@@ -148,7 +148,7 @@ flutter pub get
 
 ## Implement peer-to-peer messaging
 
-Create a new page `uikit_quick_start/lib/MessagesPage.dart`:
+Create a new page `uikit_quick_start/lib/messages_page.dart`:
 
 ```dart
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
@@ -182,7 +182,7 @@ At the top lines of the `uikit_quick_start/lib/main.dart` file, add the followin
 ```dart
 import 'package:flutter/material.dart';
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
-import 'package:uikit_quick_start/messages_page.dart';
+import 'messages_page.dart';
 
 // Replaces <#Your app key#>, <#Your created user#>, and <#User Token#> and with your own App Key, user ID, and user token generated in Agora Console.
 class ChatConfig {
@@ -375,6 +375,8 @@ class _MyHomePageState extends State<MyHomePage> {
 ```
 
 ## Test your app
+
+>On ios, if you see: The Swift pod `DKPhotoGallery` depends upon `SDWebImage`, which does not define modules. To opt into those targets generating module maps (which is necessary to import them from Swift when building as static libraries), you may set `use_modular_headers!` globally in your Podfile, or specify `:modular_headers => true` for particular dependencies. Add `use_modular_headers!` to the top of the `ios/Podfile` file.
 
 To validate the peer-to-peer messaging you have just integrated into your app using Agora Chat, perform the following operations to test the project:
 
