@@ -1,0 +1,15 @@
+{
+  "uikitAudio": "Audio",
+  "uikitFile": "File",
+  "uikitVideo": "Video",
+  "uikitLocation": "Location",
+  "uikitImage": "Image",
+  "uikitCustom": "Custom",
+  "uikitCamera": "Camera",
+  "uikitAlbum": "Album",
+  "uikitFiles": "Files",
+  "uikitDelete":"Delete",
+  "uikitDeleteConversation": "Delete conversation",
+  "uikitConfirm":"Confirm",
+  "uikitCancel":"Cancel"
+}
