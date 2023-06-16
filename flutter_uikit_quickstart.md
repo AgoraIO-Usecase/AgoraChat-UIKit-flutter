@@ -378,7 +378,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 >On ios, if you see: The Swift pod `DKPhotoGallery` depends upon `SDWebImage`, which does not define modules. To opt into those targets generating module maps (which is necessary to import them from Swift when building as static libraries), you may set `use_modular_headers!` globally in your Podfile, or specify `:modular_headers => true` for particular dependencies. Add `use_modular_headers!` to the top of the `ios/Podfile` file.
 
-To validate the peer-to-peer messaging you have just integrated into your app using Agora Chat, perform the following operations to test the project:
+To validate the one on one chat and group chat messaging you have just integrated into your app using Agora Chat, perform the following operations to test the project:
 
 1. Log in
 
