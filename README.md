@@ -2,29 +2,28 @@
 
 ## Overview
 
-Instant messaging connects people wherever they are and allows them to communicate with others in real time. With built-in user interfaces (UI) for the message list the [Chat UI Samples](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter) enables you to quickly embed real-time messaging into your app without requiring extra effort on the UI.
+Instant messaging connects people wherever they are and allows them to communicate with others in real time. With built-in user interfaces (UI) for the message list, the [Chat UI Samples](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter) enables you to quickly embed real-time messaging into your app without requiring extra effort on the UI.
+ 
+This page shows a sample code to add one-to-one chat and group chat messaging into your app by using the Agora Chat UI Samples.
+'agora_chat_uikit' currently has two modular widgets:
 
-This page shows a sample code to add one on one chat and group chat messaging into your app by using the Agora Chat UI Samples.
-'agora_chat_uikit' currently has 2 modular widget:
+`ChatConversationsView` ChatConversationsView lists the existing conversations. The avatar and nickname displayed on the conversation view can be returned through callbacks.
 
-`ChatConversationsView` ChatConversationsView is a conversation information page that displays existing conversation. And support for custom avatar and nickname operations.
+`ChatMessagesView` ChatMessagesView lists messages in the current conversation, including text, image, voice, and file messages. The avatar and nickname displayed on the message view can be returned through callbacks.
 
-`ChatMessagesView` ChatMessagesView is used to display message information, currently supports text, image, voice, and file messages. The profile avatar and nickname can be set through callbacks.
+Agora offers an open-source agora_chat_uikit project on GitHub. You can clone and run the project or refer to the logic in it to create projects integrating agora_chat_uikit.
 
-agora offers an open source agora_chat_uikit project on GitHub. You can clone and run the project or refer to the logic in it to create projects integrating agora_chat_uikit.
+Source code URL of agora_chat_uikit for Flutter:
 
-Source code URL of agora_chat_uikit for flutter:
-
-* https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter
-
+https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter
 
 ## Function
 
 The `flutter_chat_uikit` library provides the following functions:
 
-* Send and receive messages, message display, message unread count, clear messages, message types include: (text, picture, file, audio);
-* Delete conversations and messages.
-* Customize the UI.
+- Sends and receives messages, displays messages, shows the unread message count, and clears messages. The text, image, emoji, file, and audio messages are supported.
+- Deletes conversations and messages. 
+- Customizes the UI.
 
 <table>
   <tr>
@@ -39,7 +38,7 @@ The `flutter_chat_uikit` library provides the following functions:
   </tr>
     <td rowspan="2"> ChatConversationsView </td>
     <td> Conversation list </td>
-    <td> The conversation list displays the profile avatar, nickname, latest message content, unread message count, and time </td>
+    <td> Presents the conversation information, including the user's avatar and nickname, content of the last message, unread message count, and the time when the last message is sent or received.</td>
   <tr>
     <td>Delete conversation</td>
     <td>Deletes the conversation from the conversation list.</td>
@@ -47,26 +46,26 @@ The `flutter_chat_uikit` library provides the following functions:
   <tr>
     <td rowspan="4">ChatMessagesView</td>
     <td>Message sender</td>
-    <td>Support to send text, emoji, picture, file, voice.</td>
+    <td>Sends text, emoji, image, file, and voice messages.</td>
   </tr>
   <tr>
     <td>Delete messages</td>
-    <td>Delete messages</td>
+    <td>Deletes messages.</td>
   </tr>
   <tr>
     <td>Recall message</td>
-    <td>Recall message in 120 seconds</td>
+    <td>Recalls message that are sent within 120 seconds.</td>
   </tr>
   <tr>
     <td>Display message</td>
-    <td>Chat message display, including profile avatar, nickname, message content, time, sent status, and read status. Message types include text, picture, video, file, and voice</td>
+    <td>Displays one-to-one messages and group messages, including the user's avatar and nickname and the message's content, sending time or reception time, sending status, and read status. The text, image, emoji, file, voice, and video messages can be displayed.</td> 
   </tr>
 </table>
 
 
 ## Dependencies
 
-Some third party UI libraries are used in Agora_chat_uikit, as follows:
+The following third-party UI libraries are used in Agora_chat_uikit:
 
 ```dart
 dependencies:
@@ -96,24 +95,22 @@ dependencies:
 
 In `Info.plist`， add the following permissions:
 
-|Key|Type|Value|
----|---|---
-`Privacy - Microphone Usage Description` | String | For microphone access
-`Privacy - Camera Usage Description` | String | For camera access
-`Privacy - Photo Library Usage Description` | String | For photo library access
+| Key | Type | Value |
+| :------------ | :----- | :------- | 
+| `Privacy - Microphone Usage Description` | String | For microphone access |
+| `Privacy - Camera Usage Description` | String | For camera access |
+| `Privacy - Photo Library Usage Description` | String | For photo library access |
 
 ## Prevent code obfuscation
 
-In the example/android/app/proguard-rules.pro file, add the following lines to prevent code obfuscation:
+In the `example/android/app/proguard-rules.pro` file, add the following lines to prevent code obfuscation:
+
 ```
 -keep class com.hyphenate.** {*;}
 -dontwarn  com.hyphenate.**
 ```
 
-## Getting started
-
-Integrate uikit, which can be downloaded locally or integrated through git.
-
+## Integrate the UIKit
 
 ### pub.dev integration
 
@@ -134,15 +131,15 @@ dependencies:
 
 ## Usage
 
-You need to make sure the agora chat sdk is initialized before calling ChatUIKit and ChatUIKit widget at the top of you widget tree. You can add it in the `MaterialApp` builder.
+Before calling ChatUIKit, you need to make sure that the Agora chat SDK is initialized and the ChatUIKit widget is at the top of you widget tree. You can add it in the `MaterialApp` builder. 
 
 ### ChatUIKit
 
 You must have a ChatUIKit widget at the top of you widget tree.
 
-|Props|Props Description|
---|--
-theme| chat uikit theme for setting component styles. If not set, the default style will be used.
+| Prop | Description |
+| :-------------- | :----- |
+| theme | Chat UIKit theme for setting component styles. If this prop is not set, the default style will be used.|
 
 ```dart
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
@@ -170,15 +167,13 @@ class MyApp extends StatelessWidget {
 
 The 'ChatConversationsView' allows you to quickly display and manage the current conversations.
 
-|Props|Props Description|
---|--
-controller| The ScrollController for the conversation list.
-itemBuilder| Conversation list item builder, return a widget if you need to customize it.
-avatarBuilder| Avatar builder, if not implemented or returns null will use the default avatar.
-nicknameBuilder| Nickname builder, which displays the userId if not set or null is returned.
-onItemTap| Conversation list item Click event callback.
-
-
+| Prop| Description |
+| :-------------- | :----- |
+| controller | The ScrollController for the conversation list. |
+| itemBuilder | Conversation list item builder. Return a widget if you need to customize it. | 
+| avatarBuilder | Avatar builder. If this prop is not implemented or you return `null`, the default avatar will be used.|
+| nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |  
+| onItemTap | The callback of the click event of the conversation list item. | 
 
 ```dart
 class _ConversationsPageState extends State<ConversationsPage> {
@@ -204,7 +199,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
 }
 ```
 
-For more information, see `ChatConversationsView`
+For more information, see `ChatConversationsView`.
 
 ```dart
   const ChatConversationsView({
@@ -229,25 +224,28 @@ For more information, see `ChatConversationsView`
 
 ### ChatMessagesView
 
-The `ChatMessagesView` is used to manage and send and receive messages. It supports picture, text, voice, and file messages. It also supports operations such as deleting and recall messages.
+`ChatMessagesView` is used to manage text, image, emoji, file, and voice messages:
+- Sends and receives messages.
+- Deletes messages.
+- Recalls messages.
 
-|Props|Props Description|
---|--
-inputBar| Text input component, if not passed by default will use `ChatInputBar`.
-conversation| The conversation corresponding to the message details.
-onTap| Message Bubble click event callback.
-onBubbleLongPress| Message bubbles long press the event callback.
-onBubbleDoubleTap| Message Bubble Double-click the event callback.
-avatarBuilder| Avatar component builder.
-nicknameBuilder| Nickname component builder.
-itemBuilder| Message bubble, if not set, will take the default bubble.
-moreItems| The more the input component clicks on the list displayed, the default items will be used if not passed in, including copy, delete, and recall.
-messageListViewController| Message list controller: You are advised not to pass messages. Use the default value. For details, see `ChatMessageListController`.
-willSendMessage| A pre-text message event that needs to return a `ChatMessage` object. that can be used for pre-text message processing.
-onError| Error callbacks, such as no current permissions, etc.
-enableScrollBar| Enable scroll bar, default is true.
-needDismissInputWidget| Dismiss the input widget callback. If you use a customized inputBar, dismiss the inputBar when you receive the callback, for example, by calling `FocusNode.unfocus`, see `ChatInputBar`.
-inputBarMoreActionsOnTap| More button click after callback, need to return to the `ChatBottomSheetItems` list.
+| Prop | Prop Description |
+| :-------------- | :----- |
+| inputBar | Text input component. If you don't pass in this prop, `ChatInputBar` will be used by default.|
+| conversation | The conversation to which the messages belong. |
+| onTap | Message bubble click callback.|
+| onBubbleLongPress | Callback for holding a message bubble.|
+| onBubbleDoubleTap| Callback for double-clicking a message bubble.|
+| avatarBuilder | Avatar component builder.|
+| nicknameBuilder | Nickname component builder.|
+| itemBuilder| Message bubble. If you don't set this prop, the default bubble will be used. |
+| moreItems | Action items displayed after a message bubble is held down. If you return `null` in `onBubbleLongPress`, `moreItems` will be used. This prop involves three default actions: copy, delete, and recall. | 
+| messageListViewController | Message list controller. You are advised to use the default value. For details, see `ChatMessageListController`.  |
+| willSendMessage | Text message pre-sending callback. This callback needs to return a `ChatMessage` object.  |
+| onError| Error callbacks, such as no permissions.  |
+| enableScrollBar | Whether to enable the scroll bar. The scroll bar is enabled by default.  |
+| needDismissInputWidget | Callback for dismissing the input widget. If you use a custom input widget, dismiss the input widget when you receive this callback, for example, by calling `FocusNode.unfocus`. See `ChatInputBar`. |
+| inputBarMoreActionsOnTap | The callback for clicking the plus symbol next to the input box. You need to return the `ChatBottomSheetItems` list.     |  
 
 
 ```dart
@@ -267,7 +265,7 @@ class _ChatPageState extends State<ChatPage> {
 
 <div align=center> <img src="./docs/chat_page.png" width = "300" /></div>
 
-For more information, see `ChatMessagesView`
+For more information, see `ChatMessagesView`.
 
 ```dart
   const ChatMessagesView({
@@ -285,7 +283,6 @@ For more information, see `ChatMessagesView`
     this.willSendMessage,
   });
 ```
-
 
 #### Customize colors
 
@@ -314,7 +311,7 @@ class MyApp extends StatelessWidget {
 
 <div align=center> <img src="./docs/chat_page_customize_colors.png" width = "300" /></div>
 
-#### Add avatar
+#### Add an avatar
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -326,7 +323,7 @@ class _MessagesPageState extends State<MessagesPage> {
         child: ChatMessagesView(
           conversation: widget.conversation,
           avatarBuilder: (context, userId) {
-            // Returns the avatar Widget that you want to display.
+            // Returns the avatar widget that you want to display.
             return Container(
               width: 30,
               height: 30,
@@ -342,8 +339,7 @@ class _MessagesPageState extends State<MessagesPage> {
 
 <div align=center> <img src="./docs/chat_page_avatar.png" width = "300" /></div>
 
-
-#### Add nickname
+#### Add a nickname
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -354,7 +350,7 @@ class _MessagesPageState extends State<MessagesPage> {
       body: SafeArea(
         child: ChatMessagesView(
           conversation: widget.conversation,
-          // Returns the nickname Widget that you want to display.
+          // Returns the nickname widget that you want to display.
           nicknameBuilder: (context, userId) {
             return Text(userId);
           },
@@ -367,8 +363,7 @@ class _MessagesPageState extends State<MessagesPage> {
 
 <div align=center> <img src="./docs/chat_page_nickname.png" width = "300" /></div>
 
-
-#### Add bubble click event
+#### Add the bubble click event
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -394,7 +389,7 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-### Custom message item widget
+### Customize the message item widget 
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -554,7 +549,7 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-### Customize input bar more actions
+### Customize actions displayed upon a click of the plus symbol in the conversation 
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -593,15 +588,11 @@ class _MessagesPageState extends State<MessagesPage> {
 <div align=center> <img src="./docs/chat_page_more_item.png" width = "300" /></div>
 
 
-## example
+## Sample Project
 
-See the example for the effect.
+If the demo is required, configure the following information in the `example/lib/main.dart` file:
 
-### quick start
-
-If demo is required, configure the following information in the `example/lib/main.dart` file:
-
-// Replaces <#Your app key#>, <#Your created user#>, and <#User Token#> and with your own App Key, user ID, and user token generated in Agora Console.
+Replaces <#Your app key#>, <#Your created user#>, and <#User Token#> and with your own App Key, user ID, and user token generated in Agora Console.
 
 ```dart
 class ChatConfig {
