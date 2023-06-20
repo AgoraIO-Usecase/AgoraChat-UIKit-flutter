@@ -69,7 +69,7 @@ The following third-party UI libraries are used in Agora_chat_uikit:
 
 ```dart
 dependencies:
-  agora_chat_sdk: 1.1.0
+  agora_chat_sdk: 1.1.1
   image_picker: 0.8.6+4
   file_picker: 4.6.1
   record: 4.4.4
