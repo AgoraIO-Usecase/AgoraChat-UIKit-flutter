@@ -182,7 +182,7 @@ UPDATE_dict = {
     " = 'flutter_chat_uikit'":" = 'agora_chat_uikit'",
     
     # SDK Version
-    "im_flutter_sdk: ^4.0.0+7":"agora_chat_sdk: 1.1.0+1",
+    "im_flutter_sdk: ^4.0.2":"agora_chat_sdk: 1.1.1",
     
 }
 
