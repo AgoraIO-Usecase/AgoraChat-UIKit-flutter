@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:agora_chat_uikit/internal/chat_method.dart';
 
 import '../../agora_chat_uikit.dart';
 
@@ -39,7 +40,7 @@ class ChatMessageListController extends ChatBaseController {
   final bool enableReadAck;
   final List<ChatMessageListItemModel> msgList = [];
 
-  Future<void> Function(bool enableAnimation, bool moveToEnd)? _reloadData;
+  Future<void> Function(bool moveToEnd)? _reloadData;
   void Function(ChatError error)? _onError;
 
   ChatMessage? _playingMessage;
@@ -55,8 +56,7 @@ class ChatMessageListController extends ChatBaseController {
   void sendMessage(ChatMessage message) async {
     _removeMessageFromList(message);
     try {
-      ChatMessage msg =
-          await ChatClient.getInstance.chatManager.sendMessage(message);
+      ChatMessage msg = await chatClient.chatManager.sendMessage(message);
       msgList.insert(0, _modelCreator(msg));
       await refreshUI(moveToEnd: true);
     } on ChatError catch (e) {
@@ -85,7 +85,7 @@ class ChatMessageListController extends ChatBaseController {
     ChatMessage message,
   ) async {
     try {
-      await ChatClient.getInstance.chatManager.recallMessage(message.msgId);
+      await chatClient.chatManager.recallMessage(message.msgId);
       _recallMessagesCallback([message]);
     } on ChatError catch (e) {
       _onError?.call(e);
@@ -143,7 +143,7 @@ class ChatMessageListController extends ChatBaseController {
         message.direction == MessageDirection.RECEIVE &&
         conversation.type == ChatConversationType.Chat) {
       try {
-        await ChatClient.getInstance.chatManager.sendMessageReadAck(message);
+        await chatClient.chatManager.sendMessageReadAck(message);
       } on ChatError catch (e) {
         _onError?.call(e);
       }
@@ -183,7 +183,7 @@ class ChatMessageListController extends ChatBaseController {
   /// If the message roaming interface is called, the deleted message can still be retrieved.
   /// current conversation see [ChatMessagesList]. message roaming see [ChatManager.fetchHistoryMessages].
   Future<void> deleteAllMessages() async {
-    await ChatClient.getInstance.chatManager.deleteConversation(conversation.id);
+    await chatClient.chatManager.deleteConversation(conversation.id);
     _latestShowTsTime = -1;
     msgList.clear();
     refreshUI();
@@ -191,10 +191,9 @@ class ChatMessageListController extends ChatBaseController {
 
   /// Refresh ChatMessagesList Widget. see [ChatMessagesList].
   Future<void>? refreshUI({
-    bool enableAnimation = false,
     bool moveToEnd = false,
   }) {
-    return _reloadData?.call(enableAnimation, moveToEnd);
+    return _reloadData?.call(moveToEnd);
   }
 
   void play(ChatMessage message) {
@@ -261,7 +260,7 @@ class ChatMessageListController extends ChatBaseController {
   }
 
   void _addChatManagerListener() {
-    ChatClient.getInstance.chatManager.addMessageEvent(
+    chatClient.chatManager.addMessageEvent(
         key,
         ChatMessageEvent(
           onProgress: (msgId, progress) {},
@@ -271,7 +270,7 @@ class ChatMessageListController extends ChatBaseController {
             _onError?.call(error);
           },
         ));
-    ChatClient.getInstance.chatManager.addEventHandler(
+    chatClient.chatManager.addEventHandler(
       key,
       ChatEventHandler(
         onMessagesRead: _updateMessageItems,
@@ -331,8 +330,8 @@ class ChatMessageListController extends ChatBaseController {
   }
 
   void _removeChatManagerListener() {
-    ChatClient.getInstance.chatManager.removeEventHandler(key);
-    ChatClient.getInstance.chatManager.removeMessageEvent(key);
+    chatClient.chatManager.removeEventHandler(key);
+    chatClient.chatManager.removeMessageEvent(key);
   }
 
   List<ChatMessageListItemModel> _modelsCreator(
@@ -363,7 +362,7 @@ class ChatMessageListController extends ChatBaseController {
   }
 
   void _bindingActions({
-    Future<void> Function(bool enableAnimation, bool moveToEnd)? reloadData,
+    Future<void> Function(bool moveToEnd)? reloadData,
     void Function(ChatError error)? onError,
   }) {
     _reloadData = reloadData;
@@ -477,10 +476,7 @@ class _ChatMessagesListState extends State<ChatMessagesList>
           widget.conversation,
         );
 
-    controller._bindingActions(
-      reloadData: _reloadData,
-      onError: _onError,
-    );
+    controller._bindingActions(reloadData: _reloadData, onError: _onError);
     controller.loadMoreMessage();
   }
 
@@ -488,7 +484,7 @@ class _ChatMessagesListState extends State<ChatMessagesList>
     widget.onError?.call(err);
   }
 
-  Future<void> _reloadData(bool enableAnimation, bool moveToEnd) async {
+  Future<void> _reloadData(bool moveToEnd) async {
     setState(() {});
     if (moveToEnd) {
       _scrollController.jumpTo(0);

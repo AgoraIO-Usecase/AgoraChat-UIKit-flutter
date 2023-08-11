@@ -1,37 +1,51 @@
-import 'package:common_utils/common_utils.dart';
+enum TimeType {
+  today,
+  month,
+  year,
+}
 
 class TimeTool {
+  static TimeType _timeType(int ms) {
+    DateTime now = DateTime.now();
+    DateTime dateToCheck = DateTime.fromMillisecondsSinceEpoch(ms);
+    if (now.year == dateToCheck.year) {
+      if (now.month == dateToCheck.month) {
+        if (now.day == dateToCheck.day) {
+          return TimeType.today;
+        } else {
+          return TimeType.month;
+        }
+      } else {
+        return TimeType.year;
+      }
+    } else {
+      return TimeType.year;
+    }
+  }
+
   static String timeStrByMs(int ms, {bool showTime = false}) {
-    String ret = '';
-    // 是否当天
-    // HH:mm
-    if (DateUtil.isToday(ms)) {
-      ret = DateUtil.formatDateMs(ms, format: 'HH:mm');
-    }
-    // // 是否本周
-    // // 周一、周二、周三...
-    // else if (DateUtil.isWeek(ms)) {
-    //   ret = DateUtil.getWeekdayByMs(ms);
-    // }
+    // 根据传入时间判断是否是今天、本月、本年,
+    // 今天，返回 HH:mm
+    // 本月，返回 MM/dd HH:mm
+    // 本年，返回 yyyy/MM/dd HH:mm
 
-    // 是否本年
-    // MM/dd
-    else if (DateUtil.yearIsEqualByMs(ms, DateUtil.getNowDateMs())) {
-      if (showTime) {
-        ret = DateUtil.formatDateMs(ms, format: 'MM/dd HH:mm');
-      } else {
-        ret = DateUtil.formatDateMs(ms, format: 'MM/dd');
-      }
+    TimeType type = _timeType(ms);
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(ms);
+    String ret = "";
+    switch (type) {
+      case TimeType.today:
+        ret =
+            "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+        break;
+      case TimeType.month:
+        ret =
+            "${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+        break;
+      case TimeType.year:
+        ret =
+            "${date.year.toString()}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+        break;
     }
-    // yyyy/MM/dd
-    else {
-      if (showTime) {
-        ret = DateUtil.formatDateMs(ms, format: 'yyyy/MM/dd HH:mm');
-      } else {
-        ret = DateUtil.formatDateMs(ms, format: 'yyyy/MM/dd');
-      }
-    }
-
     return ret;
   }
 

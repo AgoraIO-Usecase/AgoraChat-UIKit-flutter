@@ -1,5 +1,6 @@
 import '../agora_chat_uikit.dart';
 import 'chat_message_list_manager.dart';
+import 'chat_method.dart';
 
 class ChatUIKitManager {
   static ChatUIKitManager? _shared;
@@ -19,11 +20,11 @@ class ChatUIKitManager {
 
   ChatUIKitManager._() {
     _addListeners();
-    ChatClient.getInstance.startCallback();
+    chatClient.startCallback();
   }
 
   void _addListeners() {
-    ChatClient.getInstance.chatManager.addEventHandler(
+    chatClient.chatManager.addEventHandler(
       _chatHandlerKey,
       ChatEventHandler(
         onMessagesReceived: _onMessagesReceived,
@@ -39,21 +40,21 @@ class ChatUIKitManager {
       ),
     );
 
-    ChatClient.getInstance.addConnectionEventHandler(
+    chatClient.addConnectionEventHandler(
       _connectionHandlerKey,
       ConnectionEventHandler(),
     );
 
-    ChatClient.getInstance.addMultiDeviceEventHandler(
+    chatClient.addMultiDeviceEventHandler(
       _multiDeviceHandlerKey,
       ChatMultiDeviceEventHandler(),
     );
   }
 
   void _removeListeners() {
-    ChatClient.getInstance.chatManager.removeEventHandler(_chatHandlerKey);
-    ChatClient.getInstance.removeConnectionEventHandler(_connectionHandlerKey);
-    ChatClient.getInstance.removeMultiDeviceEventHandler(_multiDeviceHandlerKey);
+    chatClient.chatManager.removeEventHandler(_chatHandlerKey);
+    chatClient.removeConnectionEventHandler(_connectionHandlerKey);
+    chatClient.removeMultiDeviceEventHandler(_multiDeviceHandlerKey);
   }
 
   void _onMessagesReceived(List<ChatMessage> messages) {

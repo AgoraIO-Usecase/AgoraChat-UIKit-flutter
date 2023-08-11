@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../agora_chat_uikit.dart';
+import '../../widgets/chat_image_show_widget/chat_image_show_widget.dart';
 
 /// Message details page
 class ChatMessagesView extends StatefulWidget {
@@ -190,6 +191,8 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
               if (!ret) {
                 if (msg.body.type == MessageType.VOICE) {
                   _voiceBubblePressed(msg);
+                } else if (msg.body.type == MessageType.IMAGE) {
+                  _imageBubblePressed(msg);
                 }
               }
               return ret;
@@ -429,6 +432,15 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
     } else {
       _playVoice(message);
     }
+  }
+
+  Future<void> _imageBubblePressed(ChatMessage message) async {
+    await widget.conversation.markMessageAsRead(message.msgId);
+    message.hasRead = true;
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+      return ChatImageShowWidget(message);
+    }));
   }
 
   void _playVoice(ChatMessage message) async {

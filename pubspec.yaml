@@ -1,34 +1,30 @@
 name: agora_chat_uikit
-description: A new Flutter plugin project.
+description: A set of ui components adapted to the chat sdk can quickly build a chat page and chat through the chat sdk by invoking the ui components.
 version: 1.0.0
-homepage:
+homepage: https://www.agora.io/
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=2.18.6 <4.0.0'
   flutter: ">=3.3.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  plugin_platform_interface: ^2.0.2
-
   flutter_localizations:
     sdk: flutter
 
-  intl: any
+  intl: ^0.18.0
 
-  image_picker: 0.8.6+4
+  image_picker: ^0.8.6+4
 
-  file_picker: 4.6.1
+  file_picker: ^4.6.1
 
-  record: 4.4.4
+  record: ^4.4.4
 
-  audioplayers: 3.0.1
+  audioplayers: ^3.0.1
 
-  common_utils: 2.1.0
-
-  agora_chat_sdk: 1.1.1
+  agora_chat_sdk: ^1.1.1
 
 dev_dependencies:
   flutter_test:
