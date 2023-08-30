@@ -2,14 +2,14 @@
 
 ## Overview
 
-Instant messaging connects people wherever they are and allows them to communicate with others in real time. With built-in user interfaces (UI) for the message list, the [Chat UI Samples](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter) enables you to quickly embed real-time messaging into your app without requiring extra effort on the UI.
+Instant messaging connects people wherever they are and allows them to communicate with others in real time. With built-in user interfaces (UI) for the message list, the [Chat UIKit Samples](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter) enables you to quickly embed real-time messaging into your app without requiring extra effort on the UI.
  
 This page shows a sample code to add one-to-one chat and group chat messaging into your app by using the Agora Chat UI Samples.
 'agora_chat_uikit' currently has two modular widgets:
 
-`ChatConversationsView` ChatConversationsView lists the existing conversations. The avatar and nickname displayed on the conversation view can be returned through callbacks.
+`ChatConversationsView` ChatConversationsView lists existing conversations. It also provides customizable avatars and nicknames.
 
-`ChatMessagesView` ChatMessagesView lists messages in the current conversation, including text, image, voice, and file messages. The avatar and nickname displayed on the message view can be returned through callbacks.
+`ChatMessagesView` ChatMessagesView lists messages in the current conversation, including text, image, voice, and file messages. It also provides customizable avatars and nicknames, and the style of list item.
 
 Agora offers an open-source agora_chat_uikit project on GitHub. You can clone and run the project or refer to the logic in it to create projects integrating agora_chat_uikit.
 
@@ -44,7 +44,7 @@ The `agora_chat_uikit` library provides the following functions:
     <td>Deletes the conversation from the conversation list.</td>
   </tr>
   <tr>
-    <td rowspan="4">ChatMessagesView</td>
+    <td rowspan="6">ChatMessagesView</td>
     <td>Message sender</td>
     <td>Sends text, emoji, image, file, and voice messages.</td>
   </tr>
@@ -55,11 +55,20 @@ The `agora_chat_uikit` library provides the following functions:
   <tr>
     <td>Recall message</td>
     <td>Recalls message that are sent within 120 seconds.</td>
+  </tr>  
+  <tr>
+    <td>Read mark</td>
+    <td>You will receive a read receipt after retrieving your message.</td>
+  </tr>
+  <tr>
+    <td>Message sent state</td>
+    <td>Display the status after the message is sent.</td>
   </tr>
   <tr>
     <td>Display message</td>
     <td>Displays one-to-one messages and group messages, including the user's avatar and nickname and the message's content, sending time or reception time, sending status, and read status. The text, image, emoji, file, voice, and video messages can be displayed.</td> 
   </tr>
+  
 </table>
 
 
