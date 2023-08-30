@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
 
+import 'messages_page.dart';
+
 class ConversationsPage extends StatefulWidget {
   const ConversationsPage({super.key});
 
@@ -9,6 +11,7 @@ class ConversationsPage extends StatefulWidget {
 }
 
 class _ConversationsPageState extends State<ConversationsPage> {
+  final ChatConversationsController controller = ChatConversationsController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,12 +19,14 @@ class _ConversationsPageState extends State<ConversationsPage> {
         title: const Text('ConversationPage'),
       ),
       body: ChatConversationsView(
+        conversationsController: controller,
         onItemTap: (conversation) {
-          SnackBar bar = SnackBar(
-            content: Text('${conversation.id} clicked'),
-            duration: const Duration(milliseconds: 1000),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(bar);
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) => MessagesPage(conversation)))
+              .then((value) {
+            controller.loadAllConversations();
+          });
         },
       ),
     );

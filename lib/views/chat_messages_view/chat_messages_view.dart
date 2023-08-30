@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../agora_chat_uikit.dart';
+import '../../widgets/chat_image_show_widget/chat_image_show_widget.dart';
 
 /// Message details page
 class ChatMessagesView extends StatefulWidget {
@@ -46,7 +47,7 @@ class ChatMessagesView extends StatefulWidget {
   ///
   /// [inputBarMoreActionsOnTap] More button click after callback, need to return to the ChatBottomSheetItems list.
   ///
-  const ChatMessagesView({
+  ChatMessagesView({
     required this.conversation,
     this.inputBarTextEditingController,
     this.background,
@@ -58,14 +59,15 @@ class ChatMessagesView extends StatefulWidget {
     this.nicknameBuilder,
     this.itemBuilder,
     this.moreItems,
-    this.messageListViewController,
+    ChatMessageListController? messageListViewController,
     this.willSendMessage,
     this.onError,
     this.enableScrollBar = true,
     this.needDismissInputWidget,
     this.inputBarMoreActionsOnTap,
     super.key,
-  });
+  }) : messageListViewController = messageListViewController ??
+            ChatMessageListController(conversation);
 
   final Widget? background;
 
@@ -102,7 +104,7 @@ class ChatMessagesView extends StatefulWidget {
 
   /// Message list controller: You are advised not to pass messages. Use the default value.
   /// For details, see [ChatMessageListController].
-  final ChatMessageListController? messageListViewController;
+  final ChatMessageListController messageListViewController;
 
   /// A pre-text message event that needs to return a ChatMessage object.
   /// that can be used for pre-text message processing.
@@ -127,7 +129,6 @@ class ChatMessagesView extends StatefulWidget {
 }
 
 class _ChatMessagesViewState extends State<ChatMessagesView> {
-  late final ChatMessageListController msgListViewController;
   final ImagePicker _picker = ImagePicker();
   final Record _audioRecorder = Record();
   final AudioPlayer _player = AudioPlayer();
@@ -143,9 +144,6 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
     super.initState();
     _textController =
         widget.inputBarTextEditingController ?? TextEditingController();
-    msgListViewController = widget.messageListViewController ??
-        ChatMessageListController(widget.conversation);
-    msgListViewController.markAllMessagesAsRead();
   }
 
   @override
@@ -157,7 +155,6 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
 
     _player.dispose();
     _focusNode.dispose();
-    msgListViewController.dispose();
     super.dispose();
   }
 
@@ -181,7 +178,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
             enableScrollBar: widget.enableScrollBar,
             onError: widget.onError,
             conversation: widget.conversation,
-            messageListViewController: msgListViewController,
+            messageListViewController: widget.messageListViewController,
             avatarBuilder: widget.avatarBuilder,
             nicknameBuilder: widget.nicknameBuilder,
             itemBuilder: widget.itemBuilder,
@@ -190,6 +187,8 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
               if (!ret) {
                 if (msg.body.type == MessageType.VOICE) {
                   _voiceBubblePressed(msg);
+                } else if (msg.body.type == MessageType.IMAGE) {
+                  _imageBubblePressed(msg);
                 }
               }
               return ret;
@@ -217,13 +216,13 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
                 if (!_focusNode.hasFocus) {
                   _focusNode.requestFocus();
                 }
-                msgListViewController.refreshUI(moveToEnd: true);
+                widget.messageListViewController.refreshUI(moveToEnd: true);
               },
               emojiWidgetOnTap: () {
                 if (_focusNode.hasFocus) {
                   _focusNode.unfocus();
                 }
-                msgListViewController.refreshUI(moveToEnd: true);
+                widget.messageListViewController.refreshUI(moveToEnd: true);
               },
               recordTouchDown: _startRecord,
               recordTouchUpInside: _stopRecord,
@@ -246,7 +245,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
                   willSend = msg;
                 }
 
-                msgListViewController.sendMessage(willSend);
+                widget.messageListViewController.sendMessage(willSend);
               },
             )
       ],
@@ -280,7 +279,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
       ChatBottomSheetItem.normal(
         'Delete',
         onTap: () async {
-          msgListViewController.removeMessage(message);
+          widget.messageListViewController.removeMessage(message);
           return Navigator.of(context).pop();
         },
       ),
@@ -293,7 +292,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
         ChatBottomSheetItem.destructive(
           'Recall',
           onTap: () async {
-            msgListViewController.recallMessage(message);
+            widget.messageListViewController.recallMessage(message);
             Navigator.of(context).pop();
           },
         ),
@@ -378,7 +377,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
         displayName: file.name,
       );
       fileMsg.chatType = ChatType.values[widget.conversation.type.index];
-      msgListViewController
+      widget.messageListViewController
           .sendMessage(widget.willSendMessage?.call(fileMsg) ?? fileMsg);
     }
   }
@@ -403,7 +402,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
           height: info.image.height.toDouble(),
           fileSize: file.sizeInBytes,
         );
-        msgListViewController
+        widget.messageListViewController
             .sendMessage(widget.willSendMessage?.call(msg) ?? msg);
       }
     }));
@@ -418,7 +417,8 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
       duration: _recordDuration,
       displayName: displayName,
     );
-    msgListViewController.sendMessage(widget.willSendMessage?.call(msg) ?? msg);
+    widget.messageListViewController
+        .sendMessage(widget.willSendMessage?.call(msg) ?? msg);
   }
 
   Future<void> _voiceBubblePressed(ChatMessage message) async {
@@ -431,10 +431,20 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
     }
   }
 
+  Future<void> _imageBubblePressed(ChatMessage message) async {
+    await widget.conversation.markMessageAsRead(message.msgId);
+    message.hasRead = true;
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+      return ChatImageShowWidget(message);
+    }));
+    return Future.value();
+  }
+
   void _playVoice(ChatMessage message) async {
     _playingMessage = message;
-    msgListViewController.play(message);
-    msgListViewController.refreshUI();
+    widget.messageListViewController.play(message);
+    widget.messageListViewController.refreshUI();
     ChatVoiceMessageBody body = message.body as ChatVoiceMessageBody;
     await _player.stop();
     _player.play(DeviceFileSource(body.localPath));
@@ -446,8 +456,8 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
   void _stopVoice() async {
     _playingMessage = null;
     await _player.stop();
-    msgListViewController.stopPlay();
-    msgListViewController.refreshUI();
+    widget.messageListViewController.stopPlay();
+    widget.messageListViewController.refreshUI();
   }
 
   void _startRecord() async {

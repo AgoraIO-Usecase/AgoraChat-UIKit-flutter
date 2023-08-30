@@ -52,12 +52,6 @@ class _MessagesPageState extends State<MessagesPage> {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           },
-          inputBarMoreActionsOnTap: (items) {
-            ChatBottomSheetItem item =
-                ChatBottomSheetItem.normal('more', onTap: () async {});
-
-            return items + [item];
-          },
         ),
       ),
     );

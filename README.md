@@ -19,7 +19,7 @@ https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter
 
 ## Function
 
-The `flutter_chat_uikit` library provides the following functions:
+The `agora_chat_uikit` library provides the following functions:
 
 - Sends and receives messages, displays messages, shows the unread message count, and clears messages. The text, image, emoji, file, and audio messages are supported.
 - Deletes conversations and messages. 
