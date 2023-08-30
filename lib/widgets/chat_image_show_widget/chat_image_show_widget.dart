@@ -22,21 +22,27 @@ class _ChatImageShowWidgetState extends State<ChatImageShowWidget> {
   @override
   void initState() {
     super.initState();
-
+    message = widget.message;
     chatClient.chatManager.addMessageEvent(
         _msgEventKey,
         ChatMessageEvent(
           onProgress: (msgId, progress) {
-            debugPrint("progress: $progress");
-            _progress.value = progress;
+            if (msgId == message!.msgId) {
+              debugPrint("progress: $progress");
+              _progress.value = progress;
+            }
           },
           onSuccess: (msgId, msg) {
-            message = msg;
-            setState(() {});
+            if (msgId == message!.msgId) {
+              message = msg;
+              setState(() {});
+            }
           },
           onError: (msgId, msg, error) {
-            message = msg;
-            setState(() {});
+            if (msgId == message!.msgId) {
+              message = msg;
+              setState(() {});
+            }
           },
         ));
   }

@@ -33,6 +33,8 @@ extension ChatMessageExt on ChatMessage {
       case MessageType.CMD:
         ret = "";
         break;
+      default:
+        break;
     }
     return ret;
   }
