@@ -131,10 +131,7 @@ dependencies:
         path: `<#uikit path#>`
 ```
 
-## Usage
-
-Before calling ChatUIKit, you need to make sure that the Agora chat SDK is initialized and the ChatUIKit widget is at the top of you widget tree. You can add it in the `MaterialApp` builder. 
-
+Before calling ChatUIKit, you need to make sure that the Agora chat SDK is initialized and the ChatUIKit widget is at the top of you widget tree. You can add it in the `MaterialApp` builder.
 
 ```dart
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
@@ -150,6 +147,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       builder: (context, child){
+        // ChatUIKit widget at the top of the widget
         return ChatUIKit(child: child!);
       },
       home: const MyHomePage(title: 'Flutter Demo'),
@@ -158,23 +156,42 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-
 ```dart
-class _ChatPageState extends State<ChatPage> {
+class MessagesPage extends StatefulWidget {
+  const MessagesPage(this.conversation, {super.key});
+
+  final ChatConversation conversation;
+
+  @override
+  State<MessagesPage> createState() => _MessagesPageState();
+}
+
+class _MessagesPageState extends State<MessagesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.conversation.id)),
+      appBar: AppBar(
+        title: Text(widget.conversation.id),
+      ),
       body: SafeArea(
-        child: ChatMessagesView(conversation: widget.conversation),
+        // Message page in uikit.
+        child: ChatMessagesView(
+          conversation: widget.conversation,
+        ),
       ),
     );
   }
 }
-
 ```
 
 ```dart
+class ConversationsPage extends StatefulWidget {
+  const ConversationsPage({super.key});
+
+  @override
+  State<ConversationsPage> createState() => _ConversationsPageState();
+}
+
 class _ConversationsPageState extends State<ConversationsPage> {
   // Used to manage the ChatConversationsView.
   final ChatConversationsController controller = ChatConversationsController();
@@ -182,12 +199,15 @@ class _ConversationsPageState extends State<ConversationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Conversations")),
+      // Conversation view page in uikit
       body: ChatConversationsView(
-       onItemTap: (conversation) {
+        // Click to jump to the message page.
+        onItemTap: (conversation) {
           Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: (context) => MessagesPage(conversation)))
               .then((value) {
+            // Refresh the ChatConversationsView and update unread count.
             controller.loadAllConversations();
           });
         },
@@ -196,7 +216,6 @@ class _ConversationsPageState extends State<ConversationsPage> {
   }
 }
 ```
-
 
 ### ChatUIKit
 
