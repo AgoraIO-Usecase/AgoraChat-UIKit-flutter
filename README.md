@@ -299,8 +299,6 @@ For more information, see `ChatConversationsView`.
 
 
 
-<div align=center> <img src="./docs/chat_page.png" width = "300" /></div>
-
 For more information, see `ChatMessagesView`.
 
 ```dart
@@ -345,8 +343,6 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-<div align=center> <img src="./docs/chat_page_customize_colors.png" width = "300" /></div>
-
 #### Add an avatar
 
 ```dart
@@ -373,8 +369,6 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-<div align=center> <img src="./docs/chat_page_avatar.png" width = "300" /></div>
-
 #### Add a nickname
 
 ```dart
@@ -396,8 +390,6 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 }
 ```
-
-<div align=center> <img src="./docs/chat_page_nickname.png" width = "300" /></div>
 
 #### Add the bubble click event
 
@@ -478,8 +470,6 @@ class CustomTextItemWidget extends ChatMessageListItem {
 
 ```
 
-<div align=center> <img src="./docs/chat_page_custom_item.png" width = "300" /></div>
-
 ### Customize the input widget
 
 ```dart
@@ -543,8 +533,6 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 
 ```
-
-<div align=center> <img src="./docs/chat_page_input.png" width = "300" /></div>
 
 ### Delete all Messages in the current conversation
 
@@ -620,9 +608,6 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 }
 ```
-
-<div align=center> <img src="./docs/chat_page_more_item.png" width = "300" /></div>
-
 
 ## Sample Project
 
