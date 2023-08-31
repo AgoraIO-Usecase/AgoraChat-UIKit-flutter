@@ -171,6 +171,8 @@ class ChatConversationsView extends StatefulWidget {
   ///
   /// [nicknameBuilder] Nickname builder, which displays the userId if not set or null is returned.
   ///
+  /// [backgroundWidgetWhenListEmpty] Background widget when list is empty.
+  ///
   ChatConversationsView({
     super.key,
     this.scrollController,
@@ -188,6 +190,7 @@ class ChatConversationsView extends StatefulWidget {
     this.itemBuilder,
     this.avatarBuilder,
     this.nicknameBuilder,
+    this.backgroundWidgetWhenListEmpty,
   }) : conversationsController =
             conversationsController ?? ChatConversationsController();
 
@@ -244,6 +247,9 @@ class ChatConversationsView extends StatefulWidget {
   /// Creates a scrollable, linear array of widgets with a custom child model. For example, a custom child model can
   /// control the algorithm used to estimate the size of children that are not actually visible.
   final Clip clipBehavior;
+
+  /// Background widget when list is empty.
+  final Widget? backgroundWidgetWhenListEmpty;
 
   @override
   State<ChatConversationsView> createState() => ChatConversationsViewState();
@@ -303,9 +309,7 @@ class ChatConversationsViewState extends State<ChatConversationsView> {
     _tmpList.addAll(widget.conversationsController.conversationList);
 
     if (_tmpList.isEmpty) {
-      return Center(
-        child: ChatImageLoader.loadImage("conversation_empty.png"),
-      );
+      return widget.backgroundWidgetWhenListEmpty ?? Container();
     }
 
     return ChatSwipeAutoCloseBehavior(
