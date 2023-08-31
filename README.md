@@ -2,15 +2,8 @@
 
 ## Overview
 
-Instant messaging connects people wherever they are and allows them to communicate with others in real time. With built-in user interfaces (UI) for the message list, the [Chat UIKit Samples](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter) enables you to quickly embed real-time messaging into your app without requiring extra effort on the UI.
+Instant messaging connects people wherever they are and allows them to communicate with others in real time. With built-in user interfaces (UI) for the message list, the [Chat UIKit](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter) enables you to quickly embed real-time messaging into your app without requiring extra effort on the UI.
  
-This page shows a sample code to add one-to-one chat and group chat messaging into your app by using the Agora Chat UI Samples.
-'agora_chat_uikit' currently has two modular widgets:
-
-`ChatConversationsView` ChatConversationsView lists existing conversations. It also provides customizable avatars and nicknames.
-
-`ChatMessagesView` ChatMessagesView lists messages in the current conversation, including text, image, voice, and file messages. It also provides customizable avatars and nicknames, and the style of list item.
-
 Agora offers an open-source agora_chat_uikit project on GitHub. You can clone and run the project or refer to the logic in it to create projects integrating agora_chat_uikit.
 
 Source code URL of agora_chat_uikit for Flutter:
@@ -22,7 +15,7 @@ https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter
 The `agora_chat_uikit` library provides the following functions:
 
 - Sends and receives messages, displays messages, shows the unread message count, and clears messages. The text, image, emoji, file, and audio messages are supported.
-- Deletes conversations and messages. 
+- Deletes conversations and messages.
 - Customizes the UI.
 
 <table>
@@ -142,13 +135,6 @@ dependencies:
 
 Before calling ChatUIKit, you need to make sure that the Agora chat SDK is initialized and the ChatUIKit widget is at the top of you widget tree. You can add it in the `MaterialApp` builder. 
 
-### ChatUIKit
-
-You must have a ChatUIKit widget at the top of you widget tree.
-
-| Prop | Description |
-| :-------------- | :----- |
-| theme | Chat UIKit theme for setting component styles. If this prop is not set, the default style will be used.|
 
 ```dart
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
@@ -172,6 +158,64 @@ class MyApp extends StatelessWidget {
 }
 ```
 
+
+```dart
+class _ChatPageState extends State<ChatPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.conversation.id)),
+      body: SafeArea(
+        child: ChatMessagesView(conversation: widget.conversation),
+      ),
+    );
+  }
+}
+
+```
+
+```dart
+class _ConversationsPageState extends State<ConversationsPage> {
+  // Used to manage the ChatConversationsView.
+  final ChatConversationsController controller = ChatConversationsController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Conversations")),
+      body: ChatConversationsView(
+       onItemTap: (conversation) {
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) => MessagesPage(conversation)))
+              .then((value) {
+            controller.loadAllConversations();
+          });
+        },
+      ),
+    );
+  }
+}
+```
+
+
+### ChatUIKit
+
+You must have a ChatUIKit widget at the top of you widget tree.
+
+| Prop | Description |
+| :-------------- | :----- |
+| theme | Chat UIKit theme for setting component styles. If this prop is not set, the default style will be used.|
+
+For more information, see `ChatUIKit`.
+
+```dart
+ChatUIKit({
+    super.key,
+    this.child,
+    ChatUIKitTheme? theme,
+});
+```
+
 ### ChatConversationsView
 
 The 'ChatConversationsView' allows you to quickly display and manage the current conversations.
@@ -182,31 +226,9 @@ The 'ChatConversationsView' allows you to quickly display and manage the current
 | itemBuilder | Conversation list item builder. Return a widget if you need to customize it. | 
 | avatarBuilder | Avatar builder. If this prop is not implemented or you return `null`, the default avatar will be used.|
 | nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |  
-| onItemTap | The callback of the click event of the conversation list item. | 
+| onItemTap | The callback of the click event of the conversation list item. |
 
-```dart
-class _ConversationsPageState extends State<ConversationsPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Conversations")),
-      body: ChatConversationsView(
-        onItemTap: (conversation) {
-          Navigator.of(context)
-              .push(
-                MaterialPageRoute(
-                  builder: (ctx) => ChatPage(conversation),
-                ),
-              )
-              .then((value) => ChatUIKit.of(context)
-                  .conversationsController
-                  .loadAllConversations());
-        },
-      ),
-    );
-  }
-}
-```
+
 
 For more information, see `ChatConversationsView`.
 
@@ -257,20 +279,6 @@ For more information, see `ChatConversationsView`.
 | inputBarMoreActionsOnTap | The callback for clicking the plus symbol next to the input box. You need to return the `ChatBottomSheetItems` list.     |  
 
 
-```dart
-class _ChatPageState extends State<ChatPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.conversation.id)),
-      body: SafeArea(
-        child: ChatMessagesView(conversation: widget.conversation),
-      ),
-    );
-  }
-}
-
-```
 
 <div align=center> <img src="./docs/chat_page.png" width = "300" /></div>
 
