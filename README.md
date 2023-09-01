@@ -376,119 +376,6 @@ class _MessagesPageState extends State<MessagesPage> {
 
 ```
 
-### ChatUIKit
-
-You must have a ChatUIKit widget at the top of you widget tree.
-
-| Prop | Description |
-| :-------------- | :----- |
-| theme | Chat UIKit theme for setting component styles. If this prop is not set, the default style will be used.|
-
-For more information, see `ChatUIKit`.
-
-```dart
-ChatUIKit({
-    super.key,
-    this.child,
-    ChatUIKitTheme? theme,
-});
-```
-
-
-### ChatMessagesView
-
-`ChatMessagesView` is used to manage text, image, emoji, file, and voice messages:
-- Sends and receives messages.
-- Deletes messages.
-- Recalls messages.
-
-| Prop | Prop Description |
-| :-------------- | :----- |
-| conversation | The ChatConversation to which the messages belong. |
-| inputBarTextEditingController | Text input widget text editing controller. |
-| background | The background widget.|
-| inputBar | Text input component. If you don't pass in this prop, `ChatInputBar` will be used by default.|
-| onTap | Message bubble click callback.|
-| onBubbleLongPress | Callback for holding a message bubble.|
-| onBubbleDoubleTap| Callback for double-clicking a message bubble.|
-| avatarBuilder | Avatar component builder.|
-| nicknameBuilder | Nickname component builder.|
-| itemBuilder| Message bubble. If you don't set this prop, the default bubble will be used. |
-| moreItems | Action items displayed after a message bubble is held down. If you return `null` in `onBubbleLongPress`, `moreItems` will be used. This prop involves three default actions: copy, delete, and recall. | 
-| messageListViewController | Message list controller. You are advised to use the default value. For details, see `ChatMessageListController`.  |
-| willSendMessage | Text message pre-sending callback. This callback needs to return a `ChatMessage` object.  |
-| onError| Error callbacks, such as no permissions.  |
-| enableScrollBar | Whether to enable the scroll bar. The scroll bar is enabled by default.  |
-| needDismissInputWidget | Callback for dismissing the input widget. If you use a custom input widget, dismiss the input widget when you receive this callback, for example, by calling `FocusNode.unfocus`. See `ChatInputBar`. |
-| inputBarMoreActionsOnTap | The callback for clicking the plus symbol next to the input box. You need to return the `ChatBottomSheetItems` list.     |  
-
-
-
-For more information, see `ChatMessagesView`.
-
-```dart
-ChatMessagesView({
-  required this.conversation,
-  this.inputBarTextEditingController,
-  this.background,
-  this.inputBar,
-  this.onTap,
-  this.onBubbleLongPress,
-  this.onBubbleDoubleTap,
-  this.avatarBuilder,
-  this.nicknameBuilder,
-  this.itemBuilder,
-  this.moreItems,
-  ChatMessageListController? messageListViewController,
-  this.willSendMessage,
-  this.onError,
-  this.enableScrollBar = true,
-  this.needDismissInputWidget,
-  this.inputBarMoreActionsOnTap,
-  super.key,
-});
-```
-
-
-### ChatConversationsView
-
-The 'ChatConversationsView' allows you to quickly display and manage the current conversations.
-
-| Prop| Description |
-| :-------------- | :----- |
-| controller | The ChatConversationsView controller. |
-| itemBuilder | Conversation list item builder. Return a widget if you need to customize it. | 
-| avatarBuilder | Avatar builder. If this prop is not implemented or you return `null`, the default avatar will be used.|
-| nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |  
-| onItemTap | The callback of the click event of the conversation list item. |
-| backgroundWidgetWhenListEmpty | Background widget when list is empty. |
-
-
-
-For more information, see `ChatConversationsView`.
-
-```dart
-ChatConversationsView({
-  super.key,
-  this.onItemTap,
-  ChatConversationsViewController? controller,
-  this.itemBuilder,
-  this.avatarBuilder,
-  this.nicknameBuilder,
-  this.backgroundWidgetWhenListEmpty,
-  this.scrollController,
-  this.reverse = false,
-  this.primary,
-  this.physics,
-  this.shrinkWrap = false,
-  this.cacheExtent,
-  this.dragStartBehavior = DragStartBehavior.down,
-  this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-  this.restorationId,
-  this.clipBehavior = Clip.hardEdge,
-});
-```
-
 ## Customize
 
 You can test it quickly in [example](./example).
@@ -503,8 +390,9 @@ class ChatConfig {
   static const String userId = "";
   static const String agoraToken = '';
 }
+```
 
-#### Customize colors
+### Customize colors
 
 You can set the color when adding `ChatUIKit`. See `ChatUIKitTheme`.
 
@@ -533,7 +421,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-#### Add an avatar
+### Add an avatar
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -560,7 +448,7 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-#### Add a nickname
+### Add a nickname
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -583,7 +471,7 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-#### Add the bubble click event
+### Add the bubble click event
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -813,6 +701,121 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 }
 ```
+
+## ChatUIKit introduce
+
+You must have a ChatUIKit widget at the top of you widget tree.
+
+| Prop | Description |
+| :-------------- | :----- |
+| theme | Chat UIKit theme for setting component styles. If this prop is not set, the default style will be used.|
+
+For more information, see `ChatUIKit`.
+
+```dart
+ChatUIKit({
+    super.key,
+    this.child,
+    ChatUIKitTheme? theme,
+});
+```
+
+
+### ChatMessagesView
+
+`ChatMessagesView` is used to manage text, image, emoji, file, and voice messages:
+- Sends and receives messages.
+- Deletes messages.
+- Recalls messages.
+
+| Prop | Prop Description |
+| :-------------- | :----- |
+| conversation | The ChatConversation to which the messages belong. |
+| inputBarTextEditingController | Text input widget text editing controller. |
+| background | The background widget.|
+| inputBar | Text input component. If you don't pass in this prop, `ChatInputBar` will be used by default.|
+| onTap | Message bubble click callback.|
+| onBubbleLongPress | Callback for holding a message bubble.|
+| onBubbleDoubleTap| Callback for double-clicking a message bubble.|
+| avatarBuilder | Avatar component builder.|
+| nicknameBuilder | Nickname component builder.|
+| itemBuilder| Message bubble. If you don't set this prop, the default bubble will be used. |
+| moreItems | Action items displayed after a message bubble is held down. If you return `null` in `onBubbleLongPress`, `moreItems` will be used. This prop involves three default actions: copy, delete, and recall. | 
+| messageListViewController | Message list controller. You are advised to use the default value. For details, see `ChatMessageListController`.  |
+| willSendMessage | Text message pre-sending callback. This callback needs to return a `ChatMessage` object.  |
+| onError| Error callbacks, such as no permissions.  |
+| enableScrollBar | Whether to enable the scroll bar. The scroll bar is enabled by default.  |
+| needDismissInputWidget | Callback for dismissing the input widget. If you use a custom input widget, dismiss the input widget when you receive this callback, for example, by calling `FocusNode.unfocus`. See `ChatInputBar`. |
+| inputBarMoreActionsOnTap | The callback for clicking the plus symbol next to the input box. You need to return the `ChatBottomSheetItems` list.     |  
+
+
+
+For more information, see `ChatMessagesView`.
+
+```dart
+ChatMessagesView({
+  required this.conversation,
+  this.inputBarTextEditingController,
+  this.background,
+  this.inputBar,
+  this.onTap,
+  this.onBubbleLongPress,
+  this.onBubbleDoubleTap,
+  this.avatarBuilder,
+  this.nicknameBuilder,
+  this.itemBuilder,
+  this.moreItems,
+  ChatMessageListController? messageListViewController,
+  this.willSendMessage,
+  this.onError,
+  this.enableScrollBar = true,
+  this.needDismissInputWidget,
+  this.inputBarMoreActionsOnTap,
+  super.key,
+});
+```
+
+
+### ChatConversationsView
+
+The 'ChatConversationsView' allows you to quickly display and manage the current conversations.
+
+| Prop| Description |
+| :-------------- | :----- |
+| controller | The ChatConversationsView controller. |
+| itemBuilder | Conversation list item builder. Return a widget if you need to customize it. | 
+| avatarBuilder | Avatar builder. If this prop is not implemented or you return `null`, the default avatar will be used.|
+| nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |  
+| onItemTap | The callback of the click event of the conversation list item. |
+| backgroundWidgetWhenListEmpty | Background widget when list is empty. |
+
+
+
+For more information, see `ChatConversationsView`.
+
+```dart
+ChatConversationsView({
+  super.key,
+  this.onItemTap,
+  ChatConversationsViewController? controller,
+  this.itemBuilder,
+  this.avatarBuilder,
+  this.nicknameBuilder,
+  this.backgroundWidgetWhenListEmpty,
+  this.scrollController,
+  this.reverse = false,
+  this.primary,
+  this.physics,
+  this.shrinkWrap = false,
+  this.cacheExtent,
+  this.dragStartBehavior = DragStartBehavior.down,
+  this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+  this.restorationId,
+  this.clipBehavior = Clip.hardEdge,
+});
+```
+
+
 
 ## License
 
