@@ -651,13 +651,13 @@ class _MessagesPageState extends State<MessagesPage> {
 
 If the demo is required, configure the following information in the `example/lib/main.dart` file:
 
-Replaces <#Your app key#>, <#Your created user#>, and <#User Token#> and with your own App Key, user ID, and user token generated in Agora Console.
+Replaces `appKey`, `userId`, and `agoraToken` and with your own App Key, user ID, and user token generated in Agora Console.
 
 ```dart
 class ChatConfig {
-  static String appkey = <#Your app key#>;
-  static String userId = <#Your created user#>;
-  static String agoraToken = <#User Token#>;
+  static const String appKey = "";
+  static const String userId = "";
+  static const String agoraToken = '';
 }
 ```
 

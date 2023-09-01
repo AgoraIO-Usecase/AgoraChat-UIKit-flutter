@@ -84,9 +84,16 @@ Used to demonstrate agora_chat_uikit, contains chat, session list page.
 3. open `example`.
 4. run `flutter pub get`;
 5. If you want to use your own App Key for the experience, you can edit the `example/lib/main.dart` file.
-   - Replace `ChatConfig.appKey` with your App KEY.
-   - Replace `ChatConfig.userId` with your registered user id.
-   - Replace `ChatConfig.agoraToken` agoraToken corresponds to the user id
+
+Replaces `appKey`, `userId`, and `agoraToken` and with your own App Key, user ID, and user token generated in Agora Console.
+
+```dart
+class ChatConfig {
+  static const String appKey = "";
+  static const String userId = "";
+  static const String agoraToken = '';
+}
+```
 
    > See [Enable and Configure Agora Chat Service](https://docs.agora.io/cn/agora-chat/enable_agora_chat?platform=flutter) to learn how to enable and configure Agora Chat Service.
 
