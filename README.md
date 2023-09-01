@@ -131,7 +131,32 @@ dependencies:
         path: `<#uikit path#>`
 ```
 
-Before calling ChatUIKit, you need to make sure that the Agora chat SDK is initialized and the ChatUIKit widget is at the top of you widget tree. You can add it in the `MaterialApp` builder.
+Before calling ChatUIKit, you need to make sure that the Agora chat SDK is initialized and the ChatUIKit widget is at the top of you widget tree. You can add it in the `MaterialApp` builder. Consider the `example` project.
+
+
+```dart
+import 'conversations_page.dart';
+import 'messages_page.dart';
+
+class ChatConfig {
+  static const String appKey = "";
+  static const String userId = "";
+  static const String agoraToken = '';
+}
+
+void main() async {
+  assert(ChatConfig.appKey.isNotEmpty,
+      "You need to configure AppKey information first.");
+  WidgetsFlutterBinding.ensureInitialized();
+  final options = ChatOptions(
+    appKey: ChatConfig.appKey,
+    autoLogin: false,
+  );
+  await ChatClient.getInstance.init(options);
+  runApp(const MyApp());
+}
+```
+
 
 ```dart
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
@@ -155,6 +180,8 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
+
+Create a messages page.
 
 ```dart
 import 'package:flutter/material.dart';
@@ -187,6 +214,8 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 
 ```
+
+Create a conversations page.
 
 ```dart
 import 'package:flutter/material.dart';
@@ -292,7 +321,7 @@ ChatConversationsView({
 
 | Prop | Prop Description |
 | :-------------- | :----- |
-| conversation | The conversation to which the messages belong. |
+| conversation | The ChatConversation to which the messages belong. |
 | inputBarTextEditingController | Text input widget text editing controller. |
 | background | The background widget.|
 | inputBar | Text input component. If you don't pass in this prop, `ChatInputBar` will be used by default.|
