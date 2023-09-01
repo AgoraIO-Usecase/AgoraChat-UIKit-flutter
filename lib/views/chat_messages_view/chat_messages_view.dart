@@ -69,6 +69,7 @@ class ChatMessagesView extends StatefulWidget {
   }) : messageListViewController = messageListViewController ??
             ChatMessageListController(conversation);
 
+  /// The background widget.
   final Widget? background;
 
   /// Text input widget text editing controller.

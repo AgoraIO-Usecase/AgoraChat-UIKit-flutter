@@ -11,47 +11,16 @@ class MessagesPage extends StatefulWidget {
 }
 
 class _MessagesPageState extends State<MessagesPage> {
-  late final ChatMessageListController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = ChatMessageListController(widget.conversation);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.conversation.id),
-        actions: [
-          UnconstrainedBox(
-            child: InkWell(
-              onTap: () {
-                controller.deleteAllMessages();
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  'Delete',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-            ),
-          )
-        ],
       ),
       body: SafeArea(
+        // Message page in uikit.
         child: ChatMessagesView(
-          messageListViewController: controller,
           conversation: widget.conversation,
-          onError: (error) {
-            final snackBar = SnackBar(
-              content: Text('Error: ${error.description}'),
-              duration: const Duration(milliseconds: 1000),
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          },
         ),
       ),
     );

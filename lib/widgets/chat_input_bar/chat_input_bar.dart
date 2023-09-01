@@ -368,7 +368,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
               onTap: () {
                 TextEditingValue value = widget.textEditingController.value;
                 int current = value.selection.baseOffset;
-                String? mStr;
+                String mStr = "";
                 int offset = 0;
                 do {
                   if (current == 0) {

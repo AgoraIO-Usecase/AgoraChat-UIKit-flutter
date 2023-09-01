@@ -15,16 +15,11 @@ dependencies:
     sdk: flutter
 
   intl: ^0.18.0
-
   image_picker: ^0.8.6+4
-
   file_picker: ^4.6.1
-
   record: ^4.4.4
-
   audioplayers: ^3.0.1
-
-  agora_chat_sdk: 1.1.1
+  agora_chat_sdk: ^1.1.1
 
 dev_dependencies:
   flutter_test:

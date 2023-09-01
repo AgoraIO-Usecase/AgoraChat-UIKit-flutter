@@ -24,7 +24,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,11 +31,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      builder: (context, child) => ChatUIKit(
-        theme: ChatUIKitTheme(),
-        child: child!,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      builder: (context, child) {
+        // ChatUIKit widget at the top of the widget
+        return ChatUIKit(child: child!);
+      },
+      home: const MyHomePage(title: 'Flutter Demo'),
     );
   }
 }

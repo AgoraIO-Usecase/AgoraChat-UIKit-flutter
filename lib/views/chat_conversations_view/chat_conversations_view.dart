@@ -5,8 +5,8 @@ import '../../agora_chat_uikit.dart';
 import '../../internal/chat_method.dart';
 import '../../widgets/chat_swipe_widget/chat_swipe_widget.dart';
 
-class ChatConversationsController extends ChatBaseController {
-  ChatConversationsController({
+class ChatConversationsViewController extends ChatBaseController {
+  ChatConversationsViewController({
     super.key,
   });
 
@@ -136,7 +136,7 @@ class ChatConversationsView extends StatefulWidget {
   ///
   /// [onItemTap] Conversation list item Click event callback.
   ///
-  /// [conversationsController] The Conversations controller.
+  /// [controller] The Conversations controller.
   ///
   /// [reverse] Creates a scrollable, linear array of widgets with a custom child model. For example, a custom child model
   /// can control the algorithm used to estimate the size of children that are not actually visible.
@@ -175,9 +175,13 @@ class ChatConversationsView extends StatefulWidget {
   ///
   ChatConversationsView({
     super.key,
-    this.scrollController,
     this.onItemTap,
-    ChatConversationsController? conversationsController,
+    ChatConversationsViewController? controller,
+    this.itemBuilder,
+    this.avatarBuilder,
+    this.nicknameBuilder,
+    this.backgroundWidgetWhenListEmpty,
+    this.scrollController,
     this.reverse = false,
     this.primary,
     this.physics,
@@ -187,15 +191,11 @@ class ChatConversationsView extends StatefulWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.restorationId,
     this.clipBehavior = Clip.hardEdge,
-    this.itemBuilder,
-    this.avatarBuilder,
-    this.nicknameBuilder,
-    this.backgroundWidgetWhenListEmpty,
   }) : conversationsController =
-            conversationsController ?? ChatConversationsController();
+            controller ?? ChatConversationsViewController();
 
-  /// The conversations controller.
-  final ChatConversationsController conversationsController;
+  /// The ChatConversationsView controller.
+  final ChatConversationsViewController conversationsController;
 
   /// The ScrollController for the conversation list.
   final ScrollController? scrollController;
@@ -254,16 +254,8 @@ class ChatConversationsView extends StatefulWidget {
   @override
   State<ChatConversationsView> createState() => ChatConversationsViewState();
 
-  static ChatConversationsViewState of(BuildContext context) {
-    ChatConversationsViewState? state;
-    state = context.findAncestorStateOfType<ChatConversationsViewState>();
-
-    assert(
-      state != null,
-      'You must have a ChatConversationListView widget at the top of you widget tree',
-    );
-
-    return state!;
+  static ChatConversationsViewState? of(BuildContext context) {
+    return context.findAncestorStateOfType<ChatConversationsViewState>();
   }
 }
 
@@ -271,24 +263,33 @@ class ChatConversationsViewState extends State<ChatConversationsView> {
   @override
   void initState() {
     super.initState();
+    updateConversation();
+    widget.conversationsController.loadAllConversations();
+  }
+
+  void updateConversation([ChatConversationsViewController? oldController]) {
+    if (oldController != null) {
+      oldController.dispose();
+      oldController.removeListListener(_handleDataSourceUpdate);
+      widget.conversationsController.conversationList =
+          oldController.conversationList;
+    }
     widget.conversationsController.addListListener(_handleDataSourceUpdate);
     widget.conversationsController.addChatListener();
-    widget.conversationsController.loadAllConversations();
+    ChatUIKit.of(context).conversationsController =
+        widget.conversationsController;
   }
 
   @override
   void didUpdateWidget(covariant ChatConversationsView oldWidget) {
     if (widget.conversationsController != oldWidget.conversationsController) {
-      oldWidget.conversationsController
-          .removeListListener(_handleDataSourceUpdate);
-      oldWidget.conversationsController.dispose();
-      widget.conversationsController.addListListener(_handleDataSourceUpdate);
-      widget.conversationsController.addChatListener();
-      widget.conversationsController.conversationList =
-          oldWidget.conversationsController.conversationList;
+      updateConversation(oldWidget.conversationsController);
     }
     super.didUpdateWidget(oldWidget);
   }
+
+  ChatConversationsViewController get conversationsController =>
+      widget.conversationsController;
 
   @override
   void dispose() {
@@ -312,7 +313,7 @@ class ChatConversationsViewState extends State<ChatConversationsView> {
       return widget.backgroundWidgetWhenListEmpty ?? Container();
     }
 
-    return ChatSwipeAutoCloseBehavior(
+    Widget content = ChatSwipeAutoCloseBehavior(
       child: CustomScrollView(
         clipBehavior: widget.clipBehavior,
         restorationId: widget.restorationId,
@@ -399,5 +400,14 @@ class ChatConversationsViewState extends State<ChatConversationsView> {
         ],
       ),
     );
+
+    content = WillPopScope(
+        child: content,
+        onWillPop: () async {
+          ChatUIKit.of(context).conversationsController = null;
+          return true;
+        });
+
+    return content;
   }
 }

@@ -32,12 +32,25 @@ class ChatMessageStatusWidget extends StatelessWidget {
     }
 
     if (message.status == MessageStatus.SUCCESS) {
-      if (message.hasDeliverAck && message.hasReadAck) {
-        content = const Icon(Icons.done_all,
-            size: 11.2, color: Color.fromRGBO(0, 204, 119, 1));
-      } else if (message.hasDeliverAck || message.hasReadAck) {
+      if (message.hasReadAck) {
+        content = const Icon(
+          Icons.done_all,
+          size: 11.2,
+          color: Color.fromRGBO(0, 204, 119, 1),
+        );
+      } else {
         content = const Icon(Icons.done, size: 11.2, color: Colors.grey);
       }
+
+      // if (message.hasDeliverAck && message.hasReadAck) {
+      //   content = const Icon(
+      //     Icons.done_all,
+      //     size: 11.2,
+      //     color: Color.fromRGBO(0, 204, 119, 1),
+      //   );
+      // } else if (message.hasDeliverAck || message.hasReadAck) {
+      //   content = const Icon(Icons.done, size: 11.2, color: Colors.grey);
+      // }
     }
 
     return content ?? const Offstage();
