@@ -33,6 +33,8 @@ class ChatUIKit extends StatefulWidget {
 class ChatUIKitState extends State<ChatUIKit> {
   ChatUIKitTheme get theme => widget.theme;
 
+  ChatConversationsViewController? conversationsController;
+
   @override
   void initState() {
     super.initState();

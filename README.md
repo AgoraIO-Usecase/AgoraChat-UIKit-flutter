@@ -71,12 +71,12 @@ The following third-party UI libraries are used in Agora_chat_uikit:
 
 ```dart
 dependencies:
-  agora_chat_sdk: 1.1.1
-  image_picker: 0.8.6+4
-  file_picker: 4.6.1
-  record: 4.4.4
-  audioplayers: 3.0.1
-  common_utils: 2.1.0
+  intl: ^0.18.0
+  image_picker: ^0.8.6+4
+  file_picker: ^4.6.1
+  record: ^4.4.4
+  audioplayers: ^3.0.1
+  agora_chat_sdk: ^1.1.1
 ```
 
 ## Permissions
@@ -157,6 +157,9 @@ class MyApp extends StatelessWidget {
 ```
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:agora_chat_uikit/agora_chat_uikit.dart';
+
 class MessagesPage extends StatefulWidget {
   const MessagesPage(this.conversation, {super.key});
 
@@ -182,9 +185,14 @@ class _MessagesPageState extends State<MessagesPage> {
     );
   }
 }
+
 ```
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:agora_chat_uikit/agora_chat_uikit.dart';
+import 'messages_page.dart';
+
 class ConversationsPage extends StatefulWidget {
   const ConversationsPage({super.key});
 
@@ -203,18 +211,19 @@ class _ConversationsPageState extends State<ConversationsPage> {
       body: ChatConversationsView(
         // Click to jump to the message page.
         onItemTap: (conversation) {
-          Navigator.of(context)
-              .push(MaterialPageRoute(
-                  builder: (context) => MessagesPage(conversation)))
-              .then((value) {
-            // Refresh the ChatConversationsView and update unread count.
-            controller.loadAllConversations();
-          });
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return MessagesPage(conversation);
+              },
+            ),
+          );
         },
       ),
     );
   }
 }
+
 ```
 
 ### ChatUIKit
@@ -241,35 +250,37 @@ The 'ChatConversationsView' allows you to quickly display and manage the current
 
 | Prop| Description |
 | :-------------- | :----- |
-| controller | The ScrollController for the conversation list. |
+| controller | The ChatConversationsView controller. |
 | itemBuilder | Conversation list item builder. Return a widget if you need to customize it. | 
 | avatarBuilder | Avatar builder. If this prop is not implemented or you return `null`, the default avatar will be used.|
 | nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |  
 | onItemTap | The callback of the click event of the conversation list item. |
+| backgroundWidgetWhenListEmpty | Background widget when list is empty. |
 
 
 
 For more information, see `ChatConversationsView`.
 
 ```dart
-  const ChatConversationsView({
-    super.key,
-    this.onItemTap,
-    this.controller,
-    this.reverse = false,
-    this.primary,
-    this.physics,
-    this.shrinkWrap = false,
-    this.padding,
-    this.cacheExtent,
-    this.dragStartBehavior = DragStartBehavior.down,
-    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-    this.restorationId,
-    this.clipBehavior = Clip.hardEdge,
-    this.itemBuilder,
-    this.avatarBuilder,
-    this.nicknameBuilder,
-  });
+ChatConversationsView({
+  super.key,
+  this.onItemTap,
+  ChatConversationsViewController? controller,
+  this.itemBuilder,
+  this.avatarBuilder,
+  this.nicknameBuilder,
+  this.backgroundWidgetWhenListEmpty,
+  this.scrollController,
+  this.reverse = false,
+  this.primary,
+  this.physics,
+  this.shrinkWrap = false,
+  this.cacheExtent,
+  this.dragStartBehavior = DragStartBehavior.down,
+  this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+  this.restorationId,
+  this.clipBehavior = Clip.hardEdge,
+});
 ```
 
 ### ChatMessagesView
@@ -281,8 +292,10 @@ For more information, see `ChatConversationsView`.
 
 | Prop | Prop Description |
 | :-------------- | :----- |
-| inputBar | Text input component. If you don't pass in this prop, `ChatInputBar` will be used by default.|
 | conversation | The conversation to which the messages belong. |
+| inputBarTextEditingController | Text input widget text editing controller. |
+| background | The background widget.|
+| inputBar | Text input component. If you don't pass in this prop, `ChatInputBar` will be used by default.|
 | onTap | Message bubble click callback.|
 | onBubbleLongPress | Callback for holding a message bubble.|
 | onBubbleDoubleTap| Callback for double-clicking a message bubble.|
@@ -299,25 +312,29 @@ For more information, see `ChatConversationsView`.
 
 
 
-<div align=center> <img src="./docs/chat_page.png" width = "300" /></div>
-
 For more information, see `ChatMessagesView`.
 
 ```dart
-  const ChatMessagesView({
-    super.key,
-    this.inputBar,
-    required this.conversation,
-    this.onTap,
-    this.onBubbleLongPress,
-    this.onBubbleDoubleTap,
-    this.avatarBuilder,
-    this.nicknameBuilder,
-    this.titleAvatarBuilder,
-    this.moreItems,
-    this.messageListViewController,
-    this.willSendMessage,
-  });
+ChatMessagesView({
+  required this.conversation,
+  this.inputBarTextEditingController,
+  this.background,
+  this.inputBar,
+  this.onTap,
+  this.onBubbleLongPress,
+  this.onBubbleDoubleTap,
+  this.avatarBuilder,
+  this.nicknameBuilder,
+  this.itemBuilder,
+  this.moreItems,
+  ChatMessageListController? messageListViewController,
+  this.willSendMessage,
+  this.onError,
+  this.enableScrollBar = true,
+  this.needDismissInputWidget,
+  this.inputBarMoreActionsOnTap,
+  super.key,
+});
 ```
 
 #### Customize colors
@@ -335,17 +352,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      builder: (context, child) => ChatUIKit(
-        theme: ChatUIKitTheme(),
-        child: child!,
-      ),
+      builder: (context, child) {
+        // ChatUIKit widget at the top of the widget
+        return ChatUIKit(
+          // ChatUIKitTheme
+          theme: ChatUIKitTheme(),
+          child: child!,
+        );
+      },
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 ```
-
-<div align=center> <img src="./docs/chat_page_customize_colors.png" width = "300" /></div>
 
 #### Add an avatar
 
@@ -356,6 +375,7 @@ class _MessagesPageState extends State<MessagesPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.conversation.id)),
       body: SafeArea(
+        // Message page in uikit.
         child: ChatMessagesView(
           conversation: widget.conversation,
           avatarBuilder: (context, userId) {
@@ -373,8 +393,6 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-<div align=center> <img src="./docs/chat_page_avatar.png" width = "300" /></div>
-
 #### Add a nickname
 
 ```dart
@@ -384,6 +402,7 @@ class _MessagesPageState extends State<MessagesPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.conversation.id)),
       body: SafeArea(
+        // Message page in uikit.
         child: ChatMessagesView(
           conversation: widget.conversation,
           // Returns the nickname widget that you want to display.
@@ -397,8 +416,6 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-<div align=center> <img src="./docs/chat_page_nickname.png" width = "300" /></div>
-
 #### Add the bubble click event
 
 ```dart
@@ -408,8 +425,10 @@ class _MessagesPageState extends State<MessagesPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.conversation.id)),
       body: SafeArea(
+        // Message page in uikit.
         child: ChatMessagesView(
           conversation: widget.conversation,
+          // item tap event
           onTap: (context, message) {
             bubbleClicked(message);
             return true;
@@ -434,10 +453,12 @@ class _MessagesPageState extends State<MessagesPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.conversation.id)),
       body: SafeArea(
+        // Message page in uikit.
         child: ChatMessagesView(
           conversation: widget.conversation,
           itemBuilder: (context, model) {
             if (model.message.body.type == MessageType.TXT) {
+              // Custom message bubble
               return CustomTextItemWidget(
                 model: model,
                 onTap: (context, message) {
@@ -457,6 +478,7 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 }
 
+// Custom message bubble
 class CustomTextItemWidget extends ChatMessageListItem {
   const CustomTextItemWidget({super.key, required super.model, super.onTap});
 
@@ -477,8 +499,6 @@ class CustomTextItemWidget extends ChatMessageListItem {
 }
 
 ```
-
-<div align=center> <img src="./docs/chat_page_custom_item.png" width = "300" /></div>
 
 ### Customize the input widget
 
@@ -504,10 +524,11 @@ class _MessagesPageState extends State<MessagesPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.conversation.id)),
       body: SafeArea(
+        // Message page in uikit.
         child: ChatMessagesView(
           conversation: widget.conversation,
           messageListViewController: _msgController,
-          inputBar: inputWidget(),
+          inputBar: customInputWidget(),
           needDismissInputWidget: () {
             _focusNode.unfocus();
           },
@@ -516,7 +537,8 @@ class _MessagesPageState extends State<MessagesPage> {
     );
   }
 
-  Widget inputWidget() {
+  // custom input widget
+  Widget customInputWidget() {
     return SizedBox(
       height: 50,
       child: Row(
@@ -543,8 +565,6 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 
 ```
-
-<div align=center> <img src="./docs/chat_page_input.png" width = "300" /></div>
 
 ### Delete all Messages in the current conversation
 
@@ -575,6 +595,7 @@ class _MessagesPageState extends State<MessagesPage> {
         ],
       ),
       body: SafeArea(
+        // Message page in uikit.
         child: ChatMessagesView(
           conversation: widget.conversation,
           messageListViewController: _msgController,
@@ -585,7 +606,7 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-### Customize actions displayed upon a click of the plus symbol in the conversation 
+### Customize actions displayed upon a click of the plus symbol in the page.
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -601,11 +622,16 @@ class _MessagesPageState extends State<MessagesPage> {
         title: Text(widget.conversation.id),
       ),
       body: SafeArea(
+        // Message page in uikit.
         child: ChatMessagesView(
           conversation: widget.conversation,
+          // Returns a list of custom events
           inputBarMoreActionsOnTap: (items) {
-            ChatBottomSheetItem item =
-                ChatBottomSheetItem('more', onTap: customMoreAction);
+            ChatBottomSheetItem item = ChatBottomSheetItem(
+              type: ChatBottomSheetItemType.normal,
+              onTap: customMoreAction,
+              label: 'more',
+            );
 
             return items + [item];
           },
@@ -614,27 +640,24 @@ class _MessagesPageState extends State<MessagesPage> {
     );
   }
 
-  void customMoreAction() {
+  Future<void> customMoreAction() async {
     debugPrint('custom action');
     Navigator.of(context).pop();
   }
 }
 ```
 
-<div align=center> <img src="./docs/chat_page_more_item.png" width = "300" /></div>
-
-
 ## Sample Project
 
 If the demo is required, configure the following information in the `example/lib/main.dart` file:
 
-Replaces <#Your app key#>, <#Your created user#>, and <#User Token#> and with your own App Key, user ID, and user token generated in Agora Console.
+Replaces `appKey`, `userId`, and `agoraToken` and with your own App Key, user ID, and user token generated in Agora Console.
 
 ```dart
 class ChatConfig {
-  static String appkey = <#Your app key#>;
-  static String userId = <#Your created user#>;
-  static String agoraToken = <#User Token#>;
+  static const String appKey = "";
+  static const String userId = "";
+  static const String agoraToken = '';
 }
 ```
 

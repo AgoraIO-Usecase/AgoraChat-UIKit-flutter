@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
-
 import 'messages_page.dart';
 
 class ConversationsPage extends StatefulWidget {
@@ -11,22 +10,24 @@ class ConversationsPage extends StatefulWidget {
 }
 
 class _ConversationsPageState extends State<ConversationsPage> {
-  final ChatConversationsController controller = ChatConversationsController();
+  // Used to manage the ChatConversationsView.
+  final ChatConversationsViewController controller =
+      ChatConversationsViewController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('ConversationPage'),
-      ),
+      appBar: AppBar(title: const Text("Conversations")),
+      // Conversation view page in uikit
       body: ChatConversationsView(
-        conversationsController: controller,
+        // Click to jump to the message page.
         onItemTap: (conversation) {
-          Navigator.of(context)
-              .push(MaterialPageRoute(
-                  builder: (context) => MessagesPage(conversation)))
-              .then((value) {
-            controller.loadAllConversations();
-          });
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return MessagesPage(conversation);
+              },
+            ),
+          );
         },
       ),
     );
