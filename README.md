@@ -114,14 +114,26 @@ In the `example/android/app/proguard-rules.pro` file, add the following lines to
 
 ## Integrate the UIKit
 
-### pub.dev integration
+### Create a new project and add UIKit.
+
+```sh
+flutter create uikit_demo --platforms=ios,android -i objc -a java
+```
+
+#### pub.dev integration(Recommended)
+
+Execute in the `uikit_demo` directory.
+
+```sh
+cd uikit_demo
+```
 
 ```dart
 flutter pub add agora_chat_uikit
 flutter pub get
 ```
 
-### Local integration
+#### Local integration
 
 You can download the project to your computer and execute it.
 
@@ -131,17 +143,18 @@ dependencies:
         path: `<#uikit path#>`
 ```
 
-Before calling ChatUIKit, you need to make sure that the Agora chat SDK is initialized and the ChatUIKit widget is at the top of you widget tree. You can add it in the `MaterialApp` builder. Consider the `example` project.
-
+Replace the code in 'lib/main.dart'.
 
 ```dart
-import 'conversations_page.dart';
+import 'package:flutter/material.dart';
+import 'package:agora_chat_uikit/agora_chat_uikit.dart';
+
 import 'messages_page.dart';
 
 class ChatConfig {
-  static const String appKey = "";
-  static const String userId = "";
-  static const String agoraToken = '';
+  static const String appKey = "easemob#easeim";
+  static const String userId = "du001";
+  static const String agoraToken = '1';
 }
 
 void main() async {
@@ -155,15 +168,9 @@ void main() async {
   await ChatClient.getInstance.init(options);
   runApp(const MyApp());
 }
-```
-
-
-```dart
-import 'package:agora_chat_uikit/agora_chat_uikit.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -171,7 +178,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      builder: (context, child){
+      builder: (context, child) {
         // ChatUIKit widget at the top of the widget
         return ChatUIKit(child: child!);
       },
@@ -179,6 +186,160 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  ScrollController scrollController = ScrollController();
+  ChatConversation? conversation;
+  String _chatId = "";
+  final List<String> _logText = [];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Container(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const SizedBox(height: 10),
+            const Text("login userId: ${ChatConfig.userId}"),
+            const Text("agoraToken: ${ChatConfig.agoraToken}"),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _signIn();
+                    },
+                    child: const Text("SIGN IN"),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _signOut();
+                    },
+                    child: const Text("SIGN OUT"),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      hintText: "Enter recipient's userId",
+                    ),
+                    onChanged: (chatId) => _chatId = chatId,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    pushToChatPage(_chatId);
+                  },
+                  child: const Text("START CHAT"),
+                ),
+              ],
+            ),
+            Flexible(
+              child: ListView.builder(
+                controller: scrollController,
+                itemBuilder: (_, index) {
+                  return Text(_logText[index]);
+                },
+                itemCount: _logText.length,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void pushToChatPage(String userId) async {
+    if (userId.isEmpty) {
+      _addLogToConsole('UserId is null');
+      return;
+    }
+    if (ChatClient.getInstance.currentUserId == null) {
+      _addLogToConsole('user not login');
+      return;
+    }
+    ChatConversation? conv =
+        await ChatClient.getInstance.chatManager.getConversation(userId);
+    Future(() {
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+        return MessagesPage(conv!);
+      }));
+    });
+  }
+
+  void _signIn() async {
+    _addLogToConsole('begin sign in...');
+    try {
+      bool judgmentPwdOrToken = false;
+      do {
+        if (ChatConfig.agoraToken.isNotEmpty) {
+          await ChatClient.getInstance.login(
+            ChatConfig.userId,
+            ChatConfig.agoraToken,
+          );
+          judgmentPwdOrToken = true;
+          break;
+        }
+      } while (false);
+      if (judgmentPwdOrToken) {
+        _addLogToConsole('sign in success');
+      } else {
+        _addLogToConsole(
+            'sign in fail: The password and agoraToken cannot both be null.');
+      }
+    } on ChatError catch (e) {
+      _addLogToConsole('sign in fail: ${e.description}');
+    }
+  }
+
+  void _signOut() async {
+    _addLogToConsole('begin sign out...');
+    try {
+      await ChatClient.getInstance.logout();
+      _addLogToConsole('sign out success');
+    } on ChatError catch (e) {
+      _addLogToConsole('sign out fail: ${e.description}');
+    }
+  }
+
+  void _addLogToConsole(String log) {
+    _logText.add("$_timeString: $log");
+    setState(() {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    });
+  }
+
+  String get _timeString {
+    return DateTime.now().toString().split(".").first;
+  }
+}
+
 ```
 
 Create a messages page.
@@ -215,46 +376,6 @@ class _MessagesPageState extends State<MessagesPage> {
 
 ```
 
-Create a conversations page.
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:agora_chat_uikit/agora_chat_uikit.dart';
-import 'messages_page.dart';
-
-class ConversationsPage extends StatefulWidget {
-  const ConversationsPage({super.key});
-
-  @override
-  State<ConversationsPage> createState() => _ConversationsPageState();
-}
-
-class _ConversationsPageState extends State<ConversationsPage> {
-  // Used to manage the ChatConversationsView.
-  final ChatConversationsController controller = ChatConversationsController();
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Conversations")),
-      // Conversation view page in uikit
-      body: ChatConversationsView(
-        // Click to jump to the message page.
-        onItemTap: (conversation) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return MessagesPage(conversation);
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-```
-
 ### ChatUIKit
 
 You must have a ChatUIKit widget at the top of you widget tree.
@@ -273,44 +394,6 @@ ChatUIKit({
 });
 ```
 
-### ChatConversationsView
-
-The 'ChatConversationsView' allows you to quickly display and manage the current conversations.
-
-| Prop| Description |
-| :-------------- | :----- |
-| controller | The ChatConversationsView controller. |
-| itemBuilder | Conversation list item builder. Return a widget if you need to customize it. | 
-| avatarBuilder | Avatar builder. If this prop is not implemented or you return `null`, the default avatar will be used.|
-| nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |  
-| onItemTap | The callback of the click event of the conversation list item. |
-| backgroundWidgetWhenListEmpty | Background widget when list is empty. |
-
-
-
-For more information, see `ChatConversationsView`.
-
-```dart
-ChatConversationsView({
-  super.key,
-  this.onItemTap,
-  ChatConversationsViewController? controller,
-  this.itemBuilder,
-  this.avatarBuilder,
-  this.nicknameBuilder,
-  this.backgroundWidgetWhenListEmpty,
-  this.scrollController,
-  this.reverse = false,
-  this.primary,
-  this.physics,
-  this.shrinkWrap = false,
-  this.cacheExtent,
-  this.dragStartBehavior = DragStartBehavior.down,
-  this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-  this.restorationId,
-  this.clipBehavior = Clip.hardEdge,
-});
-```
 
 ### ChatMessagesView
 
@@ -365,6 +448,61 @@ ChatMessagesView({
   super.key,
 });
 ```
+
+
+### ChatConversationsView
+
+The 'ChatConversationsView' allows you to quickly display and manage the current conversations.
+
+| Prop| Description |
+| :-------------- | :----- |
+| controller | The ChatConversationsView controller. |
+| itemBuilder | Conversation list item builder. Return a widget if you need to customize it. | 
+| avatarBuilder | Avatar builder. If this prop is not implemented or you return `null`, the default avatar will be used.|
+| nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |  
+| onItemTap | The callback of the click event of the conversation list item. |
+| backgroundWidgetWhenListEmpty | Background widget when list is empty. |
+
+
+
+For more information, see `ChatConversationsView`.
+
+```dart
+ChatConversationsView({
+  super.key,
+  this.onItemTap,
+  ChatConversationsViewController? controller,
+  this.itemBuilder,
+  this.avatarBuilder,
+  this.nicknameBuilder,
+  this.backgroundWidgetWhenListEmpty,
+  this.scrollController,
+  this.reverse = false,
+  this.primary,
+  this.physics,
+  this.shrinkWrap = false,
+  this.cacheExtent,
+  this.dragStartBehavior = DragStartBehavior.down,
+  this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+  this.restorationId,
+  this.clipBehavior = Clip.hardEdge,
+});
+```
+
+## Customize
+
+You can test it quickly in [example](./example).
+
+Configure the following information in the `example/lib/main.dart` file:
+
+Replaces `appKey`, `userId`, and `agoraToken` and with your own App Key, user ID, and user token generated in Agora Console.
+
+```dart
+class ChatConfig {
+  static const String appKey = "";
+  static const String userId = "";
+  static const String agoraToken = '';
+}
 
 #### Customize colors
 
@@ -673,20 +811,6 @@ class _MessagesPageState extends State<MessagesPage> {
     debugPrint('custom action');
     Navigator.of(context).pop();
   }
-}
-```
-
-## Sample Project
-
-If the demo is required, configure the following information in the `example/lib/main.dart` file:
-
-Replaces `appKey`, `userId`, and `agoraToken` and with your own App Key, user ID, and user token generated in Agora Console.
-
-```dart
-class ChatConfig {
-  static const String appKey = "";
-  static const String userId = "";
-  static const String agoraToken = '';
 }
 ```
 
