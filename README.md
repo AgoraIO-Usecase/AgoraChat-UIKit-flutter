@@ -120,7 +120,7 @@ In the `example/android/app/proguard-rules.pro` file, add the following lines to
 flutter create uikit_demo --platforms=ios,android -i objc -a java
 ```
 
-#### pub.dev integration(Recommended)
+#### pub.dev integration (Recommended)
 
 Execute in the `uikit_demo` directory.
 
@@ -152,9 +152,9 @@ import 'package:agora_chat_uikit/agora_chat_uikit.dart';
 import 'messages_page.dart';
 
 class ChatConfig {
-  static const String appKey = "easemob#easeim";
-  static const String userId = "du001";
-  static const String agoraToken = '1';
+  static const String appKey = "";
+  static const String userId = "";
+  static const String agoraToken = '';
 }
 
 void main() async {
