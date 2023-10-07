@@ -5,8 +5,8 @@ import '../../agora_chat_uikit.dart';
 import '../../internal/chat_method.dart';
 import '../../widgets/chat_swipe_widget/chat_swipe_widget.dart';
 
-class ChatConversationsViewController extends ChatBaseController {
-  ChatConversationsViewController({
+class ChatConversationsController extends ChatBaseController {
+  ChatConversationsController({
     super.key,
   });
 
@@ -136,7 +136,7 @@ class ChatConversationsView extends StatefulWidget {
   ///
   /// [onItemTap] Conversation list item Click event callback.
   ///
-  /// [controller] The Conversations controller.
+  /// [conversationsController] The Conversations controller.
   ///
   /// [reverse] Creates a scrollable, linear array of widgets with a custom child model. For example, a custom child model
   /// can control the algorithm used to estimate the size of children that are not actually visible.
@@ -173,15 +173,13 @@ class ChatConversationsView extends StatefulWidget {
   ///
   /// [backgroundWidgetWhenListEmpty] Background widget when list is empty.
   ///
+  /// [enablePullReload] Enable pull down reload.
+  ///
   ChatConversationsView({
     super.key,
-    this.onItemTap,
-    ChatConversationsViewController? controller,
-    this.itemBuilder,
-    this.avatarBuilder,
-    this.nicknameBuilder,
-    this.backgroundWidgetWhenListEmpty,
     this.scrollController,
+    this.onItemTap,
+    ChatConversationsController? conversationsController,
     this.reverse = false,
     this.primary,
     this.physics,
@@ -191,11 +189,16 @@ class ChatConversationsView extends StatefulWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.restorationId,
     this.clipBehavior = Clip.hardEdge,
+    this.itemBuilder,
+    this.avatarBuilder,
+    this.nicknameBuilder,
+    this.backgroundWidgetWhenListEmpty,
+    this.enablePullReload = false,
   }) : conversationsController =
-            controller ?? ChatConversationsViewController();
+            conversationsController ?? ChatConversationsController();
 
-  /// The ChatConversationsView controller.
-  final ChatConversationsViewController conversationsController;
+  /// The conversations controller.
+  final ChatConversationsController conversationsController;
 
   /// The ScrollController for the conversation list.
   final ScrollController? scrollController;
@@ -251,6 +254,9 @@ class ChatConversationsView extends StatefulWidget {
   /// Background widget when list is empty.
   final Widget? backgroundWidgetWhenListEmpty;
 
+  /// Enable pull down reload.
+  final bool? enablePullReload;
+
   @override
   State<ChatConversationsView> createState() => ChatConversationsViewState();
 
@@ -267,7 +273,7 @@ class ChatConversationsViewState extends State<ChatConversationsView> {
     widget.conversationsController.loadAllConversations();
   }
 
-  void updateConversation([ChatConversationsViewController? oldController]) {
+  void updateConversation([ChatConversationsController? oldController]) {
     if (oldController != null) {
       oldController.dispose();
       oldController.removeListListener(_handleDataSourceUpdate);
@@ -276,7 +282,7 @@ class ChatConversationsViewState extends State<ChatConversationsView> {
     }
     widget.conversationsController.addListListener(_handleDataSourceUpdate);
     widget.conversationsController.addChatListener();
-    ChatUIKit.of(context).conversationsController =
+    ChatUIKit.of(context)?.conversationsController =
         widget.conversationsController;
   }
 
@@ -288,7 +294,7 @@ class ChatConversationsViewState extends State<ChatConversationsView> {
     super.didUpdateWidget(oldWidget);
   }
 
-  ChatConversationsViewController get conversationsController =>
+  ChatConversationsController get conversationsController =>
       widget.conversationsController;
 
   @override
@@ -375,7 +381,7 @@ class ChatConversationsViewState extends State<ChatConversationsView> {
                         child: ChatConversationListTile(
                           avatar: widget.avatarBuilder
                                   ?.call(context, conversation) ??
-                              ChatImageLoader.defaultAvatar(size: 40),
+                              ChatImageLoader.defaultAvatar(size: 50),
                           title: widget.nicknameBuilder
                               ?.call(context, conversation),
                           conversation: conversation,
@@ -401,10 +407,19 @@ class ChatConversationsViewState extends State<ChatConversationsView> {
       ),
     );
 
+    if (widget.enablePullReload == true) {
+      content = RefreshIndicator(
+        onRefresh: () async {
+          await widget.conversationsController.loadAllConversations();
+        },
+        child: content,
+      );
+    }
+
     content = WillPopScope(
         child: content,
         onWillPop: () async {
-          ChatUIKit.of(context).conversationsController = null;
+          ChatUIKit.of(context)?.conversationsController = null;
           return true;
         });
 

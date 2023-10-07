@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../agora_chat_uikit.dart';
+import 'package:agora_chat_uikit/agora_chat_uikit.dart';
 
 extension ChatMessageExt on ChatMessage {
   String summary(BuildContext context) {

@@ -41,15 +41,18 @@ class ChatConversationListTile extends StatelessWidget {
                       Text(
                         conversation.id,
                         style: ChatUIKit.of(context)
-                            .theme
-                            .conversationListItemTitleStyle,
+                                ?.theme
+                                .conversationListItemTitleStyle ??
+                            const TextStyle(fontSize: 17),
                         overflow: TextOverflow.ellipsis,
                       ),
                 ),
                 Text(
                   msg?.createTs ?? "",
-                  style:
-                      ChatUIKit.of(context).theme.conversationListItemTsStyle,
+                  style: ChatUIKit.of(context)
+                          ?.theme
+                          .conversationListItemTsStyle ??
+                      const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ]),
           subtitle: subtitle ??
@@ -59,8 +62,9 @@ class ChatConversationListTile extends StatelessWidget {
                     return Text(
                       msg?.summary(context) ?? "",
                       style: ChatUIKit.of(context)
-                          .theme
-                          .conversationListItemTitleStyle,
+                              ?.theme
+                              .conversationListItemTitleStyle ??
+                          const TextStyle(fontSize: 17),
                       overflow: TextOverflow.ellipsis,
                     );
                   },

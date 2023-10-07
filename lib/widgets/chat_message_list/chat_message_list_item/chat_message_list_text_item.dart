@@ -26,11 +26,15 @@ class ChatMessageListTextItem extends ChatMessageListItem {
     bool isLeft = message.direction == MessageDirection.RECEIVE;
     ChatTextMessageBody body = message.body as ChatTextMessageBody;
 
-    Widget content = Text(body.content,
-        style: contentStyle ??
-            (isLeft
-                ? ChatUIKit.of(context).theme.receiveTextStyle
-                : ChatUIKit.of(context).theme.sendTextStyle));
+    Widget content = Text(
+      body.content,
+      style: contentStyle ??
+          (isLeft
+              ? ChatUIKit.of(context)?.theme.receiveTextStyle ??
+                  const TextStyle(color: Colors.black)
+              : ChatUIKit.of(context)?.theme.sendTextStyle) ??
+          const TextStyle(color: Colors.white),
+    );
 
     return getBubbleWidget(content);
   }

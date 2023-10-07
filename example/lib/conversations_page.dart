@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
-import 'messages_page.dart';
+import 'package:agora_chat_uikit_example/messages_page.dart';
 
 class ConversationsPage extends StatefulWidget {
   const ConversationsPage({super.key});
@@ -10,9 +10,6 @@ class ConversationsPage extends StatefulWidget {
 }
 
 class _ConversationsPageState extends State<ConversationsPage> {
-  // Used to manage the ChatConversationsView.
-  final ChatConversationsViewController controller =
-      ChatConversationsViewController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

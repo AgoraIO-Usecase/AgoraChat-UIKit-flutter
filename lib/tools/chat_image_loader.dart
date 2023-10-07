@@ -23,18 +23,19 @@ class ChatImageLoader {
   }
 
   static Widget defaultAvatar({
-    double size = 30,
+    double size = 40,
   }) {
     return Container(
       width: size,
       height: size,
       clipBehavior: Clip.hardEdge,
-      decoration: const ShapeDecoration(
-        shape: RoundedRectangleBorder(
+      decoration: ShapeDecoration(
+        color: Colors.grey[200],
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(100)),
         ),
       ),
-      child: loadImage("avatar.png"),
+      child: const Icon(Icons.person),
     );
   }
 }

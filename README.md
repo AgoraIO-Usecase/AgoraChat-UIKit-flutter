@@ -3,7 +3,7 @@
 ## Overview
 
 Instant messaging connects people wherever they are and allows them to communicate with others in real time. With built-in user interfaces (UI) for the message list, the [Chat UIKit](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter) enables you to quickly embed real-time messaging into your app without requiring extra effort on the UI.
- 
+
 Agora offers an open-source agora_chat_uikit project on GitHub. You can clone and run the project or refer to the logic in it to create projects integrating agora_chat_uikit.
 
 Source code URL of agora_chat_uikit for Flutter:
@@ -72,10 +72,10 @@ The following third-party UI libraries are used in Agora_chat_uikit:
 ```dart
 dependencies:
   intl: ^0.18.0
-  image_picker: ^0.8.6+4
-  file_picker: ^4.6.1
+  image_picker: ^1.0.4
+  file_picker: ^5.5.0
   record: ^4.4.4
-  audioplayers: ^3.0.1
+  audioplayers: ^5.2.0
   agora_chat_sdk: ^1.1.1
 ```
 
@@ -107,7 +107,7 @@ In `Info.plist`， add the following permissions:
 
 In the `example/android/app/proguard-rules.pro` file, add the following lines to prevent code obfuscation:
 
-```
+```gradle
 -keep class com.hyphenate.** {*;}
 -dontwarn  com.hyphenate.**
 ```
@@ -499,7 +499,7 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-### Customize the message item widget 
+### Customize the message item widget
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -661,7 +661,7 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-### Customize actions displayed upon a click of the plus symbol in the page.
+### Customize actions displayed upon a click of the plus symbol in the page
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -720,10 +720,10 @@ ChatUIKit({
 });
 ```
 
-
 ### ChatMessagesView
 
 `ChatMessagesView` is used to manage text, image, emoji, file, and voice messages:
+
 - Sends and receives messages.
 - Deletes messages.
 - Recalls messages.
@@ -740,15 +740,13 @@ ChatUIKit({
 | avatarBuilder | Avatar component builder.|
 | nicknameBuilder | Nickname component builder.|
 | itemBuilder| Message bubble. If you don't set this prop, the default bubble will be used. |
-| moreItems | Action items displayed after a message bubble is held down. If you return `null` in `onBubbleLongPress`, `moreItems` will be used. This prop involves three default actions: copy, delete, and recall. | 
+| moreItems | Action items displayed after a message bubble is held down. If you return `null` in `onBubbleLongPress`, `moreItems` will be used. This prop involves three default actions: copy, delete, and recall. |
 | messageListViewController | Message list controller. You are advised to use the default value. For details, see `ChatMessageListController`.  |
 | willSendMessage | Text message pre-sending callback. This callback needs to return a `ChatMessage` object.  |
 | onError| Error callbacks, such as no permissions.  |
 | enableScrollBar | Whether to enable the scroll bar. The scroll bar is enabled by default.  |
 | needDismissInputWidget | Callback for dismissing the input widget. If you use a custom input widget, dismiss the input widget when you receive this callback, for example, by calling `FocusNode.unfocus`. See `ChatInputBar`. |
-| inputBarMoreActionsOnTap | The callback for clicking the plus symbol next to the input box. You need to return the `ChatBottomSheetItems` list.     |  
-
-
+| inputBarMoreActionsOnTap | The callback for clicking the plus symbol next to the input box. You need to return the `ChatBottomSheetItems` list.   |
 
 For more information, see `ChatMessagesView`.
 
@@ -775,7 +773,6 @@ ChatMessagesView({
 });
 ```
 
-
 ### ChatConversationsView
 
 The 'ChatConversationsView' allows you to quickly display and manage the current conversations.
@@ -783,13 +780,11 @@ The 'ChatConversationsView' allows you to quickly display and manage the current
 | Prop| Description |
 | :-------------- | :----- |
 | controller | The ChatConversationsView controller. |
-| itemBuilder | Conversation list item builder. Return a widget if you need to customize it. | 
+| itemBuilder | Conversation list item builder. Return a widget if you need to customize it. |
 | avatarBuilder | Avatar builder. If this prop is not implemented or you return `null`, the default avatar will be used.|
-| nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |  
+| nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |
 | onItemTap | The callback of the click event of the conversation list item. |
 | backgroundWidgetWhenListEmpty | Background widget when list is empty. |
-
-
 
 For more information, see `ChatConversationsView`.
 
@@ -814,8 +809,6 @@ ChatConversationsView({
   this.clipBehavior = Clip.hardEdge,
 });
 ```
-
-
 
 ## License
 

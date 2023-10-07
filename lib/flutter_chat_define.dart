@@ -28,7 +28,7 @@ typedef ChatConversationItemWidgetBuilder = Widget? Function(
 
 typedef ChatConversationSortHandle = Future<List<ChatConversation>> Function(
     List<ChatConversation> beforeList);
-
+ 
 typedef ChatPermissionRequest = Future<bool> Function(
     ChatUIKitPermission permission);
 

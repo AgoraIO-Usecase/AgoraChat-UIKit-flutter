@@ -28,7 +28,6 @@ class _ChatImageShowWidgetState extends State<ChatImageShowWidget> {
         ChatMessageEvent(
           onProgress: (msgId, progress) {
             if (msgId == message!.msgId) {
-              debugPrint("progress: $progress");
               _progress.value = progress;
             }
           },

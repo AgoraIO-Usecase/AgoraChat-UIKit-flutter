@@ -11,5 +11,9 @@
   "uikitDelete":"Delete",
   "uikitDeleteConversation": "Delete conversation",
   "uikitConfirm":"Confirm",
-  "uikitCancel":"Cancel"
+  "uikitCancel":"Cancel",
+  "holdToTalk": "Hold to Talk",
+  "releaseToSend": "Release to Send",
+  "releaseToCancel": "Release to Cancel"
+
 }

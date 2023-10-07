@@ -42,4 +42,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get uikitCancel => 'Cancel';
+
+  @override
+  String get holdToTalk => 'Hold to Talk';
+
+  @override
+  String get releaseToSend => 'Release to Send';
+
+  @override
+  String get releaseToCancel => 'Release to Cancel';
 }
