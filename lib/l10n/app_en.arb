@@ -14,6 +14,9 @@
   "uikitCancel":"Cancel",
   "holdToTalk": "Hold to Talk",
   "releaseToSend": "Release to Send",
-  "releaseToCancel": "Release to Cancel"
-
+  "releaseToCancel": "Release to Cancel",
+  "uikitCopy": "Copy",
+  "uikitDelete": "Delete",
+  "uikitRecall": "Recall",
+  "uikitSend": "Send"
 }

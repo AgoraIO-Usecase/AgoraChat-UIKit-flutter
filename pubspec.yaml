@@ -1,5 +1,6 @@
 name: agora_chat_uikit
-description: A set of UI components built on the Agora Chat SDK, which allow users to quickly build fully functional chat applications.
+description: A set of ui components adapted to the chat sdk can quickly build a chat page
+  and chat through the chat sdk by invoking the ui components.
 version: 1.0.0
 homepage: https://www.agora.io/
 

@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:agora_chat_uikit/agora_chat_uikit.dart';
+import '../../agora_chat_uikit.dart';
 import '../../widgets/chat_image_show_widget/chat_image_show_widget.dart';
 
 /// Message details page
@@ -284,7 +284,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
     if (message.body.type == MessageType.TXT) {
       list.add(
         ChatBottomSheetItem.normal(
-          'Copy',
+          AppLocalizations.of(context)?.uikitCopy ?? 'Copy',
           onTap: () async {
             ChatTextMessageBody body = message.body as ChatTextMessageBody;
             Clipboard.setData(ClipboardData(text: body.content));
@@ -295,7 +295,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
     }
     list.add(
       ChatBottomSheetItem.normal(
-        'Delete',
+        AppLocalizations.of(context)?.uikitDelete ?? 'Delete',
         onTap: () async {
           widget.messageListViewController.removeMessage(message);
           return Navigator.of(context).pop();
@@ -308,7 +308,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
     if (time < 120 * 1000 && message.direction != MessageDirection.RECEIVE) {
       list.add(
         ChatBottomSheetItem.destructive(
-          'Recall',
+          AppLocalizations.of(context)?.uikitRecall ?? 'Recall',
           onTap: () async {
             widget.messageListViewController.recallMessage(message);
             Navigator.of(context).pop();

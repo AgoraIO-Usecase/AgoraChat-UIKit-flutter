@@ -132,6 +132,8 @@ class _ChatInputBarState extends State<ChatInputBar> {
                     : _voiceWidget(),
               ),
               () {
+                String? name = AppLocalizations.of(context)?.localeName;
+                final vPadding = name == "zh" ? 8.0 : 10.0;
                 return _currentInputType != _ChatInputType.voice
                     ? Padding(
                         padding: const EdgeInsets.fromLTRB(10, 3, 4, 2.5),
@@ -151,8 +153,8 @@ class _ChatInputBarState extends State<ChatInputBar> {
                                         widget.textEditingController.text = "";
                                       },
                                       child: Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            8, 10, 8, 10),
+                                        padding: EdgeInsets.fromLTRB(
+                                            8, vPadding, 8, vPadding),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(20),
@@ -162,14 +164,17 @@ class _ChatInputBarState extends State<ChatInputBar> {
                                               Colors.blue,
                                         ),
                                         child: Center(
-                                            child: Text(
-                                          "Send",
-                                          style: ChatUIKit.of(context)
-                                                  ?.theme
-                                                  .inputWidgetSendBtnStyle ??
-                                              const TextStyle(
-                                                  color: Colors.white),
-                                        )),
+                                          child: Text(
+                                            AppLocalizations.of(context)
+                                                    ?.uikitSend ??
+                                                "Send",
+                                            style: ChatUIKit.of(context)
+                                                    ?.theme
+                                                    .inputWidgetSendBtnStyle ??
+                                                const TextStyle(
+                                                    color: Colors.white),
+                                          ),
+                                        ),
                                       ),
                                     )
                                   : InkWell(
