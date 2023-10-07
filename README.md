@@ -182,6 +182,8 @@ class MyApp extends StatelessWidget {
         // ChatUIKit widget at the top of the widget
         return ChatUIKit(child: child!);
       },
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const MyHomePage(title: 'Flutter Demo'),
     );
   }
@@ -704,7 +706,7 @@ class _MessagesPageState extends State<MessagesPage> {
 
 ## ChatUIKit introduce
 
-You must have a ChatUIKit widget at the top of you widget tree.
+You need have a `ChatUIKit` widget at the top of you widget tree. It will help you refresh `ChatConversationsView` when you return from `ChatMessagesView`. It also provides the theme Settings.
 
 | Prop | Description |
 | :-------------- | :----- |
@@ -785,6 +787,7 @@ The 'ChatConversationsView' allows you to quickly display and manage the current
 | nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |
 | onItemTap | The callback of the click event of the conversation list item. |
 | backgroundWidgetWhenListEmpty | Background widget when list is empty. |
+| enablePullReload | Whether to enable drop-down refresh. |
 
 For more information, see `ChatConversationsView`.
 
@@ -797,6 +800,7 @@ ChatConversationsView({
   this.avatarBuilder,
   this.nicknameBuilder,
   this.backgroundWidgetWhenListEmpty,
+  this.enablePullReload = false,
   this.scrollController,
   this.reverse = false,
   this.primary,

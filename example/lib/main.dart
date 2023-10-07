@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
 
-import 'conversations_page.dart';
-import 'messages_page.dart';
+import 'package:agora_chat_uikit_example/conversations_page.dart';
+import 'package:agora_chat_uikit_example/messages_page.dart';
 
 class ChatConfig {
   static const String appKey = "";
@@ -35,6 +35,8 @@ class MyApp extends StatelessWidget {
         // ChatUIKit widget at the top of the widget
         return ChatUIKit(child: child!);
       },
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const MyHomePage(title: 'Flutter Demo'),
     );
   }
@@ -184,26 +186,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _signIn() async {
     _addLogToConsole('begin sign in...');
-    try {
-      bool judgmentPwdOrToken = false;
-      do {
-        if (ChatConfig.agoraToken.isNotEmpty) {
-          await ChatClient.getInstance.loginWithAgoraToken(
-            ChatConfig.userId,
-            ChatConfig.agoraToken,
-          );
-          judgmentPwdOrToken = true;
-          break;
-        }
-      } while (false);
-      if (judgmentPwdOrToken) {
-        _addLogToConsole('sign in success');
-      } else {
-        _addLogToConsole(
-            'sign in fail: The password and agoraToken cannot both be null.');
+    if (ChatConfig.agoraToken.isNotEmpty) {
+      try {
+        await ChatClient.getInstance.login(
+          ChatConfig.userId,
+          ChatConfig.agoraToken,
+        );
+      } on ChatError catch (e) {
+        _addLogToConsole('sign in fail: ${e.description}');
       }
-    } on ChatError catch (e) {
-      _addLogToConsole('sign in fail: ${e.description}');
+    } else {
+      _addLogToConsole(
+          'sign in fail: The password and agoraToken cannot both be null.');
     }
   }
 
