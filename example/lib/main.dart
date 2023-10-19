@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
-
-import 'package:agora_chat_uikit_example/conversations_page.dart';
-import 'package:agora_chat_uikit_example/messages_page.dart';
+import 'package:example/conversations_page.dart';
+import 'package:example/custom_video_message/custom_message_page.dart';
+import 'package:example/messages_page.dart';
+import 'package:flutter/material.dart';
 
 class ChatConfig {
   static const String appKey = "";
@@ -117,17 +117,35 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    pushToChatPage(_chatId);
-                  },
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.lightBlue),
-                  ),
-                  child: const Text("START CHAT"),
-                ),
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        pushToChatPage(_chatId);
+                      },
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.lightBlue),
+                      ),
+                      child: const Text("START CHAT"),
+                    ),
+                    const SizedBox(width: 10),
+                    TextButton(
+                      onPressed: () {
+                        pushToCustomChatPage(_chatId);
+                      },
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.lightBlue),
+                      ),
+                      child: const Text("CUSTOM CHAT"),
+                    ),
+                  ],
+                )
               ],
             ),
             const SizedBox(height: 10),
@@ -184,14 +202,33 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void pushToCustomChatPage(String userId) async {
+    if (userId.isEmpty) {
+      _addLogToConsole('UserId is null');
+      return;
+    }
+    if (ChatClient.getInstance.currentUserId == null) {
+      _addLogToConsole('user not login');
+      return;
+    }
+    ChatConversation? conv =
+        await ChatClient.getInstance.chatManager.getConversation(userId);
+    Future(() {
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+        return CustomMessagesPage(conv!);
+      }));
+    });
+  }
+
   void _signIn() async {
     _addLogToConsole('begin sign in...');
     if (ChatConfig.agoraToken.isNotEmpty) {
       try {
-        await ChatClient.getInstance.login(
+        await ChatClient.getInstance.loginWithAgoraToken(
           ChatConfig.userId,
           ChatConfig.agoraToken,
         );
+        _addLogToConsole('sign in success');
       } on ChatError catch (e) {
         _addLogToConsole('sign in fail: ${e.description}');
       }

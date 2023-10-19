@@ -25,7 +25,7 @@ dependencies:
 
   audioplayers: ^5.2.0
 
-  agora_chat_sdk: ^1.1.1
+  agora_chat_sdk: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -49,7 +49,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.flutter_chat_uikit
+        package: com.example.agora_chat_uikit
         pluginClass: FlutterChatUikitPlugin
       ios:
         pluginClass: FlutterChatUikitPlugin

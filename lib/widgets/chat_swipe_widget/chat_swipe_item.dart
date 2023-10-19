@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../flutter_chat_define.dart';
+import '../../em_chat_define.dart';
 
 class ChatSwipeItem {
   const ChatSwipeItem({

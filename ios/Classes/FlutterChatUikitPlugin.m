@@ -3,7 +3,7 @@
 @implementation FlutterChatUikitPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"flutter_chat_uikit"
+      methodChannelWithName:@"em_chat_uikit"
             binaryMessenger:[registrar messenger]];
   FlutterChatUikitPlugin* instance = [[FlutterChatUikitPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];

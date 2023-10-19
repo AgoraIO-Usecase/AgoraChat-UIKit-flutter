@@ -1,4 +1,4 @@
-package com.example.flutter_chat_uikit;
+package com.example.agora_chat_uikit;
 
 import androidx.annotation.NonNull;
 
@@ -18,7 +18,7 @@ public class FlutterChatUikitPlugin implements FlutterPlugin, MethodCallHandler 
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_chat_uikit");
+    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "em_chat_uikit");
     channel.setMethodCallHandler(this);
   }
 

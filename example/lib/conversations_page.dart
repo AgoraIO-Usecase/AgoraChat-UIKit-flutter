@@ -1,6 +1,6 @@
+import 'package:example/messages_page.dart';
 import 'package:flutter/material.dart';
 import 'package:agora_chat_uikit/agora_chat_uikit.dart';
-import 'package:agora_chat_uikit_example/messages_page.dart';
 
 class ConversationsPage extends StatefulWidget {
   const ConversationsPage({super.key});
