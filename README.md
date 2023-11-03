@@ -10,6 +10,16 @@ Source code URL of agora_chat_uikit for Flutter:
 
 https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter
 
+
+## Important features
+
+- Conversation List;
+- Chatting in a conversation;
+- Voice message;
+- Text message;
+- File message;
+- Delivery receipt;
+
 ## Function
 
 The `agora_chat_uikit` library provides the following functions:
