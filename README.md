@@ -3,12 +3,22 @@
 ## Overview
 
 Instant messaging connects people wherever they are and allows them to communicate with others in real time. With built-in user interfaces (UI) for the message list, the [Chat UIKit](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter) enables you to quickly embed real-time messaging into your app without requiring extra effort on the UI.
- 
+
 Agora offers an open-source agora_chat_uikit project on GitHub. You can clone and run the project or refer to the logic in it to create projects integrating agora_chat_uikit.
 
 Source code URL of agora_chat_uikit for Flutter:
 
 https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-flutter
+
+
+## Important features
+
+- Conversation List;
+- Chatting in a conversation;
+- Voice message;
+- Text message;
+- File message;
+- Delivery receipt;
 
 ## Function
 
@@ -72,10 +82,10 @@ The following third-party UI libraries are used in Agora_chat_uikit:
 ```dart
 dependencies:
   intl: ^0.18.0
-  image_picker: ^0.8.6+4
-  file_picker: ^4.6.1
+  image_picker: ^1.0.4
+  file_picker: ^5.5.0
   record: ^4.4.4
-  audioplayers: ^3.0.1
+  audioplayers: ^5.2.0
   agora_chat_sdk: ^1.1.1
 ```
 
@@ -107,21 +117,33 @@ In `Info.plist`， add the following permissions:
 
 In the `example/android/app/proguard-rules.pro` file, add the following lines to prevent code obfuscation:
 
-```
+```gradle
 -keep class com.hyphenate.** {*;}
 -dontwarn  com.hyphenate.**
 ```
 
 ## Integrate the UIKit
 
-### pub.dev integration
+### Create a new project and add UIKit.
+
+```sh
+flutter create uikit_demo --platforms=ios,android -i objc -a java
+```
+
+#### pub.dev integration (Recommended)
+
+Execute in the `uikit_demo` directory.
+
+```sh
+cd uikit_demo
+```
 
 ```dart
 flutter pub add agora_chat_uikit
 flutter pub get
 ```
 
-### Local integration
+#### Local integration
 
 You can download the project to your computer and execute it.
 
@@ -131,11 +153,12 @@ dependencies:
         path: `<#uikit path#>`
 ```
 
-Before calling ChatUIKit, you need to make sure that the Agora chat SDK is initialized and the ChatUIKit widget is at the top of you widget tree. You can add it in the `MaterialApp` builder. Consider the `example` project.
-
+Replace the code in 'lib/main.dart'.
 
 ```dart
-import 'conversations_page.dart';
+import 'package:flutter/material.dart';
+import 'package:agora_chat_uikit/agora_chat_uikit.dart';
+
 import 'messages_page.dart';
 
 class ChatConfig {
@@ -155,15 +178,9 @@ void main() async {
   await ChatClient.getInstance.init(options);
   runApp(const MyApp());
 }
-```
-
-
-```dart
-import 'package:agora_chat_uikit/agora_chat_uikit.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -171,14 +188,170 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      builder: (context, child){
+      builder: (context, child) {
         // ChatUIKit widget at the top of the widget
         return ChatUIKit(child: child!);
       },
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const MyHomePage(title: 'Flutter Demo'),
     );
   }
 }
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  ScrollController scrollController = ScrollController();
+  ChatConversation? conversation;
+  String _chatId = "";
+  final List<String> _logText = [];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Container(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const SizedBox(height: 10),
+            const Text("login userId: ${ChatConfig.userId}"),
+            const Text("agoraToken: ${ChatConfig.agoraToken}"),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _signIn();
+                    },
+                    child: const Text("SIGN IN"),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _signOut();
+                    },
+                    child: const Text("SIGN OUT"),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      hintText: "Enter recipient's userId",
+                    ),
+                    onChanged: (chatId) => _chatId = chatId,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    pushToChatPage(_chatId);
+                  },
+                  child: const Text("START CHAT"),
+                ),
+              ],
+            ),
+            Flexible(
+              child: ListView.builder(
+                controller: scrollController,
+                itemBuilder: (_, index) {
+                  return Text(_logText[index]);
+                },
+                itemCount: _logText.length,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void pushToChatPage(String userId) async {
+    if (userId.isEmpty) {
+      _addLogToConsole('UserId is null');
+      return;
+    }
+    if (ChatClient.getInstance.currentUserId == null) {
+      _addLogToConsole('user not login');
+      return;
+    }
+    ChatConversation? conv =
+        await ChatClient.getInstance.chatManager.getConversation(userId);
+    Future(() {
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+        return MessagesPage(conv!);
+      }));
+    });
+  }
+
+  void _signIn() async {
+    _addLogToConsole('begin sign in...');
+    try {
+      bool judgmentPwdOrToken = false;
+      do {
+        if (ChatConfig.agoraToken.isNotEmpty) {
+          await ChatClient.getInstance.login(
+            ChatConfig.userId,
+            ChatConfig.agoraToken,
+          );
+          judgmentPwdOrToken = true;
+          break;
+        }
+      } while (false);
+      if (judgmentPwdOrToken) {
+        _addLogToConsole('sign in success');
+      } else {
+        _addLogToConsole(
+            'sign in fail: The password and agoraToken cannot both be null.');
+      }
+    } on ChatError catch (e) {
+      _addLogToConsole('sign in fail: ${e.description}');
+    }
+  }
+
+  void _signOut() async {
+    _addLogToConsole('begin sign out...');
+    try {
+      await ChatClient.getInstance.logout();
+      _addLogToConsole('sign out success');
+    } on ChatError catch (e) {
+      _addLogToConsole('sign out fail: ${e.description}');
+    }
+  }
+
+  void _addLogToConsole(String log) {
+    _logText.add("$_timeString: $log");
+    setState(() {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    });
+  }
+
+  String get _timeString {
+    return DateTime.now().toString().split(".").first;
+  }
+}
+
 ```
 
 Create a messages page.
@@ -215,158 +388,23 @@ class _MessagesPageState extends State<MessagesPage> {
 
 ```
 
-Create a conversations page.
+## Customize
+
+You can test it quickly in [example](./example).
+
+Configure the following information in the `example/lib/main.dart` file:
+
+Replaces `appKey`, `userId`, and `agoraToken` and with your own App Key, user ID, and user token generated in Agora Console.
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:agora_chat_uikit/agora_chat_uikit.dart';
-import 'messages_page.dart';
-
-class ConversationsPage extends StatefulWidget {
-  const ConversationsPage({super.key});
-
-  @override
-  State<ConversationsPage> createState() => _ConversationsPageState();
+class ChatConfig {
+  static const String appKey = "";
+  static const String userId = "";
+  static const String agoraToken = '';
 }
-
-class _ConversationsPageState extends State<ConversationsPage> {
-  // Used to manage the ChatConversationsView.
-  final ChatConversationsController controller = ChatConversationsController();
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Conversations")),
-      // Conversation view page in uikit
-      body: ChatConversationsView(
-        // Click to jump to the message page.
-        onItemTap: (conversation) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return MessagesPage(conversation);
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
 ```
 
-### ChatUIKit
-
-You must have a ChatUIKit widget at the top of you widget tree.
-
-| Prop | Description |
-| :-------------- | :----- |
-| theme | Chat UIKit theme for setting component styles. If this prop is not set, the default style will be used.|
-
-For more information, see `ChatUIKit`.
-
-```dart
-ChatUIKit({
-    super.key,
-    this.child,
-    ChatUIKitTheme? theme,
-});
-```
-
-### ChatConversationsView
-
-The 'ChatConversationsView' allows you to quickly display and manage the current conversations.
-
-| Prop| Description |
-| :-------------- | :----- |
-| controller | The ChatConversationsView controller. |
-| itemBuilder | Conversation list item builder. Return a widget if you need to customize it. | 
-| avatarBuilder | Avatar builder. If this prop is not implemented or you return `null`, the default avatar will be used.|
-| nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |  
-| onItemTap | The callback of the click event of the conversation list item. |
-| backgroundWidgetWhenListEmpty | Background widget when list is empty. |
-
-
-
-For more information, see `ChatConversationsView`.
-
-```dart
-ChatConversationsView({
-  super.key,
-  this.onItemTap,
-  ChatConversationsViewController? controller,
-  this.itemBuilder,
-  this.avatarBuilder,
-  this.nicknameBuilder,
-  this.backgroundWidgetWhenListEmpty,
-  this.scrollController,
-  this.reverse = false,
-  this.primary,
-  this.physics,
-  this.shrinkWrap = false,
-  this.cacheExtent,
-  this.dragStartBehavior = DragStartBehavior.down,
-  this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-  this.restorationId,
-  this.clipBehavior = Clip.hardEdge,
-});
-```
-
-### ChatMessagesView
-
-`ChatMessagesView` is used to manage text, image, emoji, file, and voice messages:
-- Sends and receives messages.
-- Deletes messages.
-- Recalls messages.
-
-| Prop | Prop Description |
-| :-------------- | :----- |
-| conversation | The ChatConversation to which the messages belong. |
-| inputBarTextEditingController | Text input widget text editing controller. |
-| background | The background widget.|
-| inputBar | Text input component. If you don't pass in this prop, `ChatInputBar` will be used by default.|
-| onTap | Message bubble click callback.|
-| onBubbleLongPress | Callback for holding a message bubble.|
-| onBubbleDoubleTap| Callback for double-clicking a message bubble.|
-| avatarBuilder | Avatar component builder.|
-| nicknameBuilder | Nickname component builder.|
-| itemBuilder| Message bubble. If you don't set this prop, the default bubble will be used. |
-| moreItems | Action items displayed after a message bubble is held down. If you return `null` in `onBubbleLongPress`, `moreItems` will be used. This prop involves three default actions: copy, delete, and recall. | 
-| messageListViewController | Message list controller. You are advised to use the default value. For details, see `ChatMessageListController`.  |
-| willSendMessage | Text message pre-sending callback. This callback needs to return a `ChatMessage` object.  |
-| onError| Error callbacks, such as no permissions.  |
-| enableScrollBar | Whether to enable the scroll bar. The scroll bar is enabled by default.  |
-| needDismissInputWidget | Callback for dismissing the input widget. If you use a custom input widget, dismiss the input widget when you receive this callback, for example, by calling `FocusNode.unfocus`. See `ChatInputBar`. |
-| inputBarMoreActionsOnTap | The callback for clicking the plus symbol next to the input box. You need to return the `ChatBottomSheetItems` list.     |  
-
-
-
-For more information, see `ChatMessagesView`.
-
-```dart
-ChatMessagesView({
-  required this.conversation,
-  this.inputBarTextEditingController,
-  this.background,
-  this.inputBar,
-  this.onTap,
-  this.onBubbleLongPress,
-  this.onBubbleDoubleTap,
-  this.avatarBuilder,
-  this.nicknameBuilder,
-  this.itemBuilder,
-  this.moreItems,
-  ChatMessageListController? messageListViewController,
-  this.willSendMessage,
-  this.onError,
-  this.enableScrollBar = true,
-  this.needDismissInputWidget,
-  this.inputBarMoreActionsOnTap,
-  super.key,
-});
-```
-
-#### Customize colors
+### Customize colors
 
 You can set the color when adding `ChatUIKit`. See `ChatUIKitTheme`.
 
@@ -395,7 +433,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-#### Add an avatar
+### Add an avatar
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -422,7 +460,7 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-#### Add a nickname
+### Add a nickname
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -445,7 +483,7 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-#### Add the bubble click event
+### Add the bubble click event
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -473,7 +511,7 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-### Customize the message item widget 
+### Customize the message item widget
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -635,7 +673,7 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-### Customize actions displayed upon a click of the plus symbol in the page.
+### Customize actions displayed upon a click of the plus symbol in the page
 
 ```dart
 class _MessagesPageState extends State<MessagesPage> {
@@ -676,18 +714,114 @@ class _MessagesPageState extends State<MessagesPage> {
 }
 ```
 
-## Sample Project
+## ChatUIKit introduce
 
-If the demo is required, configure the following information in the `example/lib/main.dart` file:
+You need have a `ChatUIKit` widget at the top of you widget tree. It will help you refresh `ChatConversationsView` when you return from `ChatMessagesView`. It also provides the theme Settings.
 
-Replaces `appKey`, `userId`, and `agoraToken` and with your own App Key, user ID, and user token generated in Agora Console.
+| Prop | Description |
+| :-------------- | :----- |
+| theme | Chat UIKit theme for setting component styles. If this prop is not set, the default style will be used.|
+
+For more information, see `ChatUIKit`.
 
 ```dart
-class ChatConfig {
-  static const String appKey = "";
-  static const String userId = "";
-  static const String agoraToken = '';
-}
+ChatUIKit({
+    super.key,
+    this.child,
+    ChatUIKitTheme? theme,
+});
+```
+
+### ChatMessagesView
+
+`ChatMessagesView` is used to manage text, image, emoji, file, and voice messages:
+
+- Sends and receives messages.
+- Deletes messages.
+- Recalls messages.
+
+| Prop | Prop Description |
+| :-------------- | :----- |
+| conversation | The ChatConversation to which the messages belong. |
+| inputBarTextEditingController | Text input widget text editing controller. |
+| background | The background widget.|
+| inputBar | Text input component. If you don't pass in this prop, `ChatInputBar` will be used by default.|
+| onTap | Message bubble click callback.|
+| onBubbleLongPress | Callback for holding a message bubble.|
+| onBubbleDoubleTap| Callback for double-clicking a message bubble.|
+| avatarBuilder | Avatar component builder.|
+| nicknameBuilder | Nickname component builder.|
+| itemBuilder| Message bubble. If you don't set this prop, the default bubble will be used. |
+| moreItems | Action items displayed after a message bubble is held down. If you return `null` in `onBubbleLongPress`, `moreItems` will be used. This prop involves three default actions: copy, delete, and recall. |
+| messageListViewController | Message list controller. You are advised to use the default value. For details, see `ChatMessageListController`.  |
+| willSendMessage | Text message pre-sending callback. This callback needs to return a `ChatMessage` object.  |
+| onError| Error callbacks, such as no permissions.  |
+| enableScrollBar | Whether to enable the scroll bar. The scroll bar is enabled by default.  |
+| needDismissInputWidget | Callback for dismissing the input widget. If you use a custom input widget, dismiss the input widget when you receive this callback, for example, by calling `FocusNode.unfocus`. See `ChatInputBar`. |
+| inputBarMoreActionsOnTap | The callback for clicking the plus symbol next to the input box. You need to return the `ChatBottomSheetItems` list.   |
+
+For more information, see `ChatMessagesView`.
+
+```dart
+ChatMessagesView({
+  required this.conversation,
+  this.inputBarTextEditingController,
+  this.background,
+  this.inputBar,
+  this.onTap,
+  this.onBubbleLongPress,
+  this.onBubbleDoubleTap,
+  this.avatarBuilder,
+  this.nicknameBuilder,
+  this.itemBuilder,
+  this.moreItems,
+  ChatMessageListController? messageListViewController,
+  this.willSendMessage,
+  this.onError,
+  this.enableScrollBar = true,
+  this.needDismissInputWidget,
+  this.inputBarMoreActionsOnTap,
+  super.key,
+});
+```
+
+### ChatConversationsView
+
+The 'ChatConversationsView' allows you to quickly display and manage the current conversations.
+
+| Prop| Description |
+| :-------------- | :----- |
+| controller | The ChatConversationsView controller. |
+| itemBuilder | Conversation list item builder. Return a widget if you need to customize it. |
+| avatarBuilder | Avatar builder. If this prop is not implemented or you return `null`, the default avatar will be used.|
+| nicknameBuilder | Nickname builder. If you don't set this prop or return `null`, the conversation ID is displayed. |
+| onItemTap | The callback of the click event of the conversation list item. |
+| backgroundWidgetWhenListEmpty | Background widget when list is empty. |
+| enablePullReload | Whether to enable drop-down refresh. |
+
+For more information, see `ChatConversationsView`.
+
+```dart
+ChatConversationsView({
+  super.key,
+  this.onItemTap,
+  ChatConversationsViewController? controller,
+  this.itemBuilder,
+  this.avatarBuilder,
+  this.nicknameBuilder,
+  this.backgroundWidgetWhenListEmpty,
+  this.enablePullReload = false,
+  this.scrollController,
+  this.reverse = false,
+  this.primary,
+  this.physics,
+  this.shrinkWrap = false,
+  this.cacheExtent,
+  this.dragStartBehavior = DragStartBehavior.down,
+  this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+  this.restorationId,
+  this.clipBehavior = Clip.hardEdge,
+});
 ```
 
 ## License

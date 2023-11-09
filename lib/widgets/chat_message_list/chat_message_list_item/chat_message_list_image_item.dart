@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:agora_chat_uikit/tools/icon_image_provider.dart';
 
 import '../../../agora_chat_uikit.dart';
-import '../../../internal/chat_method.dart';
 
 class ChatMessageListImageItem extends ChatMessageListItem {
   const ChatMessageListImageItem({
@@ -73,26 +73,21 @@ class ChatMessageListImageItem extends ChatMessageListItem {
         }
       }
       if (body.thumbnailRemotePath != null) {
-        chatClient.chatManager.downloadThumbnail(message);
         content = Container(
           color: const Color.fromRGBO(242, 242, 242, 1),
           child: FadeInImage(
             placeholderFit: BoxFit.contain,
-            placeholder: ChatImageLoader.assetImage("download_img.png"),
+            placeholder: IconImageProvider(Icons.image),
             image: NetworkImage(body.thumbnailRemotePath!),
             imageErrorBuilder: (context, error, stackTrace) {
-              return ChatImageLoader.loadImage("download_img_failed.png",
-                  fit: BoxFit.contain);
+              return const Icon(Icons.broken_image, size: 48);
             },
             fit: BoxFit.fill,
           ),
         );
         break;
       }
-      content = ChatImageLoader.loadImage(
-        "download_img_failed.png",
-        fit: BoxFit.contain,
-      );
+      content = const Icon(Icons.broken_image, size: 58, color: Colors.white);
     } while (false);
 
     content = SizedBox(

@@ -11,5 +11,12 @@
     "uikitDelete":"删除",
     "uikitDeleteConversation": "删除会话",
     "uikitConfirm":"确定",
-    "uikitCancel":"取消"
+    "uikitCancel":"取消",
+    "holdToTalk": "按住说话",
+    "releaseToSend": "松开发送",
+    "releaseToCancel": "松开取消",
+    "uikitCopy": "复制",
+    "uikitDelete": "删除",
+    "uikitRecall": "撤回",
+    "uikitSend": "发送"
   }

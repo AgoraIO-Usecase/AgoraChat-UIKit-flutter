@@ -1,5 +1,5 @@
 name: agora_chat_uikit
-description: A set of ui components adapted to the chat sdk can quickly build a chat page and chat through the chat sdk by invoking the ui components.
+description: A set of UI components built on the Agora Chat SDK, which allow users to quickly build fully functional chat applications.
 version: 1.0.0
 homepage: https://www.agora.io/
 
@@ -15,11 +15,16 @@ dependencies:
     sdk: flutter
 
   intl: ^0.18.0
-  image_picker: ^0.8.6+4
-  file_picker: ^4.6.1
+
+  image_picker: ^1.0.4
+
+  file_picker: ^5.5.0
+
   record: ^4.4.4
-  audioplayers: ^3.0.1
-  agora_chat_sdk: ^1.1.1
+
+  audioplayers: ^5.2.0
+
+  agora_chat_sdk: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -28,7 +33,6 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
   # This section identifies this Flutter project as a plugin project.
@@ -44,7 +48,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.flutter_chat_uikit
+        package: com.example.agora_chat_uikit
         pluginClass: FlutterChatUikitPlugin
       ios:
         pluginClass: FlutterChatUikitPlugin
@@ -52,13 +56,11 @@ flutter:
   # To add assets to your plugin package, add an assets section, like this:
   assets:
     - images/
-  #
   # For details regarding assets in packages, see
   # https://flutter.dev/assets-and-images/#from-packages
   #
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
-
   # To add custom fonts to your plugin package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
@@ -78,3 +80,4 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
+

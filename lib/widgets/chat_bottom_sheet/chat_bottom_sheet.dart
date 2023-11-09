@@ -11,11 +11,9 @@ Future<T?> showChatBottomSheet<T>({
       fontWeight: FontWeight.w600,
       fontSize: 14),
   TextStyle normalItemStyle = const TextStyle(
-      color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+      color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
   TextStyle destructiveItemStyle = const TextStyle(
-      color: Color.fromRGBO(255, 20, 204, 1),
-      fontWeight: FontWeight.w600,
-      fontSize: 16),
+      color: Colors.red, fontWeight: FontWeight.w600, fontSize: 16),
 }) {
   barrierColor ??= Theme.of(context).bottomSheetTheme.modalBackgroundColor;
   return showModalBottomSheet(

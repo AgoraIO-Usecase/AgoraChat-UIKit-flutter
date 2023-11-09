@@ -1,4 +1,4 @@
-package com.example.flutter_chat_uikit;
+package com.example.agora_chat_uikit;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

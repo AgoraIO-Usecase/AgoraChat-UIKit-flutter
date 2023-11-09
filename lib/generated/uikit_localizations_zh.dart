@@ -42,4 +42,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get uikitCancel => '取消';
+
+  @override
+  String get holdToTalk => '按住说话';
+
+  @override
+  String get releaseToSend => '松开发送';
+
+  @override
+  String get releaseToCancel => '松开取消';
+
+  @override
+  String get uikitCopy => '复制';
+
+  @override
+  String get uikitRecall => '撤回';
+
+  @override
+  String get uikitSend => '发送';
 }

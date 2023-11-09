@@ -8,8 +8,8 @@ export 'controllers/chat_base_controller.dart';
 export 'extensions/chat_message_ext.dart';
 export 'extensions/file_extension.dart';
 
-export 'flutter_chat_define.dart';
-export 'flutter_chat_enums.dart';
+export 'em_chat_define.dart';
+export 'em_chat_enums.dart';
 
 export 'generated/uikit_localizations.dart';
 

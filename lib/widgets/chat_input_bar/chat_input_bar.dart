@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:agora_chat_uikit/generated/uikit_localizations.dart';
 
 import '../../tools/chat_image_loader.dart';
 import '../chat_uikit.dart';
@@ -131,6 +132,8 @@ class _ChatInputBarState extends State<ChatInputBar> {
                     : _voiceWidget(),
               ),
               () {
+                String? name = AppLocalizations.of(context)?.localeName;
+                final vPadding = name == "zh" ? 8.0 : 10.0;
                 return _currentInputType != _ChatInputType.voice
                     ? Padding(
                         padding: const EdgeInsets.fromLTRB(10, 3, 4, 2.5),
@@ -150,22 +153,28 @@ class _ChatInputBarState extends State<ChatInputBar> {
                                         widget.textEditingController.text = "";
                                       },
                                       child: Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            8, 10, 8, 10),
+                                        padding: EdgeInsets.fromLTRB(
+                                            8, vPadding, 8, vPadding),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(20),
                                           color: ChatUIKit.of(context)
-                                              .theme
-                                              .inputWidgetSendBtnColor,
+                                                  ?.theme
+                                                  .inputWidgetSendBtnColor ??
+                                              Colors.blue,
                                         ),
                                         child: Center(
-                                            child: Text(
-                                          "Send",
-                                          style: ChatUIKit.of(context)
-                                              .theme
-                                              .inputWidgetSendBtnStyle,
-                                        )),
+                                          child: Text(
+                                            AppLocalizations.of(context)
+                                                    ?.uikitSend ??
+                                                "Send",
+                                            style: ChatUIKit.of(context)
+                                                    ?.theme
+                                                    .inputWidgetSendBtnStyle ??
+                                                const TextStyle(
+                                                    color: Colors.white),
+                                          ),
+                                        ),
                                       ),
                                     )
                                   : InkWell(
@@ -304,8 +313,11 @@ class _ChatInputBarState extends State<ChatInputBar> {
       onPointerUp: _onPointerUp,
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: const Color.fromARGB(255, 230, 230, 230)),
+          borderRadius: BorderRadius.circular(20),
+          color: _voiceTouchType == _ChatVoiceOffsetType.noTouch
+              ? const Color.fromARGB(255, 230, 230, 230)
+              : Colors.red,
+        ),
         height: 42,
         key: _gestureKey,
         child: Center(
@@ -313,16 +325,23 @@ class _ChatInputBarState extends State<ChatInputBar> {
             () {
               switch (_voiceTouchType) {
                 case _ChatVoiceOffsetType.noTouch:
-                  return "Hold to Talk";
+                  return AppLocalizations.of(context)?.holdToTalk ??
+                      "Hold to Talk";
                 case _ChatVoiceOffsetType.dragInside:
-                  return "Release to send";
+                  return AppLocalizations.of(context)?.releaseToSend ??
+                      "Release to Send";
                 case _ChatVoiceOffsetType.dragOutside:
-                  return "Release to cancel";
+                  return AppLocalizations.of(context)?.releaseToCancel ??
+                      "Release to Cancel";
               }
             }(),
-            style: const TextStyle(
-                color: Color.fromRGBO(165, 167, 166, 1),
-                fontWeight: FontWeight.w400,
+            style: TextStyle(
+                color: _voiceTouchType == _ChatVoiceOffsetType.noTouch
+                    ? const Color.fromRGBO(165, 167, 166, 1)
+                    : Colors.white,
+                fontWeight: _voiceTouchType == _ChatVoiceOffsetType.noTouch
+                    ? FontWeight.w400
+                    : FontWeight.w500,
                 fontSize: 16),
           ),
         ),

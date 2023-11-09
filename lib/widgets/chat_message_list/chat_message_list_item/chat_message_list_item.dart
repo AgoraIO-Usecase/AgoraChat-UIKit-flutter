@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 
-import '../../../flutter_chat_define.dart';
+import '../../../em_chat_define.dart';
 import '../../../models/chat_message_list_item_model.dart';
 import 'chat_message_bubble.dart';
 

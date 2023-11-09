@@ -43,8 +43,10 @@ class ChatMessageBubble extends StatelessWidget {
       decoration: BoxDecoration(
         color: bubbleColor ??
             (isLeft
-                ? ChatUIKit.of(context).theme.receiveBubbleColor
-                : ChatUIKit.of(context).theme.sendBubbleColor),
+                ? ChatUIKit.of(context)?.theme.receiveBubbleColor ??
+                    const Color.fromRGBO(242, 242, 242, 1)
+                : ChatUIKit.of(context)?.theme.sendBubbleColor ??
+                    const Color.fromRGBO(0, 65, 255, 1)),
         borderRadius: BorderRadius.only(
           topLeft: const Radius.circular(10),
           topRight: const Radius.circular(10),
@@ -139,7 +141,8 @@ class ChatMessageBubble extends StatelessWidget {
                 height: 20,
                 child: Text(
                   TimeTool.timeStrByMs(message.serverTime),
-                  style: ChatUIKit.of(context).theme.messagesListItemTsStyle,
+                  style: ChatUIKit.of(context)?.theme.messagesListItemTsStyle ??
+                      const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ),
             ),

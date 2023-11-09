@@ -1,4 +1,4 @@
-# flutter_chat_uikit_example
+# agora_chat_uikit_example
 
 ## Understand the tech
 
@@ -25,7 +25,7 @@ For the Android platform, your development environment must meet the following r
 
 - Flutter 2.10 or later
 - Dart 2.16 or later
-- macOS or Windows 
+- macOS or Windows
 - Android Studio 4.0 or later with JDK 1.8 or later
 - An Android simulator or a real Android device running Android SDK API level 21 or later
 
