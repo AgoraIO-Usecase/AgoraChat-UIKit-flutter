@@ -45,3 +45,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /example/iOS/Podfile.lock
+/example/pubspec.lock

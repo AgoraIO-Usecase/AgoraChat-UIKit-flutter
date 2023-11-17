@@ -384,20 +384,13 @@ a. Replace the placeholders of `appKey`, `userId`, and `agoraToken` in the `Chat
 
 b. Select the device to run the project, run `flutter run` in the `uikit_quick_start` directory, and click `SIGN IN`.
 
-<div align=center> <img src="./docs/image1.png" width = "300" /></div>
-
-
 2. Open the `MessagesPage` page
 
 Fill in the user ID of the recipient in the `Enter recipient's user Id` box, and click `START CHAT` to open the `MessagesPage` page.
 
-<div align=center> <img src="./docs/image2.png" width = "300" /></div>
-
 3. Send a message
 
 On the `MessagesPage` page, click the input box, enter the information to be sent, and click `Send`.
-
-<div align=center> <img src="./docs/image3.png" width = "300" /></div>
 
 ## Next steps  
 
