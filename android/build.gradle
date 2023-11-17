@@ -1,4 +1,4 @@
-group 'com.example.agora_chat_uikit'
+group 'com.ease.em_chat_uikit'
 version '1.0'
 
 buildscript {

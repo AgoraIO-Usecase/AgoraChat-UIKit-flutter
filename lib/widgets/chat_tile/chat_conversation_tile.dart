@@ -32,29 +32,30 @@ class ChatConversationListTile extends StatelessWidget {
 
         return ListTile(
           leading: avatar,
-          title: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: title ??
-                      Text(
-                        conversation.id,
-                        style: ChatUIKit.of(context)
-                                ?.theme
-                                .conversationListItemTitleStyle ??
-                            const TextStyle(fontSize: 17),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                ),
-                Text(
-                  msg?.createTs ?? "",
-                  style: ChatUIKit.of(context)
-                          ?.theme
-                          .conversationListItemTsStyle ??
-                      const TextStyle(color: Colors.grey, fontSize: 14),
-                ),
-              ]),
+          title: title ??
+              Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: title ??
+                          Text(
+                            conversation.id,
+                            style: ChatUIKit.of(context)
+                                    ?.theme
+                                    .conversationListItemTitleStyle ??
+                                const TextStyle(fontSize: 17),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                    ),
+                    Text(
+                      msg?.createTs ?? "",
+                      style: ChatUIKit.of(context)
+                              ?.theme
+                              .conversationListItemTsStyle ??
+                          const TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
+                  ]),
           subtitle: subtitle ??
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Expanded(child: Builder(

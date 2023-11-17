@@ -1,4 +1,4 @@
-package com.example.agora_chat_uikit;
+package com.ease.em_chat_uikit;
 
 import androidx.annotation.NonNull;
 
@@ -24,11 +24,7 @@ public class FlutterChatUikitPlugin implements FlutterPlugin, MethodCallHandler 
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
-    } else {
-      result.notImplemented();
-    }
+    result.notImplemented();
   }
 
   @Override
