@@ -1,261 +1,121 @@
-import 'package:agora_chat_uikit/agora_chat_uikit.dart';
-import 'package:example/conversations_page.dart';
-import 'package:example/custom_video_message/custom_message_page.dart';
-import 'package:example/messages_page.dart';
-import 'package:flutter/material.dart';
+import 'package:agora_chat_uikit/chat_uikit.dart';
+import 'package:em_chat_uikit_example/debug_login_page.dart';
+import 'package:em_chat_uikit_example/demo_localizations.dart';
+import 'package:em_chat_uikit_example/home_page.dart';
+import 'package:em_chat_uikit_example/notifications/app_settings_notification.dart';
+import 'package:em_chat_uikit_example/pages/me/about_page.dart';
+import 'package:em_chat_uikit_example/pages/me/settings/general_page.dart';
+import 'package:em_chat_uikit_example/pages/me/settings/language_page.dart';
+import 'package:em_chat_uikit_example/pages/me/settings/translate_page.dart';
+import 'package:em_chat_uikit_example/custom/chat_route_filter.dart';
+import 'package:em_chat_uikit_example/tool/settings_data_store.dart';
+import 'package:em_chat_uikit_example/welcome_page.dart';
 
-class ChatConfig {
-  static const String appKey = "";
-  static const String userId = "";
-  static const String agoraToken = '';
-}
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import 'pages/me/settings/advanced_page.dart';
+
+const appKey = 'easemob#easeim';
+
+const bool appDebug = false;
 
 void main() async {
-  assert(ChatConfig.appKey.isNotEmpty,
-      "You need to configure AppKey information first.");
-  WidgetsFlutterBinding.ensureInitialized();
-  final options = ChatOptions(
-    appKey: ChatConfig.appKey,
-    autoLogin: false,
+  await ChatUIKit.instance.init(
+    options: Options(
+      appKey: appKey,
+      deleteMessagesAsExitGroup: false,
+    ),
   );
-  await ChatClient.getInstance.init(options);
-  runApp(const MyApp());
+  SettingsDataStore().init();
+  return SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((value) => runApp(const MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final ChatUIKitLocalizations _localization = ChatUIKitLocalizations();
+
+  @override
+  void initState() {
+    super.initState();
+    _localization.defaultLocale = [
+      ChatLocal(
+          'zh', Map.from(ChatUIKitLocal.zh)..addAll(DemoLocalizations.zh)),
+      ChatLocal('en', Map.from(ChatUIKitLocal.en)..addAll(DemoLocalizations.en))
+    ];
+    // 添加语言后需要进行resetLocales操作
+    _localization.resetLocales();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      builder: (context, child) {
-        // ChatUIKit widget at the top of the widget
-        return ChatUIKit(child: child!);
+    return NotificationListener(
+      onNotification: (notification) {
+        if (notification is AppSettingsNotification) {
+          setState(() {});
+        }
+        return false;
       },
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: const MyHomePage(title: 'Flutter Demo'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  ScrollController scrollController = ScrollController();
-  ChatConversation? conversation;
-  String _chatId = "";
-  final List<String> _logText = [];
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Container(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            const SizedBox(height: 10),
-            const Text("login userId: ${ChatConfig.userId}"),
-            const Text("agoraToken: ${ChatConfig.agoraToken}"),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: TextButton(
-                    onPressed: () {
-                      _signIn();
-                    },
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all(Colors.white),
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.lightBlue),
-                    ),
-                    child: const Text("SIGN IN"),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: TextButton(
-                    onPressed: () {
-                      _signOut();
-                    },
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all(Colors.white),
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.lightBlue),
-                    ),
-                    child: const Text("SIGN OUT"),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      hintText: "Enter recipient's userId",
-                    ),
-                    onChanged: (chatId) => _chatId = chatId,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        pushToChatPage(_chatId);
-                      },
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all(Colors.white),
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.lightBlue),
-                      ),
-                      child: const Text("START CHAT"),
-                    ),
-                    const SizedBox(width: 10),
-                    TextButton(
-                      onPressed: () {
-                        pushToCustomChatPage(_chatId);
-                      },
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all(Colors.white),
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.lightBlue),
-                      ),
-                      child: const Text("CUSTOM CHAT"),
-                    ),
-                  ],
-                )
-              ],
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                pushToConversationPage();
-              },
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all(Colors.white),
-                backgroundColor: MaterialStateProperty.all(Colors.lightBlue),
-              ),
-              child: const Text("CONVERSATION"),
-            ),
-            Flexible(
-              child: ListView.builder(
-                controller: scrollController,
-                itemBuilder: (_, index) {
-                  return Text(_logText[index]);
-                },
-                itemCount: _logText.length,
-              ),
-            ),
-          ],
+      child: MaterialApp(
+        supportedLocales: _localization.supportedLocales,
+        localizationsDelegates: _localization.localizationsDelegates,
+        localeResolutionCallback: _localization.localeResolutionCallback,
+        locale: _localization.currentLocale,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
         ),
+        builder: EasyLoading.init(
+          builder: (context, child) {
+            return ChatUIKitTheme(
+              color: AppSettingsNotification.isLight
+                  ? ChatUIKitColor.light()
+                  : ChatUIKitColor.dark(),
+              child: child!,
+            );
+          },
+        ),
+        home: const WelcomePage(),
+        onGenerateRoute: (settings) {
+          RouteSettings newSettings =
+              ChatRouteFilter.chatRouteSettings(settings);
+          return ChatUIKitRoute().generateRoute(newSettings) ??
+              MaterialPageRoute(
+                builder: (context) {
+                  if (settings.name == '/home') {
+                    return const HomePage();
+                  } else if (settings.name == '/login') {
+                    return const DebugLoginPage();
+                  } else if (settings.name == '/debug_login') {
+                    return const DebugLoginPage();
+                  } else if (settings.name == '/general_page') {
+                    return const GeneralPage();
+                  } else if (settings.name == '/language_page') {
+                    return const LanguagePage();
+                  } else if (settings.name == '/translate_page') {
+                    return const TranslatePage();
+                  } else if (settings.name == '/advanced_page') {
+                    return const AdvancedPage();
+                  } else if (settings.name == '/about_page') {
+                    return const AboutPage();
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              );
+        },
       ),
     );
-  }
-
-  void pushToConversationPage() async {
-    if (ChatClient.getInstance.currentUserId == null) {
-      _addLogToConsole('user not login');
-      return;
-    }
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return const ConversationsPage();
-    }));
-  }
-
-  void pushToChatPage(String userId) async {
-    if (userId.isEmpty) {
-      _addLogToConsole('UserId is null');
-      return;
-    }
-    if (ChatClient.getInstance.currentUserId == null) {
-      _addLogToConsole('user not login');
-      return;
-    }
-    ChatConversation? conv =
-        await ChatClient.getInstance.chatManager.getConversation(userId);
-    Future(() {
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-        return MessagesPage(conv!);
-      }));
-    });
-  }
-
-  void pushToCustomChatPage(String userId) async {
-    if (userId.isEmpty) {
-      _addLogToConsole('UserId is null');
-      return;
-    }
-    if (ChatClient.getInstance.currentUserId == null) {
-      _addLogToConsole('user not login');
-      return;
-    }
-    ChatConversation? conv =
-        await ChatClient.getInstance.chatManager.getConversation(userId);
-    Future(() {
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-        return CustomMessagesPage(conv!);
-      }));
-    });
-  }
-
-  void _signIn() async {
-    _addLogToConsole('begin sign in...');
-    if (ChatConfig.agoraToken.isNotEmpty) {
-      try {
-        await ChatClient.getInstance.loginWithAgoraToken(
-          ChatConfig.userId,
-          ChatConfig.agoraToken,
-        );
-        _addLogToConsole('sign in success');
-      } on ChatError catch (e) {
-        _addLogToConsole('sign in fail: ${e.description}');
-      }
-    } else {
-      _addLogToConsole(
-          'sign in fail: The password and agoraToken cannot both be null.');
-    }
-  }
-
-  void _signOut() async {
-    _addLogToConsole('begin sign out...');
-    try {
-      await ChatClient.getInstance.logout();
-      _addLogToConsole('sign out success');
-    } on ChatError catch (e) {
-      _addLogToConsole('sign out fail: ${e.description}');
-    }
-  }
-
-  void _addLogToConsole(String log) {
-    _logText.add("$_timeString: $log");
-    setState(() {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
-    });
-  }
-
-  String get _timeString {
-    return DateTime.now().toString().split(".").first;
   }
 }
