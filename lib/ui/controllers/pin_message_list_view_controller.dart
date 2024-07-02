@@ -74,6 +74,8 @@ class PinMessageListViewController extends ChangeNotifier
       if (items.isNotEmpty) {
         list.value = items;
         show();
+      } else {
+        ChatUIKit.instance.sendChatUIKitEvent(ChatUIKitEvent.pinMessagesEmpty);
       }
     } catch (e) {
       debugPrint('Error fetching pinned messages: $e');

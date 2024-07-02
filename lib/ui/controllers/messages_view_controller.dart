@@ -422,20 +422,24 @@ class MessagesViewController extends ChangeNotifier
 
   Future<void> translateMessage(Message message,
       {bool showTranslate = true}) async {
-    Message msg = await ChatUIKit.instance.translateMessage(
-      msg: message,
-      languages: [ChatUIKitSettings.translateTargetLanguage],
-    );
-    Map<String, dynamic>? map = msg.attributes;
-    map ??= {};
-    if (showTranslate) {
-      msg.setHasTranslate(true);
-    } else {
-      msg.setHasTranslate(false);
-    }
+    try {
+      Message msg = await ChatUIKit.instance.translateMessage(
+        msg: message,
+        languages: [ChatUIKitSettings.translateTargetLanguage],
+      );
+      Map<String, dynamic>? map = msg.attributes;
+      map ??= {};
+      if (showTranslate) {
+        msg.setHasTranslate(true);
+      } else {
+        msg.setHasTranslate(false);
+      }
 
-    await ChatUIKit.instance.updateMessage(message: msg);
-    _replaceMessage(msg);
+      await ChatUIKit.instance.updateMessage(message: msg);
+      _replaceMessage(msg);
+    } catch (e) {
+      debugPrint('translateMessage: $e');
+    }
   }
 
   Future<void> _clearMention(List<MessageModel> msgs) async {

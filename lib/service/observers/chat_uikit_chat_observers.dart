@@ -21,6 +21,8 @@ mixin ChatUIKitChatObservers on ChatSDKWrapper {
       }
       Future.wait(futures);
     }
+
+    super.onMessagesReceived(messages);
   }
 
   @override
