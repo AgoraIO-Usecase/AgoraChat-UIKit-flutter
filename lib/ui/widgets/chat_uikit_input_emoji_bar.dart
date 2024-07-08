@@ -94,6 +94,25 @@ class ChatUIKitInputEmojiBar extends StatelessWidget {
       );
     }
 
+    content = ShaderMask(
+      shaderCallback: (bounds) {
+        return LinearGradient(
+          colors: [
+            Colors.transparent,
+            Colors.transparent,
+            ChatUIKitTheme.of(context).color.isDark
+                ? ChatUIKitTheme.of(context).color.neutralColor3
+                : ChatUIKitTheme.of(context).color.neutralColor98,
+          ],
+          stops: const [0.05, 0.9, 1.0],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ).createShader(bounds);
+      },
+      blendMode: BlendMode.dstOut,
+      child: content,
+    );
+
     return content;
   }
 

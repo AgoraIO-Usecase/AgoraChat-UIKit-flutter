@@ -35,7 +35,7 @@ mixin ChatWrapper on ChatUIKitWrapperBase {
   void onCmdMessagesReceived(List<Message> messages) {
     List<Message> list = [];
     for (var msg in messages) {
-      if ((msg.body as CmdMessageBody).action == 'chat_uikit_message_typing') {
+      if ((msg.body as CmdMessageBody).action == typingKey) {
         list.add(msg);
       }
     }

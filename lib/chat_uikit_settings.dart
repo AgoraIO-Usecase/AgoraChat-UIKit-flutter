@@ -11,6 +11,9 @@ class ChatUIKitSettings {
   // 搜索框圆角
   static CornerRadius searchBarRadius = CornerRadius.small;
 
+  // 输入框圆角
+  static CornerRadius inputBarRadius = CornerRadius.medium;
+
   // 头像默认占位图
   static ImageProvider? avatarPlaceholder;
 

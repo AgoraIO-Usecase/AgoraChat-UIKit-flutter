@@ -150,3 +150,5 @@ enum ChatSDKEvent {
   fetchOwnInfo,
   fetchUserInfoByIds,
 }
+
+const String typingKey = 'TypingBegin';

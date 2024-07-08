@@ -66,7 +66,7 @@ class ChatUIKitNewRequestListViewItem extends StatelessWidget {
         InkWell(
           highlightColor: Colors.transparent,
           splashColor: Colors.transparent,
-          onTap: onAcceptTap ?? _onAcceptTap,
+          onTap: onAcceptTap,
           child: Container(
             width: 74,
             height: 28,
@@ -116,12 +116,5 @@ class ChatUIKitNewRequestListViewItem extends StatelessWidget {
       ],
     );
     return content;
-  }
-
-  void _onAcceptTap() async {
-    try {
-      ChatUIKit.instance.acceptContactRequest(userId: model.profile.id);
-      // ignore: empty_catches
-    } on ChatError {}
   }
 }

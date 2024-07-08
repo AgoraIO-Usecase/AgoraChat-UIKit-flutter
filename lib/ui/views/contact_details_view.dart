@@ -71,11 +71,16 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
   }
 
   void fetchInfo() async {
-    Conversation conversation = await ChatUIKit.instance.createConversation(
-        conversationId: profile!.id, type: ConversationType.Chat);
-    Map<String, ChatSilentModeResult> map = await ChatUIKit.instance
-        .fetchSilentModel(conversations: [conversation]);
-    isNotDisturb.value = map.values.first.remindType != ChatPushRemindType.ALL;
+    try {
+      Conversation conversation = await ChatUIKit.instance.createConversation(
+          conversationId: profile!.id, type: ConversationType.Chat);
+      Map<String, ChatSilentModeResult> map = await ChatUIKit.instance
+          .fetchSilentModel(conversations: [conversation]);
+      isNotDisturb.value =
+          map.values.first.remindType != ChatPushRemindType.ALL;
+    } catch (e) {
+      debugPrint('contact detail fetch info error: $e');
+    }
   }
 
   @override

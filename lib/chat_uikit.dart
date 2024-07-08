@@ -7,7 +7,7 @@ export 'chat_uikit_localizations.dart';
 export 'provider/chat_uikit_provider.dart';
 
 export 'sdk_wrapper/chat_sdk_wrapper.dart';
-export 'sdk_wrapper/chat_sdk_wrapper_action_events.dart';
+export 'sdk_wrapper/sdk_wrapper_defines.dart';
 
 export 'service/chat_uikit_service.dart';
 export 'provider/chat_uikit_profile.dart';

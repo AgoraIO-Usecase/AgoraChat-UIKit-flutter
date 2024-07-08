@@ -2,11 +2,11 @@
 
 library chat_sdk_wrapper;
 
-import 'typedef_define.dart';
+import 'sdk_define.dart';
 
 import 'package:flutter/material.dart';
 
-import 'chat_sdk_wrapper_action_events.dart';
+import 'sdk_wrapper_defines.dart';
 import 'observers/action_event_observer.dart';
 
 import 'actions/chat_actions.dart';
@@ -36,7 +36,7 @@ export 'actions/presence_actions.dart';
 export 'actions/thread_actions.dart';
 export 'actions/user_info_actions.dart';
 
-export 'typedef_define.dart';
+export 'sdk_define.dart';
 
 export 'wrappers/chat_wrapper.dart';
 export 'wrappers/connect_wrapper.dart';
@@ -59,9 +59,9 @@ export 'observers/presence_observer.dart';
 export 'observers/action_event_observer.dart';
 export 'observers/thread_observer.dart';
 
-export 'chat_sdk_wrapper_action_events.dart';
-export 'typedef_define.dart';
-export 'chat_sdk_wrapper_action_events.dart';
+export 'sdk_wrapper_defines.dart';
+export 'sdk_define.dart';
+export 'sdk_wrapper_defines.dart';
 export 'sdk_wrapper_tools.dart';
 
 const String sdkEventKey = 'chat_uikit';

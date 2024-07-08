@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-class ChatUIKitViewObserver extends ChangeNotifier {
+import '../../tools/safe_disposed.dart';
+
+class ChatUIKitViewObserver extends ChangeNotifier with SafeAreaDisposed {
   void refresh() {
     if (hasListeners) {
       notifyListeners();

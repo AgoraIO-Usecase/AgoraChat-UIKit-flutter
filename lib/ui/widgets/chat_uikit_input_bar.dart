@@ -1,7 +1,9 @@
 import '../../../chat_uikit.dart';
 import 'package:flutter/material.dart';
 
-class ChatUIKitInputBarController extends ChangeNotifier {
+import '../../tools/safe_disposed.dart';
+
+class ChatUIKitInputBarController extends ChangeNotifier with SafeAreaDisposed {
   late CustomTextEditingController _textEditingController;
   late FocusNode _focusNode;
 
@@ -171,11 +173,12 @@ class _ChatUIKitInputBarState extends State<ChatUIKitInputBar> {
             ? theme.color.neutralColor1
             : theme.color.neutralColor98,
         border: Border(
-            top: BorderSide(
-                color: theme.color.isDark
-                    ? theme.color.neutralColor2
-                    : theme.color.neutralColor9,
-                width: 0.5)),
+          top: BorderSide(
+              color: theme.color.isDark
+                  ? theme.color.neutralColor2
+                  : theme.color.neutralColor9,
+              width: 0.5),
+        ),
       ),
       child: content,
     );
@@ -190,7 +193,10 @@ class _ChatUIKitInputBarState extends State<ChatUIKitInputBar> {
         color: theme.color.isDark
             ? theme.color.neutralColor2
             : theme.color.neutralColor95,
-        borderRadius: widget.borderRadius ?? BorderRadius.circular(4),
+        borderRadius: widget.borderRadius ??
+            BorderRadius.circular(
+              CornerRadiusHelper.inputBarRadius(36),
+            ),
       ),
       child: TextField(
         scrollController: scrollController,
@@ -230,8 +236,11 @@ class _ChatUIKitInputBarState extends State<ChatUIKitInputBar> {
                 fontSize: theme.font.bodyLarge.fontSize,
                 fontWeight: theme.font.bodyLarge.fontWeight,
               ),
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
+          contentPadding: EdgeInsets.symmetric(
+            vertical: 7,
+            horizontal:
+                ChatUIKitSettings.inputBarRadius == CornerRadius.large ? 12 : 8,
+          ),
         ),
       ),
     );

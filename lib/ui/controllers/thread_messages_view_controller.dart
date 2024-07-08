@@ -1,13 +1,19 @@
 import 'dart:io';
 import 'dart:math';
 import '../../chat_uikit.dart';
+import '../../tools/safe_disposed.dart';
 import '../../universal/chat_uikit_tools.dart';
 import '../../universal/inner_headers.dart';
 
 import 'package:flutter/material.dart';
 
 class ThreadMessagesViewController
-    with ChangeNotifier, ChatObserver, MessageObserver, ThreadObserver {
+    with
+        ChangeNotifier,
+        SafeAreaDisposed,
+        ChatObserver,
+        MessageObserver,
+        ThreadObserver {
   MessageModel? model;
   ChatThread? thread;
 

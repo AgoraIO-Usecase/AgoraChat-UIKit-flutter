@@ -1,8 +1,10 @@
 import '../../chat_uikit.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../tools/safe_disposed.dart';
+
 class PinMessageListViewController extends ChangeNotifier
-    with ChatObserver, ChatUIKitProviderObserver {
+    with SafeAreaDisposed, ChatObserver, ChatUIKitProviderObserver {
   PinMessageListViewController(this.profile) {
     ChatUIKit.instance.addObserver(this);
     ChatUIKitProvider.instance.addObserver(this);

@@ -430,6 +430,7 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
 
   @override
   void onTyping(List<String> fromUsers) {
+    if (controller.profile.type == ChatUIKitProfileType.group) return;
     if (fromUsers.contains(controller.profile.id)) {
       updateInputType();
     }

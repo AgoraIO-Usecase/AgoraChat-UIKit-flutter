@@ -1,10 +1,11 @@
 import '../../chat_uikit.dart';
+import '../../tools/safe_disposed.dart';
 import '../../universal/inner_headers.dart';
 
 import 'package:flutter/foundation.dart';
 
 class ThreadMembersViewController extends ChangeNotifier
-    with ChatUIKitProviderObserver {
+    with SafeAreaDisposed, ChatUIKitProviderObserver {
   final ChatThread thread;
   bool loadFinished = false;
   bool fetching = false;

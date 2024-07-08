@@ -40,4 +40,23 @@ extension CornerRadiusHelper on CornerRadius {
     }
     return circularRadius;
   }
+
+  static double inputBarRadius(double height, {CornerRadius? cornerRadius}) {
+    double circularRadius = 0;
+    switch (cornerRadius ?? ChatUIKitSettings.inputBarRadius) {
+      case CornerRadius.extraSmall:
+        circularRadius = min(height / 16, 16);
+        break;
+      case CornerRadius.small:
+        circularRadius = min(height / 8, 8);
+        break;
+      case CornerRadius.medium:
+        circularRadius = min(height / 4, 4);
+        break;
+      case CornerRadius.large:
+        circularRadius = height / 2;
+        break;
+    }
+    return circularRadius;
+  }
 }
