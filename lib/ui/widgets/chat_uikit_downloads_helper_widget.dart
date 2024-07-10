@@ -1,7 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+
 import '../../../chat_uikit.dart';
-import 'package:flutter/widgets.dart';
 
 typedef ChatUIKitDownloadBuilder = Widget Function(
   BuildContext context,
@@ -27,16 +28,24 @@ class ChatUIKitDownloadController {
   }
 }
 
+typedef ChatUIKitDownloadResult = void Function(
+  Message message,
+  String? path,
+  ChatError? error,
+);
+
 class ChatUIKitDownloadsHelperWidget extends StatefulWidget {
   const ChatUIKitDownloadsHelperWidget({
-    required this.builder,
     required this.message,
+    this.builder,
     this.controller,
+    this.onDownloadResult,
     super.key,
   });
 
-  final ChatUIKitDownloadBuilder builder;
+  final ChatUIKitDownloadBuilder? builder;
   final ChatUIKitDownloadController? controller;
+  final ChatUIKitDownloadResult? onDownloadResult;
   final Message message;
 
   @override
@@ -51,7 +60,7 @@ class _ChatUIKitDownloadsHelperWidgetState
   ValueNotifier<int> progress = ValueNotifier(0);
 
   Message? message;
-  late ChatUIKitDownloadController? controller;
+  late ChatUIKitDownloadController controller;
 
   @override
   void initState() {
@@ -60,10 +69,11 @@ class _ChatUIKitDownloadsHelperWidgetState
     message = widget.message;
     controller = widget.controller ?? ChatUIKitDownloadController();
     updateControllerCallback();
+    controller.download();
   }
 
   void updateControllerCallback() {
-    controller?._sendHandler(downloadMessage);
+    controller._sendHandler(downloadMessage);
   }
 
   @override
@@ -79,6 +89,7 @@ class _ChatUIKitDownloadsHelperWidgetState
     File file = File(message!.localPath!);
     if (file.existsSync()) {
       isDownloading.value = ChatUIKitMessageDownloadState.success;
+      widget.onDownloadResult?.call(message!, message!.localPath, null);
       return;
     }
     ChatUIKit.instance.downloadAttachment(message: message!);
@@ -87,13 +98,14 @@ class _ChatUIKitDownloadsHelperWidgetState
 
   @override
   void dispose() {
-    controller?._dispose();
+    controller._dispose();
     ChatUIKit.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = ChatUIKitTheme.of(context);
     if ((widget.message.bodyType == MessageType.FILE ||
             widget.message.bodyType == MessageType.IMAGE ||
             widget.message.bodyType == MessageType.VIDEO ||
@@ -103,55 +115,65 @@ class _ChatUIKitDownloadsHelperWidgetState
     }
 
     return Container(
-        key: ValueKey(widget.message.localTime),
-        child: ValueListenableBuilder<ChatUIKitMessageDownloadState>(
-          valueListenable: isDownloading,
-          builder: (context, state, child) {
-            if (state == ChatUIKitMessageDownloadState.success) {
-              return widget.builder(
-                context,
-                message!.localPath,
-                message!.displayName,
-                state,
-                100,
-              );
-            }
-            if (state == ChatUIKitMessageDownloadState.downloading) {
-              return ValueListenableBuilder<int>(
-                valueListenable: progress,
-                builder: (context, progress, child) {
-                  return widget.builder(
-                    context,
-                    null,
-                    message!.displayName,
-                    state,
-                    progress,
-                  );
-                },
-                child: widget.builder(
+      key: ValueKey(widget.message.localTime),
+      child: ValueListenableBuilder<ChatUIKitMessageDownloadState>(
+        valueListenable: isDownloading,
+        builder: (context, state, child) {
+          if (state == ChatUIKitMessageDownloadState.success) {
+            return widget.builder?.call(
                   context,
-                  null,
+                  message!.localPath,
                   message!.displayName,
                   state,
-                  0,
-                ),
-              );
-            }
-            return widget.builder(
-              context,
-              null,
-              message!.displayName,
-              state,
-              0,
+                  100,
+                ) ??
+                const SizedBox();
+          }
+          if (state == ChatUIKitMessageDownloadState.downloading) {
+            return ValueListenableBuilder<int>(
+              valueListenable: progress,
+              builder: (context, progress, child) {
+                return widget.builder?.call(
+                      context,
+                      null,
+                      message!.displayName,
+                      state,
+                      progress,
+                    ) ??
+                    CircularProgressIndicator(
+                      color: theme.color.isDark
+                          ? theme.color.primaryColor6
+                          : theme.color.primaryColor5,
+                      value: progress.toDouble(),
+                    );
+              },
+              child: widget.builder?.call(
+                context,
+                null,
+                message!.displayName,
+                state,
+                0,
+              ),
             );
-          },
-        ));
+          }
+          return widget.builder?.call(
+                context,
+                null,
+                message!.displayName,
+                state,
+                0,
+              ) ??
+              const SizedBox();
+        },
+      ),
+    );
   }
 
   @override
   void onSuccess(String msgId, Message msg) {
     if (msgId == message!.msgId) {
       isDownloading.value = ChatUIKitMessageDownloadState.success;
+      widget.onDownloadResult?.call(msg, msg.localPath, null);
     }
   }
 
@@ -159,6 +181,7 @@ class _ChatUIKitDownloadsHelperWidgetState
   void onError(String msgId, Message msg, ChatError error) {
     if (msgId == message!.msgId) {
       isDownloading.value = ChatUIKitMessageDownloadState.error;
+      widget.onDownloadResult?.call(msg, null, error);
     }
   }
 

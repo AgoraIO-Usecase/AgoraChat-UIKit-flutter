@@ -29,4 +29,7 @@ enum ChatUIKitEvent {
 
   /// pin messages empty
   pinMessagesEmpty,
+
+  /// record duration too short
+  recordDurationTooShort,
 }

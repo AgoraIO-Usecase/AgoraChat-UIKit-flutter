@@ -200,6 +200,9 @@ mixin ChatUIKitLocal {
   static const alertKickedInfo = 'messages_view_group_kicked_info';
   static const alertRecallInfo = 'messages_view_recall_info';
   static const alertYou = 'messages_view_recall_info_you';
+  static const alertYouAlreadyAdd = 'message_view_already_add';
+  static const alertAsContact = 'message_view_as_contact';
+
   static const messagesViewAlertGroupInfoTitle =
       'messages_view_alert_group_info_title';
   static const messagesViewAlertThreadInfoTitle =
@@ -472,6 +475,8 @@ mixin ChatUIKitLocal {
     alertKickedInfo: '你已被移出本群组',
     alertRecallInfo: '撤回了一条消息',
     alertYou: '你',
+    alertYouAlreadyAdd: '你已添加',
+    alertAsContact: '为联系人',
     messagesViewAlertGroupInfoTitle: '创建群组',
     messagesViewAlertThreadInfoTitle: '创建了话题',
     messagesViewEditMessageTitle: '正在编辑',
@@ -702,6 +707,8 @@ mixin ChatUIKitLocal {
     alertKickedInfo: 'You have been removed from the group.',
     alertRecallInfo: ' recalled a message',
     alertYou: 'You',
+    alertYouAlreadyAdd: 'You have added ',
+    alertAsContact: ' as a contact',
     messagesViewAlertGroupInfoTitle: 'created a group ',
     messagesViewAlertThreadInfoTitle: 'created a thread ',
     messagesViewEditMessageTitle: 'Editing',

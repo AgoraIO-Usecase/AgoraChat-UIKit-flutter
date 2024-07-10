@@ -35,6 +35,7 @@ const String alertGroupCreateKey = 'createGroupKey';
 const String alertGroupDestroyKey = 'alertGroupDestroyKey';
 const String alertGroupLeaveKey = 'alertGroupLeaveKey';
 const String alertGroupKickedKey = 'alertGroupKickedKey';
+const String alertContactAddKey = 'alertContactAddKey';
 
 const String mentionKey = 'em_at_list';
 const String mentionAllValue = 'ALL';

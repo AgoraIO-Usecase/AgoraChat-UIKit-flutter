@@ -46,7 +46,7 @@ mixin GroupWrapper on ChatUIKitWrapperBase {
 
   @protected
   void onGroupDestroyed(String groupId, String? groupName) {
-    SDKWrapperTools.insertGroupDestroyMessage(groupId);
+    InsertMessageTools.insertGroupDestroyMessage(groupId);
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is GroupObserver) {
         observer.onGroupDestroyed(groupId, groupName);
@@ -272,7 +272,7 @@ mixin GroupWrapper on ChatUIKitWrapperBase {
 
   @protected
   void onUserRemovedFromGroup(String groupId, String? groupName) {
-    SDKWrapperTools.insertGroupKickedMessage(groupId);
+    InsertMessageTools.insertGroupKickedMessage(groupId);
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is GroupObserver) {
         observer.onUserRemovedFromGroup(groupId, groupName);

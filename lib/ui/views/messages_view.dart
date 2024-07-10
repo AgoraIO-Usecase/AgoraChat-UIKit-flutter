@@ -348,42 +348,37 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
                     showPinMsgsView();
                   },
                 ),
-              ChatUIKitAppBarAction(
-                actionType: controller.isMultiSelectMode
-                    ? ChatUIKitActionType.cancel
-                    : ChatUIKitActionType.thread,
-                onTap: (context) {
-                  if (controller.isMultiSelectMode) {
+              if (ChatUIKitSettings.enableMessageThread &&
+                  !controller.isMultiSelectMode &&
+                  controller.conversationType == ConversationType.GroupChat)
+                ChatUIKitAppBarAction(
+                  actionType: ChatUIKitActionType.thread,
+                  onTap: (context) {
+                    pushThread();
+                  },
+                  child: ChatUIKitImageLoader.messageLongPressThread(
+                    color: theme.color.isDark
+                        ? theme.color.neutralColor9
+                        : theme.color.neutralColor3,
+                  ),
+                ),
+              if (controller.isMultiSelectMode)
+                ChatUIKitAppBarAction(
+                  actionType: ChatUIKitActionType.cancel,
+                  onTap: (context) {
                     controller.disableMultiSelectMode();
-                  } else {
-                    if (controller.conversationType ==
-                            ConversationType.GroupChat &&
-                        ChatUIKitSettings.enableMessageThread) {
-                      pushThread();
-                    }
-                  }
-                },
-                child: controller.isMultiSelectMode
-                    ? Text(
-                        ChatUIKitLocal.bottomSheetCancel.localString(context),
-                        style: TextStyle(
-                          color: theme.color.isDark
-                              ? theme.color.primaryColor6
-                              : theme.color.primaryColor5,
-                          fontWeight: theme.font.labelMedium.fontWeight,
-                          fontSize: theme.font.labelMedium.fontSize,
-                        ),
-                      )
-                    : controller.conversationType ==
-                                ConversationType.GroupChat &&
-                            ChatUIKitSettings.enableMessageThread
-                        ? ChatUIKitImageLoader.messageLongPressThread(
-                            color: theme.color.isDark
-                                ? theme.color.neutralColor9
-                                : theme.color.neutralColor3,
-                          )
-                        : const SizedBox(),
-              )
+                  },
+                  child: Text(
+                    ChatUIKitLocal.bottomSheetCancel.localString(context),
+                    style: TextStyle(
+                      color: theme.color.isDark
+                          ? theme.color.primaryColor6
+                          : theme.color.primaryColor5,
+                      fontWeight: theme.font.labelMedium.fontWeight,
+                      fontSize: theme.font.labelMedium.fontSize,
+                    ),
+                  ),
+                ),
             ];
 
             actions = widget.appBarModel?.trailingActionsBuilder
@@ -546,7 +541,7 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
       onThreadItemTap: (context, model) {
         bool ret = widget.onThreadItemTap?.call(context, model) ?? false;
         if (ret == false) {
-          showThread(context, model); 
+          showThread(context, model);
         }
         return ret;
       },
@@ -962,6 +957,27 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
         infos: [
           MessageAlertAction(
             text: ChatUIKitLocal.alertKickedInfo.localString(context),
+          ),
+        ],
+      );
+    }
+
+    if (model.message.isNewContactAlert) {
+      ChatUIKitProfile profile = ChatUIKitProvider.instance
+          .getProfile(ChatUIKitProfile.contact(id: operator!));
+      return ChatUIKitMessageListViewAlertItem(
+        infos: [
+          MessageAlertAction(
+            text: ChatUIKitLocal.alertYouAlreadyAdd.localString(context),
+          ),
+          MessageAlertAction(
+            text: profile.showName,
+            onTap: () {
+              pushContactDetail(profile);
+            },
+          ),
+          MessageAlertAction(
+            text: ChatUIKitLocal.alertAsContact.localString(context),
           ),
         ],
       );

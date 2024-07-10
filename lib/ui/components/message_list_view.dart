@@ -164,6 +164,7 @@ class _MessageListViewState extends State<MessageListView> {
         model.message.isDeleteThreadAlert ||
         model.message.isDestroyGroupAlert ||
         model.message.isKickedGroupAlert ||
+        model.message.isNewContactAlert ||
         model.message.isLeaveGroupAlert) {
       if (widget.alertItemBuilder != null) {
         return widget.alertItemBuilder!.call(context, model)!;

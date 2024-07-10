@@ -1,6 +1,6 @@
 import '../chat_uikit.dart';
 
-class SDKWrapperTools {
+class InsertMessageTools {
   static Message insertRecallMessage({
     required Message recalledMessage,
     int? timestamp,
@@ -37,9 +37,11 @@ class SDKWrapperTools {
     alertMsg.localTime = alertMsg.serverTime;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    ChatUIKit.instance.insertMessage(message: alertMsg);
-    // ignore: invalid_use_of_protected_member
-    ChatUIKit.instance.onMessagesReceived([alertMsg]);
+    ChatUIKit.instance.insertMessage(
+      message: alertMsg,
+      runMessageReceived: true,
+      needUpdateConversationList: true,
+    );
   }
 
   static void insertGroupLeaveMessage(String groupId) {
@@ -56,9 +58,32 @@ class SDKWrapperTools {
     alertMsg.localTime = alertMsg.serverTime;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    ChatUIKit.instance.insertMessage(message: alertMsg);
-    // ignore: invalid_use_of_protected_member
-    ChatUIKit.instance.onMessagesReceived([alertMsg]);
+    ChatUIKit.instance.insertMessage(
+      message: alertMsg,
+      runMessageReceived: true,
+      needUpdateConversationList: true,
+    );
+  }
+
+  static void insertAddContactMessage(String userId) {
+    Message alertMsg = Message.createCustomSendMessage(
+      targetId: userId,
+      event: alertContactAddKey,
+      chatType: ChatType.Chat,
+      params: {
+        alertOperatorIdKey: userId,
+      },
+    );
+
+    alertMsg.serverTime = DateTime.now().millisecondsSinceEpoch;
+    alertMsg.localTime = alertMsg.serverTime;
+    alertMsg.status = MessageStatus.SUCCESS;
+
+    ChatUIKit.instance.insertMessage(
+      message: alertMsg,
+      runMessageReceived: true,
+      needUpdateConversationList: true,
+    );
   }
 
   static void insertGroupKickedMessage(String groupId) {
@@ -75,9 +100,11 @@ class SDKWrapperTools {
     alertMsg.localTime = alertMsg.serverTime;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    ChatUIKit.instance.insertMessage(message: alertMsg);
-    // ignore: invalid_use_of_protected_member
-    ChatUIKit.instance.onMessagesReceived([alertMsg]);
+    ChatUIKit.instance.insertMessage(
+      message: alertMsg,
+      runMessageReceived: true,
+      needUpdateConversationList: true,
+    );
   }
 
   static insertCreateGroupMessage({
@@ -95,7 +122,10 @@ class SDKWrapperTools {
     timeMsg.localTime = time;
     timeMsg.status = MessageStatus.SUCCESS;
 
-    await ChatUIKit.instance.insertMessage(message: timeMsg);
+    await ChatUIKit.instance.insertMessage(
+      message: timeMsg,
+      runMessageReceived: true,
+    );
 
     Message alertMsg = Message.createCustomSendMessage(
       targetId: group.groupId,
@@ -115,9 +145,11 @@ class SDKWrapperTools {
     alertMsg.localTime = time + 1;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    ChatUIKit.instance.insertMessage(message: alertMsg);
-    // ignore: invalid_use_of_protected_member
-    ChatUIKit.instance.onMessagesReceived([alertMsg]);
+    ChatUIKit.instance.insertMessage(
+      message: alertMsg,
+      runMessageReceived: false,
+      needUpdateConversationList: true,
+    );
   }
 
   static insertCreateThreadEventMessage({
@@ -137,9 +169,10 @@ class SDKWrapperTools {
     timeMsg.localTime = time;
     timeMsg.status = MessageStatus.SUCCESS;
 
-    ChatUIKit.instance.insertMessage(message: timeMsg);
-    // ignore: invalid_use_of_protected_member
-    ChatUIKit.instance.onMessagesReceived([timeMsg]);
+    ChatUIKit.instance.insertMessage(
+      message: timeMsg,
+      runMessageReceived: true,
+    );
 
     Message alertMsg = Message.createCustomSendMessage(
       targetId: thread.parentId,
@@ -158,8 +191,10 @@ class SDKWrapperTools {
     alertMsg.localTime = time + 1;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    ChatUIKit.instance.insertMessage(message: alertMsg);
-    // ignore: invalid_use_of_protected_member
-    ChatUIKit.instance.onMessagesReceived([alertMsg]);
+    ChatUIKit.instance.insertMessage(
+      message: alertMsg,
+      runMessageReceived: true,
+      needUpdateConversationList: true,
+    );
   }
 }

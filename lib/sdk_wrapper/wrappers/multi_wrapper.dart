@@ -37,10 +37,10 @@ mixin MultiWrapper on ChatUIKitWrapperBase {
   void onGroupEvent(
       MultiDevicesEvent event, String groupId, List<String>? userIds) {
     if (event == MultiDevicesEvent.GROUP_LEAVE) {
-      SDKWrapperTools.insertGroupLeaveMessage(groupId);
+      InsertMessageTools.insertGroupLeaveMessage(groupId);
     }
     if (event == MultiDevicesEvent.GROUP_DESTROY) {
-      SDKWrapperTools.insertGroupDestroyMessage(groupId);
+      InsertMessageTools.insertGroupDestroyMessage(groupId);
     }
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is MultiObserver) {

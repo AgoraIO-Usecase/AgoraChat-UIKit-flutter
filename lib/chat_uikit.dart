@@ -17,7 +17,7 @@ export 'universal/chat_string_extension.dart';
 
 export 'tools/chat_uikit_helper.dart';
 export 'tools/chat_uikit_image_loader.dart';
-export 'tools/chat_uikit_message_helper.dart';
+export 'tools/chat_uikit_message_extension.dart';
 export 'tools/chat_uikit_conversation_helper.dart';
 export 'tools/chat_uikit_file_size_tool.dart';
 export 'tools/chat_uikit_time_tool.dart';

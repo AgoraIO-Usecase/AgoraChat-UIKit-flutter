@@ -20,4 +20,5 @@ abstract mixin class ChatObserver implements ChatUIKitObserverBase {
     MessagePinOperation pinOperation,
     MessagePinInfo pinInfo,
   ) {}
+  void onMessageUpdate(Message newMessage, [Message? oldMessage]) {}
 }

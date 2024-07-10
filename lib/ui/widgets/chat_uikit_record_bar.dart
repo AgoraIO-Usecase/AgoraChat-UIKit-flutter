@@ -412,9 +412,8 @@ class _ChatUIKitRecordBarState extends State<ChatUIKitRecordBar> {
               onTap: () async {
                 if (await _audioRecorder.isRecording()) {
                   recordPath = await _audioRecorder.stop();
-                  stopRecordTimer();
                 }
-
+                stopRecordTimer();
                 safeSetState(() {
                   statusType = ChatUIKitVoiceBarStatusType.none;
                 });
@@ -435,11 +434,12 @@ class _ChatUIKitRecordBarState extends State<ChatUIKitRecordBar> {
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Center(
-                    child: ChatUIKitImageLoader.voiceDelete(
-                  color: theme.color.isDark
-                      ? theme.color.neutralColor7
-                      : theme.color.neutralColor5,
-                )),
+                    child: widget.micIcon ??
+                        ChatUIKitImageLoader.voiceDelete(
+                          color: theme.color.isDark
+                              ? theme.color.neutralColor7
+                              : theme.color.neutralColor5,
+                        )),
               ),
             )
           : const SizedBox(),
@@ -460,10 +460,32 @@ class _ChatUIKitRecordBarState extends State<ChatUIKitRecordBar> {
                 if (await _audioRecorder.isRecording()) {
                   recordPath = await _audioRecorder.stop();
                 }
-                statusType = ChatUIKitVoiceBarStatusType.ready;
-                widget.statusChangeCallback
-                    ?.call(statusType, recordCounter, recordPath!);
-                sendVoice();
+                stopRecordTimer();
+                if (recordCounter < 1) {
+                  safeSetState(() {
+                    recordPath = null;
+                    statusType = ChatUIKitVoiceBarStatusType.none;
+                  });
+
+                  widget.statusChangeCallback?.call(
+                    statusType,
+                    recordCounter,
+                    recordPath,
+                  );
+                  ChatUIKit.instance.sendChatUIKitEvent(
+                      ChatUIKitEvent.recordDurationTooShort);
+                } else {
+                  safeSetState(() {
+                    statusType = ChatUIKitVoiceBarStatusType.ready;
+                  });
+
+                  widget.statusChangeCallback?.call(
+                    statusType,
+                    recordCounter,
+                    recordPath,
+                  );
+                  sendVoice();
+                }
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -473,11 +495,12 @@ class _ChatUIKitRecordBarState extends State<ChatUIKitRecordBar> {
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Center(
-                    child: ChatUIKitImageLoader.voiceSend(
-                  color: theme.color.isDark
-                      ? theme.color.neutralColor98
-                      : theme.color.neutralColor98,
-                )),
+                    child: widget.sendIcon ??
+                        ChatUIKitImageLoader.voiceSend(
+                          color: theme.color.isDark
+                              ? theme.color.neutralColor98
+                              : theme.color.neutralColor98,
+                        )),
               ),
             )
           : const SizedBox(),
@@ -513,18 +536,29 @@ class _ChatUIKitRecordBarState extends State<ChatUIKitRecordBar> {
 
   Future<void> stopRecord() async {
     recordPath = await _audioRecorder.stop();
-
-    safeSetState(() {
-      stopRecordTimer();
-      statusType = ChatUIKitVoiceBarStatusType.ready;
-      widget.statusChangeCallback?.call(statusType, recordCounter, recordPath!);
-    });
+    stopRecordTimer();
+    if (recordCounter < 1) {
+      safeSetState(() {
+        statusType = ChatUIKitVoiceBarStatusType.none;
+        recordPath = null;
+        widget.statusChangeCallback
+            ?.call(statusType, recordCounter, recordPath);
+      });
+      ChatUIKit.instance
+          .sendChatUIKitEvent(ChatUIKitEvent.recordDurationTooShort);
+    } else {
+      safeSetState(() {
+        statusType = ChatUIKitVoiceBarStatusType.ready;
+        widget.statusChangeCallback
+            ?.call(statusType, recordCounter, recordPath);
+      });
+    }
   }
 
   void play() {
     safeSetState(() {
       statusType = ChatUIKitVoiceBarStatusType.playing;
-      widget.statusChangeCallback?.call(statusType, recordCounter, recordPath!);
+      widget.statusChangeCallback?.call(statusType, recordCounter, recordPath);
       startPlayTimer();
     });
   }
@@ -532,7 +566,7 @@ class _ChatUIKitRecordBarState extends State<ChatUIKitRecordBar> {
   void stopPlay() {
     safeSetState(() {
       statusType = ChatUIKitVoiceBarStatusType.ready;
-      widget.statusChangeCallback?.call(statusType, recordCounter, recordPath!);
+      widget.statusChangeCallback?.call(statusType, recordCounter, recordPath);
       stopPlayTimer();
     });
   }

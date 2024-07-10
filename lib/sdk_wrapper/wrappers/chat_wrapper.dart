@@ -91,7 +91,8 @@ mixin ChatWrapper on ChatUIKitWrapperBase {
   void onMessagesRecalled(List<Message> messages) {
     List<Message> replaces = [];
     for (var msg in messages) {
-      final replace = SDKWrapperTools.insertRecallMessage(recalledMessage: msg);
+      final replace =
+          InsertMessageTools.insertRecallMessage(recalledMessage: msg);
       replaces.add(replace);
     }
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
@@ -169,6 +170,14 @@ mixin ChatWrapper on ChatUIKitWrapperBase {
       if (observer is ChatObserver) {
         observer.onMessagePinChanged(
             messageId, conversationId, pinOperation, pinInfo);
+      }
+    }
+  }
+
+  void onMessageUpdate(Message newMessage, [Message? oldMessage]) async {
+    for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
+      if (observer is ChatObserver) {
+        observer.onMessageUpdate(newMessage, oldMessage);
       }
     }
   }

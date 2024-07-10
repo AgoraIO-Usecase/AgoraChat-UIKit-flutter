@@ -25,7 +25,7 @@ mixin ThreadWrapper on ChatUIKitWrapperBase {
   }
 
   void onChatThreadCreate(ChatThreadEvent event) {
-    SDKWrapperTools.insertCreateThreadEventMessage(event: event);
+    InsertMessageTools.insertCreateThreadEventMessage(event: event);
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is ThreadObserver) {
         observer.onChatThreadCreate(event);

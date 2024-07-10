@@ -1,5 +1,7 @@
 import '../../chat_uikit.dart';
 
+import 'package:flutter/foundation.dart';
+
 class NewRequestListViewController
     with ChatUIKitListViewControllerBase, ChatUIKitProviderObserver {
   NewRequestListViewController() {
@@ -61,5 +63,23 @@ class NewRequestListViewController
       list.add(info);
     }
     return list;
+  }
+
+  Future<void> acceptRequest(String userId) async {
+    try {
+      await ChatUIKit.instance.acceptContactRequest(userId: userId);
+
+      list.removeWhere((element) {
+        if (element is NewRequestItemModel) {
+          return element.profile.id == userId;
+        } else {
+          return false;
+        }
+      });
+      // ignore: empty_catches
+    } catch (e) {
+      debugPrint('acceptRequest error: $e');
+    }
+    refresh();
   }
 }

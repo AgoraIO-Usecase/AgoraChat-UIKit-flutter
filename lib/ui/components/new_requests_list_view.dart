@@ -87,7 +87,7 @@ class _NewRequestsListViewState extends State<NewRequestsListView>
                 child: ChatUIKitNewRequestListViewItem(
                   model,
                   onAcceptTap: () {
-                    onAcceptTap.call(model);
+                    controller.acceptRequest(model.profile.id);
                   },
                 ),
               );
@@ -112,13 +112,5 @@ class _NewRequestsListViewState extends State<NewRequestsListView>
   @override
   void onContactAdded(String userId) {
     controller.fetchItemList();
-  }
-
-  void onAcceptTap(NewRequestItemModel model) async {
-    try {
-      await ChatUIKit.instance.acceptContactRequest(userId: model.profile.id);
-    } on ChatError catch (e) {
-      debugPrint('acceptContactRequest error: $e');
-    }
   }
 }
