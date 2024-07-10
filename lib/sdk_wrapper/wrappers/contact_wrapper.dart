@@ -31,7 +31,6 @@ mixin ContactWrapper on ChatUIKitWrapperBase {
         observer.onContactAdded(userId);
       }
     }
-    InsertMessageTools.insertAddContactMessage(userId);
   }
 
   @protected

@@ -7,12 +7,12 @@ export 'chat_uikit_localizations.dart';
 export 'provider/chat_uikit_provider.dart';
 
 export 'sdk_wrapper/chat_sdk_wrapper.dart';
-export 'sdk_wrapper/sdk_wrapper_defines.dart';
+export 'sdk_wrapper/chat_sdk_wrapper_defines.dart';
 
-export 'service/chat_uikit_service.dart';
+export 'chat_uikit_service/chat_uikit_service.dart';
+export 'chat_uikit_service/chat_uikit_action_events.dart';
+export 'chat_uikit_service/observers/chat_uikit_events_observers.dart';
 export 'provider/chat_uikit_profile.dart';
-export 'service/chat_uikit_action_events.dart';
-export 'service/observers/chat_uikit_events_observers.dart';
 export 'universal/chat_string_extension.dart';
 
 export 'tools/chat_uikit_helper.dart';

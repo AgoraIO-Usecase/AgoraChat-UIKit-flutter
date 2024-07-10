@@ -200,13 +200,17 @@ mixin ChatUIKitLocal {
   static const alertKickedInfo = 'messages_view_group_kicked_info';
   static const alertRecallInfo = 'messages_view_recall_info';
   static const alertYou = 'messages_view_recall_info_you';
-  static const alertYouAlreadyAdd = 'message_view_already_add';
+  static const alertAlreadyAdd = 'message_view_already_add';
   static const alertAsContact = 'message_view_as_contact';
+  static const alertPinTitle = 'messages_view_alert_pin_title';
+  static const alertUnpinTitle = 'messages_view_alert_unpin_title';
 
   static const messagesViewAlertGroupInfoTitle =
       'messages_view_alert_group_info_title';
   static const messagesViewAlertThreadInfoTitle =
       'messages_view_alert_thread_info_title';
+  static const messageViewAlertShowDetail = 'message_view_alert_show_detail';
+
   static const messagesViewEditMessageTitle =
       'messages_view_edit_message_title';
   static const messagesViewMoreActionsTitleAlbum =
@@ -471,14 +475,17 @@ mixin ChatUIKitLocal {
     changInfoViewSave: '完成',
     changInfoViewInputHint: '请输入',
     alertDestroy: '本群组已被解散',
-    alertLeave: '你已退出本群组',
-    alertKickedInfo: '你已被移出本群组',
+    alertLeave: '已退出本群组',
+    alertKickedInfo: '已被移出本群组',
     alertRecallInfo: '撤回了一条消息',
     alertYou: '你',
-    alertYouAlreadyAdd: '你已添加',
+    alertAlreadyAdd: '已添加',
     alertAsContact: '为联系人',
     messagesViewAlertGroupInfoTitle: '创建群组',
     messagesViewAlertThreadInfoTitle: '创建了话题',
+    messageViewAlertShowDetail: '查看详情',
+    alertPinTitle: '置顶了一条消息',
+    alertUnpinTitle: '移除了一条置顶消息',
     messagesViewEditMessageTitle: '正在编辑',
     messagesViewMoreActionsTitleAlbum: '相册',
     messagesViewMoreActionsTitleCamera: '相机',
@@ -703,14 +710,17 @@ mixin ChatUIKitLocal {
     changInfoViewSave: 'Done',
     changInfoViewInputHint: 'input',
     alertDestroy: 'The group has been disbanded.',
-    alertLeave: 'You have left the group.',
-    alertKickedInfo: 'You have been removed from the group.',
+    alertLeave: ' have left the group.',
+    alertKickedInfo: ' have been removed from the group.',
     alertRecallInfo: ' recalled a message',
     alertYou: 'You',
-    alertYouAlreadyAdd: 'You have added ',
+    alertAlreadyAdd: ' have added ',
     alertAsContact: ' as a contact',
-    messagesViewAlertGroupInfoTitle: 'created a group ',
-    messagesViewAlertThreadInfoTitle: 'created a thread ',
+    messagesViewAlertGroupInfoTitle: ' created a group ',
+    messagesViewAlertThreadInfoTitle: ' created a thread ',
+    messageViewAlertShowDetail: 'show details',
+    alertPinTitle: ' pinned a message',
+    alertUnpinTitle: ' unpinned a message',
     messagesViewEditMessageTitle: 'Editing',
     messagesViewMoreActionsTitleAlbum: 'Album',
     messagesViewMoreActionsTitleCamera: 'Camera',

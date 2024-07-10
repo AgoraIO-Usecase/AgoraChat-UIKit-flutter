@@ -57,7 +57,6 @@ mixin GroupActions on GroupWrapper {
         options: options,
       );
 
-      await InsertMessageTools.insertCreateGroupMessage(group: group);
       onGroupCreatedByMyself(group);
 
       return group;
@@ -248,16 +247,14 @@ mixin GroupActions on GroupWrapper {
   }
 
   Future<void> leaveGroup({required String groupId}) {
-    return checkResult(ChatSDKEvent.leaveGroup, () async {
-      await Client.getInstance.groupManager.leaveGroup(groupId);
-      InsertMessageTools.insertGroupLeaveMessage(groupId);
+    return checkResult(ChatSDKEvent.leaveGroup, () {
+      return Client.getInstance.groupManager.leaveGroup(groupId);
     });
   }
 
   Future<void> destroyGroup({required String groupId}) {
-    return checkResult(ChatSDKEvent.destroyGroup, () async {
-      await Client.getInstance.groupManager.destroyGroup(groupId);
-      InsertMessageTools.insertGroupDestroyMessage(groupId);
+    return checkResult(ChatSDKEvent.destroyGroup, () {
+      return Client.getInstance.groupManager.destroyGroup(groupId);
     });
   }
 

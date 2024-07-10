@@ -1822,7 +1822,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
 
     if (model.message.isTimeMessageAlert) {
       content ??= ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
           MessageAlertAction(
             text: ChatUIKitTimeFormatter.instance.formatterHandler?.call(
                     context,
@@ -1851,7 +1851,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
         showName = profile.showName;
       }
       content ??= ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
           MessageAlertAction(
             text: showName,
             onTap: () {

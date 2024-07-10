@@ -2,27 +2,33 @@ import '../../../../chat_uikit.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+enum MessageAlertActionType {
+  heightLight,
+  normal,
+}
+
 class MessageAlertAction {
   final String text;
-
+  final MessageAlertActionType type;
   final VoidCallback? onTap;
 
   MessageAlertAction({
     required this.text,
+    this.type = MessageAlertActionType.normal,
     this.onTap,
   });
 }
 
 class ChatUIKitMessageListViewAlertItem extends StatelessWidget {
   const ChatUIKitMessageListViewAlertItem({
-    required this.infos,
+    required this.actions,
     this.isCenter = true,
     this.textAlign = TextAlign.center,
     this.style,
     super.key,
   });
 
-  final List<MessageAlertAction> infos;
+  final List<MessageAlertAction> actions;
   final bool isCenter;
   final TextAlign textAlign;
   final TextStyle? style;
@@ -39,6 +45,14 @@ class ChatUIKitMessageListViewAlertItem extends StatelessWidget {
               : theme.color.neutralColor7,
         );
 
+    final hightLightStyle = TextStyle(
+      fontSize: theme.font.labelSmall.fontSize,
+      fontWeight: theme.font.labelSmall.fontWeight,
+      color: theme.color.isDark
+          ? theme.color.neutralColor6
+          : theme.color.neutralColor5,
+    );
+
     final actionTextStyle = TextStyle(
       fontSize: theme.font.labelSmall.fontSize,
       fontWeight: theme.font.labelSmall.fontWeight,
@@ -49,10 +63,10 @@ class ChatUIKitMessageListViewAlertItem extends StatelessWidget {
 
     List<InlineSpan> list = [];
 
-    for (var info in infos) {
-      bool hasAction = info.onTap != null;
+    for (var info in actions) {
+      bool normal = info.type == MessageAlertActionType.normal;
 
-      if (hasAction && info != infos.first) {
+      if (!normal && info != actions.first) {
         list.add(
           const WidgetSpan(child: SizedBox(width: 2)),
         );
@@ -61,11 +75,13 @@ class ChatUIKitMessageListViewAlertItem extends StatelessWidget {
       list.add(
         TextSpan(
             text: info.text,
-            style: hasAction ? actionTextStyle : null,
+            style: normal
+                ? null
+                : (info.onTap == null ? hightLightStyle : actionTextStyle),
             recognizer: TapGestureRecognizer()..onTap = info.onTap),
       );
 
-      if (hasAction && info != infos.last) {
+      if (!normal && info != actions.last) {
         list.add(
           const WidgetSpan(child: SizedBox(width: 2)),
         );

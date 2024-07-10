@@ -10,8 +10,8 @@ mixin ChatUIKitContactObservers on ChatSDKWrapper {
   }
 
   @override
-  void onContactAdded(String userId) {
-    ChatUIKitContext.instance.removeRequest(userId);
+  void onContactAdded(String userId) async {
+    await ChatUIKitInsertTools.insertAddContactMessage(userId);
     super.onContactAdded(userId);
   }
 }

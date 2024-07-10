@@ -141,7 +141,7 @@ class _MessageListViewState extends State<MessageListView> {
         model,
       );
       content ??= ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
           MessageAlertAction(
             text: ChatUIKitTimeFormatter.instance.formatterHandler?.call(
                     context,
@@ -165,6 +165,8 @@ class _MessageListViewState extends State<MessageListView> {
         model.message.isDestroyGroupAlert ||
         model.message.isKickedGroupAlert ||
         model.message.isNewContactAlert ||
+        model.message.isPinAlert ||
+        model.message.isUnPinAlert ||
         model.message.isLeaveGroupAlert) {
       if (widget.alertItemBuilder != null) {
         return widget.alertItemBuilder!.call(context, model)!;

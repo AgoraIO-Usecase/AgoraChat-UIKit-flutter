@@ -27,7 +27,10 @@ mixin ChatUIKitChatObservers on ChatSDKWrapper {
 
   @override
   void onMessageContentChanged(
-      Message message, String operatorId, int operationTime) async {
+    Message message,
+    String operatorId,
+    int operationTime,
+  ) async {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is ChatObserver) {
         // clear message's preview.
@@ -47,5 +50,28 @@ mixin ChatUIKitChatObservers on ChatSDKWrapper {
         observer.onMessageContentChanged(message, operatorId, operationTime);
       }
     }
+  }
+
+  @override
+  void onMessagePinChanged(
+    String messageId,
+    String conversationId,
+    MessagePinOperation pinOperation,
+    MessagePinInfo pinInfo,
+  ) async {
+    if (pinOperation == MessagePinOperation.Pin) {
+      await ChatUIKitInsertTools.insertPinEventMessage(
+        messageId: messageId,
+        conversationId: conversationId,
+        creator: pinInfo.operatorId,
+      );
+    } else if (pinOperation == MessagePinOperation.Unpin) {
+      await ChatUIKitInsertTools.insertUnPinEventMessage(
+        messageId: messageId,
+        conversationId: conversationId,
+        creator: pinInfo.operatorId,
+      );
+    }
+    super.onMessagePinChanged(messageId, conversationId, pinOperation, pinInfo);
   }
 }

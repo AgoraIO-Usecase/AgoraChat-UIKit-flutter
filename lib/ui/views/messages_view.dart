@@ -789,7 +789,7 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
 
     if (model.message.isTimeMessageAlert) {
       content = ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
           MessageAlertAction(
             text: ChatUIKitTimeFormatter.instance.formatterHandler?.call(
                     context,
@@ -821,10 +821,13 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
       }
 
       content ??= ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
           MessageAlertAction(
-            text:
-                '${showName ?? ""}${ChatUIKitLocal.alertRecallInfo.localString(context)}',
+            text: '$showName',
+            type: MessageAlertActionType.heightLight,
+          ),
+          MessageAlertAction(
+            text: ChatUIKitLocal.alertRecallInfo.localString(context),
           ),
         ],
       );
@@ -851,30 +854,23 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
     if (model.message.isCreateGroupAlert) {
       ChatUIKitProfile? targetProfile;
       if (targetId != null) {
-        targetProfile = ChatUIKitProvider.instance
-            .getProfile(ChatUIKitProfile.group(id: targetId));
+        targetProfile = ChatUIKitProvider.instance.getProfile(
+          ChatUIKitProfile.group(id: targetId),
+        );
       }
 
       content ??= ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
           MessageAlertAction(
             text: showName,
-            onTap: () {
-              if (operatorProfile != null) {
-                pushNextPage(operatorProfile);
-              }
-            },
+            type: MessageAlertActionType.heightLight,
           ),
           MessageAlertAction(
               text: ChatUIKitLocal.messagesViewAlertGroupInfoTitle
                   .localString(context)),
           MessageAlertAction(
             text: targetProfile?.showName ?? "",
-            onTap: () {
-              if (targetProfile != null) {
-                pushNextPage(targetProfile);
-              }
-            },
+            type: MessageAlertActionType.heightLight,
           ),
         ],
       );
@@ -883,20 +879,19 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
 
     if (model.message.isCreateThreadAlert) {
       content ??= ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
           MessageAlertAction(
             text: showName,
-            onTap: () {
-              if (operatorProfile != null) {
-                pushNextPage(operatorProfile);
-              }
-            },
+            type: MessageAlertActionType.heightLight,
           ),
           MessageAlertAction(
-              text: ChatUIKitLocal.messagesViewAlertThreadInfoTitle
-                  .localString(context)),
+            text: ChatUIKitLocal.messagesViewAlertThreadInfoTitle
+                .localString(context),
+          ),
           MessageAlertAction(
-            text: map?[alertTargetNameKey] ?? map?[alertTargetIdKey] ?? '',
+            text:
+                ChatUIKitLocal.messageViewAlertShowDetail.localString(context),
+            type: MessageAlertActionType.heightLight,
             onTap: () async {
               String? msgId = map?[alertTargetParentIdKey]!;
               if (msgId == null) return;
@@ -917,12 +912,6 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
                       ),
                     );
                   });
-                } else {
-                  String? threadId = map?[alertTargetIdKey];
-                  if (threadId != null) {
-                    // ChatThread? thread = ChatThread(threadId: threadId);
-                    // ChatUIKit.instance.fetchChatThread(chatThreadId: map[alertTargetIdKey])
-                  }
                 }
               });
             },
@@ -934,7 +923,7 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
 
     if (model.message.isDestroyGroupAlert) {
       return ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
           MessageAlertAction(
             text: ChatUIKitLocal.alertDestroy.localString(context),
           ),
@@ -944,7 +933,11 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
 
     if (model.message.isLeaveGroupAlert) {
       return ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
+          MessageAlertAction(
+            text: showName,
+            type: MessageAlertActionType.heightLight,
+          ),
           MessageAlertAction(
             text: ChatUIKitLocal.alertLeave.localString(context),
           ),
@@ -954,7 +947,11 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
 
     if (model.message.isKickedGroupAlert) {
       return ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
+          MessageAlertAction(
+            text: showName,
+            type: MessageAlertActionType.heightLight,
+          ),
           MessageAlertAction(
             text: ChatUIKitLocal.alertKickedInfo.localString(context),
           ),
@@ -966,18 +963,48 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
       ChatUIKitProfile profile = ChatUIKitProvider.instance
           .getProfile(ChatUIKitProfile.contact(id: operator!));
       return ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
           MessageAlertAction(
-            text: ChatUIKitLocal.alertYouAlreadyAdd.localString(context),
+            text: ChatUIKitLocal.alertYou.localString(context),
+            type: MessageAlertActionType.heightLight,
+          ),
+          MessageAlertAction(
+            text: ChatUIKitLocal.alertAlreadyAdd.localString(context),
           ),
           MessageAlertAction(
             text: profile.showName,
-            onTap: () {
-              pushContactDetail(profile);
-            },
+            type: MessageAlertActionType.heightLight,
           ),
           MessageAlertAction(
             text: ChatUIKitLocal.alertAsContact.localString(context),
+          ),
+        ],
+      );
+    }
+
+    if (model.message.isPinAlert) {
+      return ChatUIKitMessageListViewAlertItem(
+        actions: [
+          MessageAlertAction(
+            text: showName,
+            type: MessageAlertActionType.heightLight,
+          ),
+          MessageAlertAction(
+            text: ChatUIKitLocal.alertPinTitle.localString(context),
+          ),
+        ],
+      );
+    }
+
+    if (model.message.isUnPinAlert) {
+      return ChatUIKitMessageListViewAlertItem(
+        actions: [
+          MessageAlertAction(
+            text: showName,
+            type: MessageAlertActionType.heightLight,
+          ),
+          MessageAlertAction(
+            text: ChatUIKitLocal.alertUnpinTitle.localString(context),
           ),
         ],
       );

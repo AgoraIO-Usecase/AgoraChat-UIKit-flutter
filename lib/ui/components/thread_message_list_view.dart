@@ -166,7 +166,7 @@ class _ThreadMessageListViewState extends State<ThreadMessageListView> {
         model,
       );
       content ??= ChatUIKitMessageListViewAlertItem(
-        infos: [
+        actions: [
           MessageAlertAction(
             text: ChatUIKitTimeFormatter.instance.formatterHandler?.call(
                     context,

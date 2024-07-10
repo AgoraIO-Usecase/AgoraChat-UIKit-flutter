@@ -19,4 +19,16 @@ mixin ChatUIKitChatActions on ChatSDKWrapper {
     }
     return unreadCount;
   }
+
+  @override
+  Future<void> pinMessage({required String messageId}) async {
+    await super.pinMessage(messageId: messageId);
+    await ChatUIKitInsertTools.insertPinEventMessage(messageId: messageId);
+  }
+
+  @override
+  Future<void> unpinMessage({required String messageId}) async {
+    await super.unpinMessage(messageId: messageId);
+    await ChatUIKitInsertTools.insertUnPinEventMessage(messageId: messageId);
+  }
 }

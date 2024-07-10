@@ -48,7 +48,8 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
 
   Widget _buildContext(BuildContext context, {Message? message}) {
     BorderRadiusGeometry? borderRadius;
-    if (ChatUIKitSettings.messageBubbleStyle == ChatUIKitMessageListViewBubbleStyle.arrow) {
+    if (ChatUIKitSettings.messageBubbleStyle ==
+        ChatUIKitMessageListViewBubbleStyle.arrow) {
       borderRadius = const BorderRadius.all(Radius.circular(4));
     } else {
       borderRadius = BorderRadius.only(

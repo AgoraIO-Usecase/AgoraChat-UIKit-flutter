@@ -92,7 +92,7 @@ mixin ChatWrapper on ChatUIKitWrapperBase {
     List<Message> replaces = [];
     for (var msg in messages) {
       final replace =
-          InsertMessageTools.insertRecallMessage(recalledMessage: msg);
+          ChatUIKitInsertTools.insertRecallMessage(recalledMessage: msg);
       replaces.add(replace);
     }
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
