@@ -303,7 +303,7 @@ class _ConversationsViewState extends State<ConversationsView> {
         },
       ),
       ChatUIKitBottomSheetAction.normal(
-        actionType: ChatUIKitActionType.pin,
+        actionType: ChatUIKitActionType.pinConversation,
         label: info.pinned
             ? ChatUIKitLocal.conversationListLongPressMenuUnPin
                 .localString(context)

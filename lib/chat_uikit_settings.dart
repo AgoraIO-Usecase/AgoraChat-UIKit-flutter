@@ -44,6 +44,7 @@ class ChatUIKitSettings {
     ChatUIKitActionType.reply,
     ChatUIKitActionType.forward,
     ChatUIKitActionType.multiSelect,
+    ChatUIKitActionType.pinMessage,
     ChatUIKitActionType.translate, // only text message
     ChatUIKitActionType.thread, // only group message
     ChatUIKitActionType.edit, // only text message

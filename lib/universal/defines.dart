@@ -24,7 +24,7 @@ enum ChatUIKitActionType {
   transferOwner,
   disbandGroup,
   mute,
-  pin,
+  pinConversation,
   read,
   addContact,
   newChat,

@@ -2091,11 +2091,11 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
 
       // 置顶
       if (model.message.status == MessageStatus.SUCCESS &&
-          element == ChatUIKitActionType.multiSelect &&
+          element == ChatUIKitActionType.pinMessage &&
           model.message.chatType == ChatType.GroupChat &&
           ChatUIKitSettings.enablePinMsg) {
         items.add(ChatUIKitBottomSheetAction.normal(
-          actionType: ChatUIKitActionType.multiSelect,
+          actionType: ChatUIKitActionType.pinMessage,
           icon: ChatUIKitImageLoader.pinMessage(
             color: theme.color.isDark
                 ? theme.color.neutralColor7
