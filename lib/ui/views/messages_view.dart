@@ -2198,7 +2198,8 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
       if (model.message.bodyType == MessageType.TXT &&
           model.message.direction == MessageDirection.SEND &&
           element == ChatUIKitActionType.edit &&
-          ChatUIKitSettings.enableMessageEdit) {
+          ChatUIKitSettings.enableMessageEdit &&
+          model.message.status == MessageStatus.SUCCESS) {
         items.add(ChatUIKitBottomSheetAction.normal(
           actionType: ChatUIKitActionType.edit,
           label: ChatUIKitLocal.messagesViewLongPressActionsTitleEdit
@@ -2223,7 +2224,8 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
       }
 
       if (element == ChatUIKitActionType.report &&
-          ChatUIKitSettings.enableMessageReport) {
+          ChatUIKitSettings.enableMessageReport &&
+          model.message.status == MessageStatus.SUCCESS) {
         // 举报
         items.add(ChatUIKitBottomSheetAction.normal(
           actionType: ChatUIKitActionType.report,
@@ -2278,7 +2280,8 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
               DateTime.now().millisecondsSinceEpoch -
                   ChatUIKitSettings.recallExpandTime * 1000 &&
           element == ChatUIKitActionType.recall &&
-          ChatUIKitSettings.enableMessageRecall) {
+          ChatUIKitSettings.enableMessageRecall &&
+          model.message.status == MessageStatus.SUCCESS) {
         items.add(ChatUIKitBottomSheetAction.normal(
           actionType: ChatUIKitActionType.recall,
           label: ChatUIKitLocal.messagesViewLongPressActionsTitleRecall

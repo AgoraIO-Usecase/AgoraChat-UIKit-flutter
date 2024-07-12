@@ -1,5 +1,4 @@
 import '../../../../chat_uikit.dart';
-import '../../../../universal/inner_headers.dart';
 import 'package:flutter/material.dart';
 
 class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
@@ -78,24 +77,6 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
 
     if (model.message.bodyType == MessageType.TXT) {
       Widget textWidget = _buildTextMessage(context, model, left);
-      if (model.message.textContent.hasURL() &&
-          ChatUIKitURLHelper().isFetching(model.message.msgId)) {
-        textWidget = Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            textWidget,
-            Text(
-              ChatUIKitLocal.messageTextWidgetURLPreviewParsing
-                  .getString(context),
-              style: TextStyle(
-                  color: theme.color.isDark
-                      ? theme.color.neutralColor7
-                      : theme.color.neutralColor5),
-            ),
-          ],
-        );
-      }
       msgWidget = textWidget;
     } else if (model.message.bodyType == MessageType.IMAGE) {
       msgWidget = _buildImageMessage(context, model, left);
@@ -176,7 +157,7 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
               size: 16,
               statusType: () {
                 if (model.message.status == MessageStatus.PROGRESS ||
-                    model.message.hasFetchingPreview()) {
+                    ChatUIKitURLHelper().isFetching(model.message.msgId)) {
                   return MessageStatusType.loading;
                 } else if (model.message.status == MessageStatus.CREATE ||
                     model.message.status == MessageStatus.FAIL) {

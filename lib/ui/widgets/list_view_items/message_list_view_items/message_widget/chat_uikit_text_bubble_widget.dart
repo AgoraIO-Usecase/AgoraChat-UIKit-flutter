@@ -4,9 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../chat_uikit.dart';
-import '../../../../../ui/widgets/chat_uikit_reg_exp_text.dart';
-
-
+import '../../../chat_uikit_reg_exp_text.dart';
 
 class ChatUIKitTextBubbleWidget extends StatelessWidget {
   const ChatUIKitTextBubbleWidget({
@@ -65,7 +63,8 @@ class ChatUIKitTextBubbleWidget extends StatelessWidget {
     );
 
     contents.add(content);
-    if (model.message.hasFetchingPreview()) {
+    if (model.message.textContent.hasURL() &&
+        ChatUIKitURLHelper().isFetching(model.message.msgId)) {
       contents.add(
         Padding(
           padding: const EdgeInsets.only(top: 8),
@@ -80,7 +79,7 @@ class ChatUIKitTextBubbleWidget extends StatelessWidget {
                       ? theme.color.neutralColor7
                       : theme.color.neutralColor5
                   : theme.color.isDark
-                      ? theme.color.primaryColor8
+                      ? theme.color.primaryColor2
                       : theme.color.primaryColor9,
             ),
           ),

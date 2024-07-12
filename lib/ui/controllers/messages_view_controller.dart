@@ -16,7 +16,8 @@ enum MessageLastActionType {
 
 /// 消息列表控制器
 class MessagesViewController extends ChangeNotifier
-    with SafeAreaDisposed,
+    with
+        SafeAreaDisposed,
         ChatObserver,
         MessageObserver,
         ThreadObserver,
@@ -574,7 +575,9 @@ class MessagesViewController extends ChangeNotifier
         await ChatUIKit.instance.recallMessage(message: message);
         refresh();
         // ignore: empty_catches
-      } catch (e) {}
+      } catch (e) {
+        debugPrint('recallMessage: $e');
+      }
     }
   }
 
@@ -726,7 +729,6 @@ class MessagesViewController extends ChangeNotifier
       url = ChatUIKitURLHelper().getUrlFromText(willSendMsg.textContent);
       if (url?.isNotEmpty == true) {
         willSendMsg.status = MessageStatus.FAIL;
-        willSendMsg.fetchPreviewing();
         await ChatUIKit.instance.insertMessage(message: willSendMsg);
         willSendMsg.status = MessageStatus.PROGRESS;
         msgModelList.insert(0, MessageModel(message: willSendMsg));
@@ -735,9 +737,8 @@ class MessagesViewController extends ChangeNotifier
         refresh();
         ChatUIKitPreviewObj? obj = await ChatUIKitURLHelper()
             .fetchPreview(url!, messageId: willSendMsg.msgId);
-        willSendMsg.removePreviewing();
         willSendMsg.addPreview(obj);
-        await ChatUIKit.instance.sendMessage(message: willSendMsg);
+        ChatUIKit.instance.sendMessage(message: willSendMsg);
       }
     }
 

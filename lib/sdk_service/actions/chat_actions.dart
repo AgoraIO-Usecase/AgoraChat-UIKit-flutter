@@ -57,8 +57,17 @@ mixin ChatActions on ChatWrapper {
 
   Future<void> recallMessage({required Message message}) {
     return checkResult(ChatSDKEvent.recallMessage, () async {
-      await Client.getInstance.chatManager.recallMessage(message.msgId);
-      onMessagesRecalled([message]);
+      if (message.status == MessageStatus.SUCCESS &&
+          message.direction == MessageDirection.SEND) {
+        await Client.getInstance.chatManager.updateMessage(message);
+        await Client.getInstance.chatManager.recallMessage(message.msgId);
+        onMessagesRecalled([message]);
+      } else {
+        throw ChatError.fromJson({
+          'code': 500,
+          'description': 'Message is invalid',
+        });
+      }
     });
   }
 
