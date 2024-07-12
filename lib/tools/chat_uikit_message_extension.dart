@@ -355,15 +355,18 @@ extension MessageHelper on Message {
           ]}';
         } else {
           Map<String, String>? map = (body as CustomMessageBody).params;
-          String? operator = map![alertOperatorIdKey]!;
+          String? operator = map?[alertOperatorIdKey];
           String? showName;
           if (ChatUIKit.instance.currentUserId == operator) {
             showName = ChatUIKitLocal.alertYou.localString(context);
           } else {
-            ChatUIKitProfile profile = ChatUIKitProvider.instance.getProfile(
-              ChatUIKitProfile.contact(id: operator),
-            );
-            showName = profile.showName;
+            if (operator?.isNotEmpty == true) {
+              ChatUIKitProfile profile = ChatUIKitProvider.instance.getProfile(
+                ChatUIKitProfile.contact(id: operator!),
+              );
+              showName = profile.showName;
+            }
+            showName ??= '';
           }
           if (isRecallAlert) {
             return '$showName${ChatUIKitLocal.alertRecallInfo.localString(context)}';

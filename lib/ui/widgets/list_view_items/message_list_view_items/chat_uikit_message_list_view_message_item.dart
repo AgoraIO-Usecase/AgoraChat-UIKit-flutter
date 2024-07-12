@@ -175,7 +175,8 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
               onErrorBtnTap: onErrorBtnTap,
               size: 16,
               statusType: () {
-                if (model.message.status == MessageStatus.PROGRESS) {
+                if (model.message.status == MessageStatus.PROGRESS ||
+                    model.message.hasFetchingPreview()) {
                   return MessageStatusType.loading;
                 } else if (model.message.status == MessageStatus.CREATE ||
                     model.message.status == MessageStatus.FAIL) {
