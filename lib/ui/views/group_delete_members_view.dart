@@ -234,11 +234,11 @@ class _GroupDeleteMembersViewState extends State<GroupDeleteMembersView> {
       title: Strings.format(
           ChatUIKitLocal.groupDeleteMembersViewAlertTitle.localString(context),
           [selectedProfiles.length]),
-      items: [
-        ChatUIKitDialogItem.cancel(
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
             label: ChatUIKitLocal.groupDeleteMembersViewAlertButtonCancel
                 .localString(context)),
-        ChatUIKitDialogItem.confirm(
+        ChatUIKitDialogAction.confirm(
             label: ChatUIKitLocal.groupDeleteMembersViewAlertButtonConfirm
                 .localString(context),
             onTap: () async => Navigator.of(context).pop(true))

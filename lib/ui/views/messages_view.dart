@@ -1383,10 +1383,10 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
                 }
                 bool? ret = await showChatUIKitDialog(
                     context: context,
-                    items: [
-                      ChatUIKitDialogItem.cancel(
+                    actionItems: [
+                      ChatUIKitDialogAction.cancel(
                           label: ChatUIKitLocal.confirm.localString(context)),
-                      ChatUIKitDialogItem.confirm(
+                      ChatUIKitDialogAction.confirm(
                         label: ChatUIKitLocal.cancel.localString(context),
                         onTap: () async {
                           Navigator.of(context).pop(true);
@@ -1576,15 +1576,15 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
       content: ChatUIKitLocal.messagesViewDeleteMessageAlertSubTitle
           .localString(context),
       context: context,
-      items: [
-        ChatUIKitDialogItem.cancel(
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
           label: ChatUIKitLocal.messagesViewDeleteMessageAlertButtonCancel
               .localString(context),
           onTap: () async {
             Navigator.of(context).pop();
           },
         ),
-        ChatUIKitDialogItem.confirm(
+        ChatUIKitDialogAction.confirm(
           label: ChatUIKitLocal.messagesViewDeleteMessageAlertButtonConfirm
               .localString(context),
           onTap: () async {
@@ -1603,15 +1603,15 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
       title: ChatUIKitLocal.messagesViewRecallMessageAlertTitle
           .localString(context),
       context: context,
-      items: [
-        ChatUIKitDialogItem.cancel(
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
           label: ChatUIKitLocal.messagesViewRecallMessageAlertButtonCancel
               .localString(context),
           onTap: () async {
             Navigator.of(context).pop();
           },
         ),
-        ChatUIKitDialogItem.confirm(
+        ChatUIKitDialogAction.confirm(
           label: ChatUIKitLocal.messagesViewRecallMessageAlertButtonConfirm
               .localString(context),
           onTap: () async {
@@ -1694,8 +1694,8 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
                     '${ChatUIKitLocal.messagesViewShareContactAlertSubTitle.localString(context)}"%a"${ChatUIKitLocal.messagesViewShareContactAlertSubTitleTo.localString(context)}"%a"?',
                     [model.profile.showName, controller.profile.showName]),
                 context: context,
-                items: [
-                  ChatUIKitDialogItem.cancel(
+                actionItems: [
+                  ChatUIKitDialogAction.cancel(
                     label: ChatUIKitLocal
                         .messagesViewShareContactAlertButtonCancel
                         .localString(context),
@@ -1703,7 +1703,7 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
                       Navigator.of(context).pop();
                     },
                   ),
-                  ChatUIKitDialogItem.confirm(
+                  ChatUIKitDialogAction.confirm(
                     label: ChatUIKitLocal
                         .messagesViewShareContactAlertButtonConfirm
                         .localString(context),

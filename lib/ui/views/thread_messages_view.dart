@@ -1199,8 +1199,8 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                 content: ChatUIKitLocal.messagesViewShareContactAlertSubTitle
                     .localString(context),
                 context: context,
-                items: [
-                  ChatUIKitDialogItem.cancel(
+                actionItems: [
+                  ChatUIKitDialogAction.cancel(
                     label: ChatUIKitLocal
                         .messagesViewShareContactAlertButtonCancel
                         .localString(context),
@@ -1208,7 +1208,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                       Navigator.of(context).pop();
                     },
                   ),
-                  ChatUIKitDialogItem.confirm(
+                  ChatUIKitDialogAction.confirm(
                     label: ChatUIKitLocal
                         .messagesViewShareContactAlertButtonConfirm
                         .localString(context),

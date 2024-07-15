@@ -155,15 +155,15 @@ class _GroupChangeOwnerViewState extends State<GroupChangeOwnerView> {
           '${ChatUIKitLocal.groupChangeOwnerViewAlertTitle.localString(context)}"%a"?',
           [model.profile.nickname]),
       context: context,
-      items: [
-        ChatUIKitDialogItem.cancel(
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
           label: ChatUIKitLocal.groupChangeOwnerViewAlertButtonCancel
               .localString(context),
           onTap: () async {
             Navigator.of(context).pop();
           },
         ),
-        ChatUIKitDialogItem.confirm(
+        ChatUIKitDialogAction.confirm(
           label: ChatUIKitLocal.groupChangeOwnerViewAlertButtonConfirm
               .localString(context),
           onTap: () async {

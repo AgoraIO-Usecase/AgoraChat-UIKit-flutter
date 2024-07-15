@@ -452,8 +452,8 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
       content: ChatUIKitLocal.contactDetailViewClearChatHistoryAlertSubTitle
           .localString(context),
       context: context,
-      items: [
-        ChatUIKitDialogItem.cancel(
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
           label: ChatUIKitLocal
               .contactDetailViewClearChatHistoryAlertButtonCancel
               .localString(context),
@@ -461,7 +461,7 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
             Navigator.of(context).pop();
           },
         ),
-        ChatUIKitDialogItem.confirm(
+        ChatUIKitDialogAction.confirm(
           label: ChatUIKitLocal
               .contactDetailViewClearChatHistoryAlertButtonConfirm
               .localString(context),
@@ -520,15 +520,15 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
       content: ChatUIKitLocal.contactDetailViewDeleteAlertSubTitle
           .localString(context),
       context: context,
-      items: [
-        ChatUIKitDialogItem.cancel(
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
           label: ChatUIKitLocal.contactDetailViewDeleteAlertButtonCancel
               .localString(context),
           onTap: () async {
             Navigator.of(context).pop();
           },
         ),
-        ChatUIKitDialogItem.confirm(
+        ChatUIKitDialogAction.confirm(
           label: ChatUIKitLocal.contactDetailViewDeleteAlertButtonConfirm
               .localString(context),
           onTap: () async {

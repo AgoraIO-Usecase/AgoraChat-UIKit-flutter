@@ -58,6 +58,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    ChatUIKitSettings.dialogRectangleType =
+        ChatUIKitDialogRectangleType.circular;
     return NotificationListener(
       onNotification: (notification) {
         if (notification is AppSettingsNotification) {
@@ -79,9 +81,10 @@ class _MyAppState extends State<MyApp> {
         builder: EasyLoading.init(
           builder: (context, child) {
             return ChatUIKitTheme(
-              color: AppSettingsNotification.isLight
-                  ? ChatUIKitColor.light()
-                  : ChatUIKitColor.dark(),
+              color: ChatUIKitColor.light(),
+              // color: AppSettingsNotification.isLight
+              //     ? ChatUIKitColor.light()
+              //     : ChatUIKitColor.dark(),
               child: child!,
             );
           },

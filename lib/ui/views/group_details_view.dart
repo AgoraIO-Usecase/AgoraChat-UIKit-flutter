@@ -1,7 +1,6 @@
 import '../../chat_uikit.dart';
 import '../../universal/inner_headers.dart';
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -663,15 +662,15 @@ class _GroupDetailsViewState extends State<GroupDetailsView>
       title:
           ChatUIKitLocal.groupDetailViewClearChatHistory.localString(context),
       context: context,
-      items: [
-        ChatUIKitDialogItem.cancel(
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
           label: ChatUIKitLocal.groupDetailViewClearChatHistoryAlertButtonCancel
               .localString(context),
           onTap: () async {
             Navigator.of(context).pop();
           },
         ),
-        ChatUIKitDialogItem.confirm(
+        ChatUIKitDialogAction.confirm(
           label: ChatUIKitLocal
               .contactDetailViewClearChatHistoryAlertButtonConfirm
               .localString(context),
@@ -752,15 +751,15 @@ class _GroupDetailsViewState extends State<GroupDetailsView>
       content: ChatUIKitLocal.groupDetailViewDisbandAlertSubTitle
           .localString(context),
       context: context,
-      items: [
-        ChatUIKitDialogItem.cancel(
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
           label: ChatUIKitLocal.groupDetailViewDisbandAlertButtonCancel
               .localString(context),
           onTap: () async {
             Navigator.of(context).pop();
           },
         ),
-        ChatUIKitDialogItem.confirm(
+        ChatUIKitDialogAction.confirm(
           label: ChatUIKitLocal.groupDetailViewDisbandAlertButtonConfirm
               .localString(context),
           onTap: () async {
@@ -785,15 +784,15 @@ class _GroupDetailsViewState extends State<GroupDetailsView>
       content:
           ChatUIKitLocal.groupDetailViewLeaveAlertSubTitle.localString(context),
       context: context,
-      items: [
-        ChatUIKitDialogItem.cancel(
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
           label: ChatUIKitLocal.groupDetailViewLeaveAlertButtonCancel
               .localString(context),
           onTap: () async {
             Navigator.of(context).pop();
           },
         ),
-        ChatUIKitDialogItem.confirm(
+        ChatUIKitDialogAction.confirm(
           label: ChatUIKitLocal.groupDetailViewLeaveAlertButtonConfirm
               .localString(context),
           onTap: () async {

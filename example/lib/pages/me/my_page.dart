@@ -196,8 +196,8 @@ class _MyPageState extends State<MyPage> with ChatUIKitProviderObserver {
     showChatUIKitDialog(
       title: '暂不支持',
       context: context,
-      items: [
-        ChatUIKitDialogItem.confirm(
+      actionItems: [
+        ChatUIKitDialogAction.confirm(
           label: '确定',
           onTap: () async {
             Navigator.of(context).pop();
@@ -211,14 +211,14 @@ class _MyPageState extends State<MyPage> with ChatUIKitProviderObserver {
     showChatUIKitDialog(
       title: DemoLocalizations.logoutTitle.localString(context),
       context: context,
-      items: [
-        ChatUIKitDialogItem.cancel(
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
           label: DemoLocalizations.logoutCancel.localString(context),
           onTap: () async {
             Navigator.of(context).pop();
           },
         ),
-        ChatUIKitDialogItem.confirm(
+        ChatUIKitDialogAction.confirm(
           label: DemoLocalizations.logoutConfirm.localString(context),
           onTap: () async {
             Navigator.of(context).pop();

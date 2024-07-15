@@ -41,15 +41,15 @@ class ChatUIKitSettings {
   static List<ChatUIKitActionType> msgItemLongPressActions = [
     ChatUIKitActionType.reaction,
     ChatUIKitActionType.copy, // only text message
-    ChatUIKitActionType.reply,
     ChatUIKitActionType.forward,
+    ChatUIKitActionType.thread, // only group message
+    ChatUIKitActionType.reply,
+    ChatUIKitActionType.recall,
+    ChatUIKitActionType.edit, // only text message
     ChatUIKitActionType.multiSelect,
     ChatUIKitActionType.pinMessage,
     ChatUIKitActionType.translate, // only text message
-    ChatUIKitActionType.thread, // only group message
-    ChatUIKitActionType.edit, // only text message
     ChatUIKitActionType.report,
-    ChatUIKitActionType.recall,
     ChatUIKitActionType.delete,
   ];
 

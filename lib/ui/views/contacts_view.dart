@@ -280,18 +280,21 @@ class _ContactsViewState extends State<ContactsView> with ContactObserver {
       content:
           ChatUIKitLocal.contactsAddContactAlertSubTitle.localString(context),
       context: context,
-      hintsText: [
-        ChatUIKitLocal.contactsAddContactAlertHintText.localString(context)
+      inputItems: [
+        ChatUIKitDialogInputContentItem(
+          hintText: ChatUIKitLocal.contactsAddContactAlertHintText
+              .localString(context),
+        )
       ],
-      items: [
-        ChatUIKitDialogItem.cancel(
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
           label: ChatUIKitLocal.contactsAddContactAlertButtonCancel
               .localString(context),
           onTap: () async {
             Navigator.of(context).pop();
           },
         ),
-        ChatUIKitDialogItem.inputsConfirm(
+        ChatUIKitDialogAction.inputsConfirm(
           label: ChatUIKitLocal.contactsAddContactAlertButtonConfirm
               .localString(context),
           onInputsTap: (inputs) async {

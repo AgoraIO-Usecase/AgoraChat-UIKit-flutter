@@ -427,15 +427,19 @@ class _ConversationsViewState extends State<ConversationsView> {
       title: ChatUIKitLocal.addContactTitle.localString(context),
       content: ChatUIKitLocal.addContactSubTitle.localString(context),
       context: context,
-      hintsText: [ChatUIKitLocal.addContactInputHints.localString(context)],
-      items: [
-        ChatUIKitDialogItem.cancel(
+      inputItems: [
+        ChatUIKitDialogInputContentItem(
+          hintText: ChatUIKitLocal.addContactInputHints.localString(context),
+        )
+      ],
+      actionItems: [
+        ChatUIKitDialogAction.cancel(
           label: ChatUIKitLocal.addContactCancel.localString(context),
           onTap: () async {
             Navigator.of(context).pop();
           },
         ),
-        ChatUIKitDialogItem.inputsConfirm(
+        ChatUIKitDialogAction.inputsConfirm(
           label: ChatUIKitLocal.addContactConfirm.localString(context),
           onInputsTap: (inputs) async {
             Navigator.of(context).pop(inputs.first);

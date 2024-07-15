@@ -35,9 +35,9 @@ class _DebugLoginPageState extends State<DebugLoginPage> {
   }
 
   Future<void> showDialog(BuildContext context) async {
-    List<ChatUIKitDialogItem> list = [];
+    List<ChatUIKitDialogAction> list = [];
     list.add(
-      ChatUIKitDialogItem.cancel(
+      ChatUIKitDialogAction.cancel(
         label: 'Cancel',
         onTap: () async {
           Navigator.of(context).pop();
@@ -45,7 +45,7 @@ class _DebugLoginPageState extends State<DebugLoginPage> {
       ),
     );
     list.add(
-      ChatUIKitDialogItem.inputsConfirm(
+      ChatUIKitDialogAction.inputsConfirm(
         label: 'Confirm',
         onInputsTap: (List<String> inputs) async {
           Navigator.of(context).pop(inputs);
@@ -55,11 +55,16 @@ class _DebugLoginPageState extends State<DebugLoginPage> {
 
     dynamic ret = await showChatUIKitDialog(
       context: context,
-      hintsText: [
-        'UserId',
-        'Password',
+      inputItems: [
+        ChatUIKitDialogInputContentItem(
+          hintText: 'UserId',
+          maxLength: 32,
+        ),
+        ChatUIKitDialogInputContentItem(
+          hintText: 'Password',
+        ),
       ],
-      items: list,
+      actionItems: list,
     );
 
     if (ret != null) {
