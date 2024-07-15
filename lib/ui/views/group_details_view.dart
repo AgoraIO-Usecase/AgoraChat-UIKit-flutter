@@ -17,6 +17,7 @@ class GroupDetailsView extends StatefulWidget {
         viewObserver = arguments.viewObserver,
         detailsListViewItemsBuilder = arguments.detailsListViewItemsBuilder,
         rightTopMoreActionsBuilder = arguments.moreActionsBuilder,
+        group = arguments.group,
         attributes = arguments.attributes;
 
   const GroupDetailsView({
@@ -29,6 +30,7 @@ class GroupDetailsView extends StatefulWidget {
     this.detailsListViewItemsBuilder,
     this.rightTopMoreActionsBuilder,
     this.viewObserver,
+    this.group,
     super.key,
   });
   final ChatUIKitDetailContentActionsBuilder? contentActionsBuilder;
@@ -38,6 +40,7 @@ class GroupDetailsView extends StatefulWidget {
   final String? attributes;
   final VoidCallback? onMessageDidClear;
   final ChatUIKitDetailItemBuilder? detailsListViewItemsBuilder;
+  final Group? group;
 
   /// 用于刷新页面的Observer
   final ChatUIKitViewObserver? viewObserver;
@@ -66,7 +69,7 @@ class _GroupDetailsViewState extends State<GroupDetailsView>
     widget.viewObserver?.addListener(() {
       setState(() {});
     });
-
+    group = widget.group;
     profile = widget.profile;
     fetchGroupInfos();
   }
@@ -862,7 +865,7 @@ class _GroupDetailsViewState extends State<GroupDetailsView>
         appBarModel: ChatUIKitAppBarModel(
           title: ChatUIKitLocal.groupDetailViewDescription.localString(context),
         ),
-        maxLength: 256,
+        maxLength: 150,
         attributes: widget.attributes,
         inputTextCallback: () async {
           if (group?.groupId != null) {

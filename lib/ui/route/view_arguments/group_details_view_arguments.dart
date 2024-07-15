@@ -12,6 +12,7 @@ class GroupDetailsViewArguments implements ChatUIKitViewArguments {
     this.detailsListViewItemsBuilder,
     this.moreActionsBuilder,
     this.attributes,
+    this.group,
   });
   final ChatUIKitProfile profile;
   final ChatUIKitDetailContentActionsBuilder? actionsBuilder;
@@ -22,6 +23,8 @@ class GroupDetailsViewArguments implements ChatUIKitViewArguments {
 
   /// 更多操作构建器，用于构建更多操作的菜单，如果不设置将会使用默认的菜单。
   final ChatUIKitMoreActionsBuilder? moreActionsBuilder;
+
+  final Group? group;
 
   @override
   String? attributes;
@@ -37,9 +40,11 @@ class GroupDetailsViewArguments implements ChatUIKitViewArguments {
       ChatUIKitViewObserver? viewObserver,
       VoidCallback? onMessageDidClear,
       String? attributes,
+      Group? group,
       ChatUIKitMoreActionsBuilder? moreActionsBuilder}) {
     return GroupDetailsViewArguments(
       profile: profile ?? this.profile,
+      group: group ?? this.group,
       actionsBuilder: actionsBuilder ?? this.actionsBuilder,
       enableAppBar: enableAppBar ?? this.enableAppBar,
       appBarModel: appBarModel ?? this.appBarModel,

@@ -1844,60 +1844,64 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
 
   // 处理当前聊天对象是群时
   void pushToGroupInfo(ChatUIKitProfile profile) {
-    ChatUIKitRoute.pushOrPushNamed(
-      context,
-      ChatUIKitRouteNames.groupDetailsView,
-      GroupDetailsViewArguments(
-          profile: profile,
-          attributes: widget.attributes,
-          onMessageDidClear: () {
-            replyMessage = null;
-            controller.clearMessages();
-          },
-          actionsBuilder: (context, defaultList) {
-            return [
-              ChatUIKitDetailContentAction(
-                title: ChatUIKitLocal.groupDetailViewSend.localString(context),
-                icon: 'assets/images/chat.png',
-                iconSize: const Size(32, 32),
-                packageName: ChatUIKitImageLoader.packageName,
-                onTap: (context) {
-                  Navigator.of(context).pop();
-                },
-              ),
-              ChatUIKitDetailContentAction(
-                title:
-                    ChatUIKitLocal.contactDetailViewSearch.localString(context),
-                icon: 'assets/images/search_history.png',
-                packageName: ChatUIKitImageLoader.packageName,
-                iconSize: const Size(32, 32),
-                onTap: (context) {
-                  ChatUIKitRoute.pushOrPushNamed(
-                    context,
-                    ChatUIKitRouteNames.searchHistoryView,
-                    SearchHistoryViewArguments(
-                      profile: profile,
-                      attributes: widget.attributes,
-                    ),
-                  ).then((value) {
-                    if (value != null && value is Message) {
-                      int count = 0;
-                      Navigator.of(context).popUntil((route) {
-                        count++;
-                        if (count == 2) return true;
-                        return route.settings.name ==
-                                ChatUIKitRouteNames.messagesView ||
-                            route.isFirst;
-                      });
-                      controller.jumpToSearchedMessage(value);
-                    }
-                  });
-                },
-              ),
-            ];
-          }),
-    ).then((value) {
-      controller.refresh();
+    ChatUIKit.instance.getGroup(groupId: profile.id).then((value) {
+      ChatUIKitRoute.pushOrPushNamed(
+        context,
+        ChatUIKitRouteNames.groupDetailsView,
+        GroupDetailsViewArguments(
+            profile: profile,
+            attributes: widget.attributes,
+            group: value,
+            onMessageDidClear: () {
+              replyMessage = null;
+              controller.clearMessages();
+            },
+            actionsBuilder: (context, defaultList) {
+              return [
+                ChatUIKitDetailContentAction(
+                  title:
+                      ChatUIKitLocal.groupDetailViewSend.localString(context),
+                  icon: 'assets/images/chat.png',
+                  iconSize: const Size(32, 32),
+                  packageName: ChatUIKitImageLoader.packageName,
+                  onTap: (context) {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ChatUIKitDetailContentAction(
+                  title: ChatUIKitLocal.contactDetailViewSearch
+                      .localString(context),
+                  icon: 'assets/images/search_history.png',
+                  packageName: ChatUIKitImageLoader.packageName,
+                  iconSize: const Size(32, 32),
+                  onTap: (context) {
+                    ChatUIKitRoute.pushOrPushNamed(
+                      context,
+                      ChatUIKitRouteNames.searchHistoryView,
+                      SearchHistoryViewArguments(
+                        profile: profile,
+                        attributes: widget.attributes,
+                      ),
+                    ).then((value) {
+                      if (value != null && value is Message) {
+                        int count = 0;
+                        Navigator.of(context).popUntil((route) {
+                          count++;
+                          if (count == 2) return true;
+                          return route.settings.name ==
+                                  ChatUIKitRouteNames.messagesView ||
+                              route.isFirst;
+                        });
+                        controller.jumpToSearchedMessage(value);
+                      }
+                    });
+                  },
+                ),
+              ];
+            }),
+      ).then((value) {
+        controller.refresh();
+      });
     });
   }
 
