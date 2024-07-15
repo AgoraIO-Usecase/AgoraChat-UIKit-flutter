@@ -672,7 +672,16 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
       msgWidget = ChatUIKitCombineBubbleWidget(model: model);
     } else if (model.message.bodyType == MessageType.CUSTOM) {
       if (model.message.isCardMessage) {
-        msgWidget = ChatUIKitCardBubbleWidget(model: model);
+        msgWidget = Container(
+          decoration: BoxDecoration(
+            color: theme.color.isDark
+                ? theme.color.primaryColor95
+                : theme.color.primaryColor5,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: const EdgeInsets.all(8),
+          child: ChatUIKitCardBubbleWidget(model: model),
+        );
       }
     }
     msgWidget ??= ChatUIKitNonsupportMessageWidget(model: model);

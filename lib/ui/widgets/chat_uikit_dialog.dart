@@ -101,12 +101,14 @@ class ChatUIKitDialogInputContentItem {
     this.maxLength = -1,
     this.minLength = 1,
     this.clearOnTap = false,
+    this.inputFormatters,
   });
 
   final String? hintText;
   final bool clearOnTap;
   final int maxLength;
   final int minLength;
+  final List<TextInputFormatter>? inputFormatters;
 }
 
 class ChatUIKitDialog<T> extends StatefulWidget {
@@ -375,9 +377,10 @@ class _ChatUIKitDialogState extends State<ChatUIKitDialog> {
                   : Brightness.light,
               style: textStyle,
               controller: _controllers[i],
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(item.maxLength)
-              ],
+              inputFormatters: () {
+                return (item.inputFormatters ?? []) +
+                    [LengthLimitingTextInputFormatter(item.maxLength)];
+              }(),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintStyle: hightLightStyle,
