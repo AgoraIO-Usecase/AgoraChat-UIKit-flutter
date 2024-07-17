@@ -92,6 +92,10 @@ class ChatUIKitProvider {
     return getProfiles([profile], force: force)[profile.id]!;
   }
 
+  ChatUIKitProfile? getProfileById(String id) {
+    return profilesCache[id];
+  }
+
   /// 添加用户信息，用户信息更新时会通知所有的观察者信息更新。
   void addProfiles(List<ChatUIKitProfile> list) {
     if (list.isEmpty) return;

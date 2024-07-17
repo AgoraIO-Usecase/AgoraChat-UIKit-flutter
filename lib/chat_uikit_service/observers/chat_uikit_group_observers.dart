@@ -1,6 +1,6 @@
 import '../../chat_uikit.dart';
 
-mixin ChatUIKitGroupObservers on ChatSDKWrapper {
+mixin ChatUIKitGroupObservers on ChatSDKService {
   @override
   void onGroupDestroyed(String groupId, String? groupName) async {
     await ChatUIKitInsertTools.insertGroupDestroyMessage(groupId);

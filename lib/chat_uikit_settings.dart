@@ -5,39 +5,42 @@ import 'package:flutter/material.dart';
 enum CornerRadius { extraSmall, small, medium, large }
 
 class ChatUIKitSettings {
-  // 头像圆角
+  /// Specifies the corner radius for the avatars in the uikit.
   static CornerRadius avatarRadius = CornerRadius.medium;
 
-  // 搜索框圆角
+  /// Specifies the corner radius of the search box.
   static CornerRadius searchBarRadius = CornerRadius.small;
 
-  // 输入框圆角
+  /// Specifies the corner radius of the input box.
   static CornerRadius inputBarRadius = CornerRadius.medium;
 
-  // 头像默认占位图
+  /// Default avatar placeholder image
   static ImageProvider? avatarPlaceholder;
 
-  // Dialog 圆角
+  /// The corner radius for the dialog.
   static ChatUIKitDialogRectangleType dialogRectangleType =
       ChatUIKitDialogRectangleType.filletCorner;
 
-  // 消息气泡默认显示样式
+  /// Default display style of message bubbles
   static ChatUIKitMessageListViewBubbleStyle messageBubbleStyle =
       ChatUIKitMessageListViewBubbleStyle.arrow;
 
-  // 会话列表是否显示头像
+  /// Whether to show avatars in the conversation list
   static bool showConversationListAvatar = true;
 
-  // 会话列表是否显示未读消息数
+  /// Whether to show unread message count in the conversation list
   static bool showConversationListUnreadCount = true;
 
-  // 会话列表显示的静音图标
+  /// Mute icon displayed in the conversation list
   static ImageProvider? conversationListMuteImage;
 
-  // 消息输入状态
-  static bool enableTypingIndicator = true;
+  /// Contact item list height
+  static double contactItemListItemHeight = 60;
 
-  /// 消息长按菜单
+  /// Contact item more list item height
+  static double contactItemMoreListItemHeight = 56;
+
+  /// Message long press menu
   static List<ChatUIKitActionType> msgItemLongPressActions = [
     ChatUIKitActionType.reaction,
     ChatUIKitActionType.copy, // only text message
@@ -53,19 +56,22 @@ class ChatUIKitSettings {
     ChatUIKitActionType.delete,
   ];
 
-  /// 是否开启 thread 功能
-  static bool enableMessageThread = false;
+  /// Whether to enable the functionality of input status for one-on-one chat messages.
+  static bool enableTypingIndicator = true;
 
-  /// 是否开启消息翻译功能
-  static bool enableMessageTranslation = false;
+  /// Whether to enable the thread feature
+  static bool enableMessageThread = true;
 
-  /// 消息翻译目标语言
+  /// Whether to enable message translation feature
+  static bool enableMessageTranslation = true;
+
+  /// Message translation target language
   static String translateTargetLanguage = 'zh-Hans';
 
-  /// 是否开启消息表情回复功能
-  static bool enableMessageReaction = false;
+  /// Whether to enable message reaction feature
+  static bool enableMessageReaction = true;
 
-  /// 消息表情回复 bottom sheet title 展示内容, 该内容需要包含在表情列表 [ChatUIKitEmojiData.emojiList] 中。
+  /// Message emoji reply bottom sheet title display content, this content needs to be included in the emoji list [ChatUIKitEmojiData.emojiList].
   static List<String> favoriteReaction = [
     '\u{1F44D}',
     '\u{2764}',
@@ -75,31 +81,31 @@ class ChatUIKitSettings {
     '\u{1F389}',
   ];
 
-  /// 默认 消息 url 正则
+  /// Default message URL regular expression
   static RegExp defaultUrlRegExp = RegExp(
     r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+',
     caseSensitive: false,
   );
 
-  /// 是否开启消息置顶功能
+  /// Whether to enable the message pinning feature
   static bool enablePinMsg = true;
 
-  /// 是否开启消息引用功能
+  /// Whether to enable message quoting feature
   static bool enableMessageReply = true;
 
-  /// 是否开启消息撤回功能
+  /// Whether to enable message recall feature
   static bool enableMessageRecall = true;
 
-  /// 撤回消息的时间限制，单位秒
+  /// Time limit for message recall, in seconds
   static int recallExpandTime = 120;
 
-  /// 是否开启消息编辑功能
+  /// Whether to enable message editing feature
   static bool enableMessageEdit = true;
 
-  /// 是否开启消息举报功能
+  /// Whether to enable message reporting feature
   static bool enableMessageReport = true;
 
-  /// 消息举报tag, 可以用于自定义，举报的 reason 需要写在国际化文件中，国际化文件中的reason的key要和tag一致。如 [ChatUIKitLocal.reportTarget1]
+  /// Message report tags, can be customized. The reasons for reporting should be written in the localization file, and the key for the reason in the localization file should be consistent with the tag. For example, [ChatUIKitLocal.reportTarget1]
   static List<String> reportMessageTags = [
     'tag1',
     'tag2',
@@ -112,18 +118,12 @@ class ChatUIKitSettings {
     'tag9',
   ];
 
-  /// 是否开启消息多选转发功能
+  /// Whether to enable message multi-select forwarding feature
   static bool enableMessageMultiSelect = true;
 
-  /// 是否开启消息转发功能
+  /// Whether to enable message forwarding feature
   static bool enableMessageForward = true;
 
-  /// 联系人字母排序顺序, 如果有中文，可以用过 [ChatUIKitAlphabetSortHelper] 首字母重新定义, 如:
-  /// ```dart
-  /// ChatUIKitAlphabetSortHelper.instance.sortHandler = (showName) {
-  ///   /// 获取中文首字母
-  ///   return PinyinHelper.getPinyinE(showName, defPinyin: '#', format: PinyinFormat.WITHOUT_TONE).substring(0, 1);
-  /// }
-  /// ```
+  /// Contact alphabetical sorting order, if there are Chinese characters, you can redefine the initials using [ChatUIKitAlphabetSortHelper].
   static String sortAlphabetical = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#';
 }

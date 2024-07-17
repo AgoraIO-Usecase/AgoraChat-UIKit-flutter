@@ -595,8 +595,8 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                     children: [
                       Text(
                         () {
-                          ChatUIKitProfile? profile = ChatUIKitProvider
-                              .instance.profilesCache[model.message.from!];
+                          ChatUIKitProfile? profile = ChatUIKitProvider.instance
+                              .getProfileById(model.message.from!);
                           profile ??= model.message.fromProfile;
                           return profile.showName;
                         }(),
@@ -648,18 +648,16 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
   Widget subWidget(ChatUIKitTheme theme, MessageModel model) {
     Widget? msgWidget;
     if (model.message.bodyType == MessageType.TXT) {
-      msgWidget = Flexible(
-          fit: FlexFit.loose,
-          child: ChatUIKitTextBubbleWidget(
-            model: model,
-            style: TextStyle(
-              fontWeight: theme.font.bodyMedium.fontWeight,
-              fontSize: theme.font.bodyMedium.fontSize,
-              color: theme.color.isDark
-                  ? theme.color.neutralColor98
-                  : theme.color.neutralColor2,
-            ),
-          ));
+      msgWidget = ChatUIKitTextBubbleWidget(
+        model: model,
+        style: TextStyle(
+          fontWeight: theme.font.bodyMedium.fontWeight,
+          fontSize: theme.font.bodyMedium.fontSize,
+          color: theme.color.isDark
+              ? theme.color.neutralColor98
+              : theme.color.neutralColor2,
+        ),
+      );
     } else if (model.message.bodyType == MessageType.IMAGE) {
       msgWidget = ChatUIKitImageBubbleWidget(model: model);
     } else if (model.message.bodyType == MessageType.VOICE) {
@@ -1896,7 +1894,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
       // 是好友，不是当前聊天对象，跳转到好友页面，并可以发消息
       if (contacts.contains(profile.id)) {
         ChatUIKitProfile? tmpProfile =
-            ChatUIKitProvider.instance.profilesCache[profile.id];
+            ChatUIKitProvider.instance.getProfileById(profile.id);
         pushContactDetail(tmpProfile ?? profile);
       }
       // 不是好友，跳转到添加好友页面

@@ -1,6 +1,6 @@
 import '../../chat_uikit.dart';
 
-mixin ChatUIKitNotificationActions on ChatSDKWrapper {
+mixin ChatUIKitNotificationActions on ChatSDKService {
   @override
   Future<void> setSilentMode(
       {required String conversationId,

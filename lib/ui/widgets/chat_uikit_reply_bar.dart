@@ -112,7 +112,7 @@ class _ChatUIKitReplyBarState extends State<ChatUIKitReplyBar> {
               TextSpan(
                 text: () {
                   ChatUIKitProfile? profile = ChatUIKitProvider.instance
-                      .profilesCache[widget.messageModel.message.from!];
+                      .getProfileById(widget.messageModel.message.from!);
                   profile ??= widget.messageModel.message.fromProfile;
                   return profile.showName;
                 }(),

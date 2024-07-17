@@ -167,7 +167,9 @@ class ChatUIKitInsertTools {
   }) async {
     ChatThread thread = event.chatThread!;
 
-    int time = timestamp ?? DateTime.now().millisecondsSinceEpoch - 1;
+    int time = timestamp ??
+        event.chatThread?.createAt ??
+        DateTime.now().millisecondsSinceEpoch - 1;
     Message timeMsg = Message.createCustomSendMessage(
       targetId: thread.parentId,
       event: alertTimeKey,
@@ -175,6 +177,7 @@ class ChatUIKitInsertTools {
     );
     timeMsg.serverTime = time;
     timeMsg.localTime = time;
+
     timeMsg.status = MessageStatus.SUCCESS;
 
     await ChatUIKit.instance.insertMessage(

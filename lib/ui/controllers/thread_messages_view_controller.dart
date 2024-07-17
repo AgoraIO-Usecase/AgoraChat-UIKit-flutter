@@ -114,7 +114,7 @@ class ThreadMessagesViewController
 
         // 先从缓存的profile中取
         ChatUIKitProfile? profile =
-            ChatUIKitProvider.instance.profilesCache[msg.from!];
+            ChatUIKitProvider.instance.getProfileById(msg.from!);
         if (profile != null) {
           userMap[msg.from!] = profile;
         } else {
@@ -477,7 +477,7 @@ class ThreadMessagesViewController
           List<MessageReaction>? list = await msg.reactionList();
           msgModelList.add(MessageModel(message: msg, reactions: list));
           ChatUIKitProfile? profile =
-              ChatUIKitProvider.instance.profilesCache[msg.from!];
+              ChatUIKitProvider.instance.getProfileById(msg.from!);
           profile ??= msg.fromProfile;
           userMap[msg.from!] = profile;
         }

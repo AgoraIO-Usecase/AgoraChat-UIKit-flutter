@@ -81,10 +81,9 @@ class _MyAppState extends State<MyApp> {
         builder: EasyLoading.init(
           builder: (context, child) {
             return ChatUIKitTheme(
-              color: ChatUIKitColor.light(),
-              // color: AppSettingsNotification.isLight
-              //     ? ChatUIKitColor.light()
-              //     : ChatUIKitColor.dark(),
+              color: AppSettingsNotification.isLight
+                  ? ChatUIKitColor.light()
+                  : ChatUIKitColor.dark(),
               child: child!,
             );
           },

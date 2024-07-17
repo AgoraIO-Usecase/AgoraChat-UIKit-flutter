@@ -1,4 +1,5 @@
 import '../../chat_uikit.dart';
+
 class ContactItemModel
     with ChatUIKitListItemModelBase, NeedAlphabetical, NeedSearch {
   @override
@@ -19,7 +20,7 @@ class ContactItemModel
   }
 
   @override
-  double get itemHeight => 60;
+  double get itemHeight => ChatUIKitSettings.contactItemListItemHeight;
 
   @override
   String get showName {

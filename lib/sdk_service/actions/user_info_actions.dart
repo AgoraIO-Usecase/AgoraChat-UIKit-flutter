@@ -1,4 +1,4 @@
-import '../chat_sdk_wrapper.dart';
+import '../chat_sdk_service.dart';
 
 mixin UserInfoActions on UserInfoWrapper {
   Future<void> updateUserInfo({

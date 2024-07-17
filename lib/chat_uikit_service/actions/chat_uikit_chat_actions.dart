@@ -1,6 +1,6 @@
 import '../../chat_uikit.dart';
 
-mixin ChatUIKitChatActions on ChatSDKWrapper {
+mixin ChatUIKitChatActions on ChatSDKService {
   @override
   Future<int> getUnreadMessageCount({List<String>? withoutIds}) async {
     int unreadCount = 0;

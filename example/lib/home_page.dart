@@ -4,7 +4,8 @@ import 'package:em_chat_uikit_example/pages/contact/contact_page.dart';
 import 'package:em_chat_uikit_example/pages/conversation/conversation_page.dart';
 import 'package:em_chat_uikit_example/pages/me/my_page.dart';
 import 'package:em_chat_uikit_example/tool/toast_page.dart';
-import 'package:em_chat_uikit_example/widgets/user_provider_widget.dart';
+import 'package:em_chat_uikit_example/widgets/token_status_handler_widget.dart';
+import 'package:em_chat_uikit_example/tool/user_provider_widget.dart';
 
 import 'package:flutter/material.dart';
 
@@ -140,6 +141,8 @@ class _HomePageState extends State<HomePage>
     content = ToastPage(child: content);
 
     content = UserProviderWidget(child: content);
+
+    content = TokenStatusHandlerWidget(child: content);
 
     return content;
   }

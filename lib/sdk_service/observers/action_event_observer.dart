@@ -1,4 +1,4 @@
-import '../chat_sdk_wrapper.dart';
+import '../chat_sdk_service.dart';
 
 abstract mixin class ChatSDKEventsObserver implements ChatUIKitObserverBase {
   void onChatSDKEventBegin(ChatSDKEvent event) {}

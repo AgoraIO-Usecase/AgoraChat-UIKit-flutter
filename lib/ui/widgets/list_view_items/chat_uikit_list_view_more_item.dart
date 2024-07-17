@@ -93,5 +93,5 @@ class ChatUIKitListViewMoreItem extends StatelessWidget
   }
 
   @override
-  double get itemHeight => 56;
+  double get itemHeight => ChatUIKitSettings.contactItemMoreListItemHeight;
 }

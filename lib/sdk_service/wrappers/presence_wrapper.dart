@@ -1,8 +1,8 @@
-import '../chat_sdk_wrapper.dart';
+import '../chat_sdk_service.dart';
 
 import 'package:flutter/foundation.dart';
 
-mixin PresenceWrapper on ChatUIKitWrapperBase {
+mixin PresenceWrapper on ChatUIKitServiceBase {
   @protected
   @override
   void addListeners() {

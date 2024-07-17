@@ -1,6 +1,6 @@
 import '../../chat_uikit.dart';
 
-mixin ChatUIKitChatObservers on ChatSDKWrapper {
+mixin ChatUIKitChatObservers on ChatSDKService {
   @override
   void onMessagesReceived(List<Message> messages) async {
     List<Conversation>? needMentionConversations;

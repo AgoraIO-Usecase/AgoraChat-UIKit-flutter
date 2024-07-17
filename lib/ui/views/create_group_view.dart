@@ -234,19 +234,31 @@ class _CreateGroupViewState extends State<CreateGroupView> {
         return;
       }
     }
-    List<String> userIds = selectedProfiles.map((e) => e.id).toList();
+    List<ChatUIKitProfile> inviteMembers =
+        info?.inviteMembers ?? selectedProfiles;
+    List<String> userIds = inviteMembers.map((e) => e.id).toList();
     ChatUIKit.instance
         .createGroup(
-      groupName: info?.groupName ??
-          widget.createGroupInfo?.groupName ??
+      groupName: widget.createGroupInfo?.groupName ??
+          info?.groupName ??
           [
-            ...selectedProfiles +
-                [ChatUIKitProvider.instance.currentUserProfile!]
+            ...inviteMembers +
+                [
+                  ChatUIKitProvider.instance.currentUserProfile ??
+                      ChatUIKitProfile.contact(
+                          id: ChatUIKit.instance.currentUserId!)
+                ]
           ].map((e) => e.showName).join(','),
       desc: info?.groupDesc ?? widget.createGroupInfo?.groupDesc,
       options: GroupOptions(
-        maxCount: 1000,
-        style: GroupStyle.PrivateMemberCanInvite,
+        maxCount: info?.maxCount ?? widget.createGroupInfo?.maxCount ?? 1000,
+        style: info?.style ??
+            widget.createGroupInfo?.style ??
+            GroupStyle.PrivateMemberCanInvite,
+        inviteNeedConfirm: info?.inviteNeedConfirm ??
+            widget.createGroupInfo?.inviteNeedConfirm ??
+            false,
+        ext: info?.ext ?? widget.createGroupInfo?.ext,
       ),
       inviteMembers: userIds,
     )
@@ -268,10 +280,20 @@ class CreateGroupInfo {
     this.groupDesc,
     this.groupAvatar,
     this.onGroupCreateCallback,
+    this.inviteMembers,
+    this.maxCount = 1000,
+    this.style = GroupStyle.PrivateMemberCanInvite,
+    this.inviteNeedConfirm = false,
+    this.ext,
   });
 
   final String groupName;
   final String? groupDesc;
   final String? groupAvatar;
   final GroupCreateCallback? onGroupCreateCallback;
+  final List<ChatUIKitProfile>? inviteMembers;
+  final GroupStyle style;
+  final int maxCount;
+  final bool inviteNeedConfirm;
+  final String? ext;
 }

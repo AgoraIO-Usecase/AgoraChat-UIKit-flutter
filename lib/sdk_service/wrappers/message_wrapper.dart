@@ -1,7 +1,7 @@
-import '../chat_sdk_wrapper.dart';
+import '../chat_sdk_service.dart';
 import 'package:flutter/foundation.dart';
 
-mixin MessageWrapper on ChatUIKitWrapperBase {
+mixin MessageWrapper on ChatUIKitServiceBase {
   @protected
   @override
   void addListeners() {

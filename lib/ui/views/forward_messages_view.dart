@@ -188,7 +188,7 @@ class _ForwardMessagesViewState extends State<ForwardMessagesView>
     }
 
     ChatUIKitProfile? profile =
-        ChatUIKitProvider.instance.profilesCache[model.message.from!];
+        ChatUIKitProvider.instance.getProfileById(model.message.from!);
 
     Widget titleRow = Row(
       mainAxisSize: MainAxisSize.max,

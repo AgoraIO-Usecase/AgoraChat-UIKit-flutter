@@ -74,7 +74,7 @@ class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
         str += typeBuilder!;
       } else {
         ChatUIKitProfile? profile =
-            ChatUIKitProvider.instance.profilesCache[msg.from!];
+            ChatUIKitProvider.instance.getProfileById(msg.from!);
         str += '${profile?.nickname ?? msg.fromProfile.nickname}: ';
         if (msg.bodyType == MessageType.TXT) {
           str += msg.textContent;
@@ -350,14 +350,15 @@ class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
         chatType: isGroup ? ChatType.GroupChat : ChatType.Chat,
       );
     } else {
+      final msg = widget.messages.first;
       message = Message.createSendMessage(
-        body: widget.messages.first.body,
+        body: msg.body,
         to: to,
         chatType: isGroup ? ChatType.GroupChat : ChatType.Chat,
       );
+      message.addPreview(msg.getPreview());
     }
     message.addProfile();
-
     final ret = await ChatUIKit.instance.sendMessage(message: message);
     // ignore: invalid_use_of_protected_member
     ChatUIKit.instance.onMessagesReceived([ret]);

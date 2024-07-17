@@ -53,8 +53,8 @@ class ContactListViewController
       loadingType.value = ChatUIKitListViewType.loading;
     }
 
-    List<String> items = await ChatUIKit.instance.getAllContactIds();
     try {
+      List<String> items = await ChatUIKit.instance.getAllContactIds();
       if ((items.isEmpty &&
               !ChatUIKitContext.instance.isContactLoadFinished()) ||
           force == true) {
@@ -70,11 +70,7 @@ class ContactListViewController
         loadingType.value = ChatUIKitListViewType.normal;
       }
     } catch (e) {
-      if (items.isEmpty) {
-        loadingType.value = ChatUIKitListViewType.error;
-      } else {
-        loadingType.value = ChatUIKitListViewType.normal;
-      }
+      loadingType.value = ChatUIKitListViewType.error;
     }
   }
 

@@ -1,6 +1,6 @@
 import '../../chat_uikit.dart';
 
-mixin ChatUIKitContactActions on ChatSDKWrapper {
+mixin ChatUIKitContactActions on ChatSDKService {
   @override
   Future<void> acceptContactRequest({required String userId}) async {
     await super.acceptContactRequest(userId: userId);
@@ -39,5 +39,9 @@ mixin ChatUIKitContactActions on ChatSDKWrapper {
   Future<void> deleteBlockedContact({required String userId}) async {
     await super.deleteBlockedContact(userId: userId);
     ChatUIKit.instance.onBlockedContactDeleted(userId);
+  }
+
+  int contactRequestCount() {
+    return ChatUIKitContext.instance.newRequestCount();
   }
 }

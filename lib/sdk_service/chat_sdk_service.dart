@@ -1,12 +1,12 @@
 // ignore_for_file: duplicate_export
 
-library chat_sdk_wrapper;
+library chat_sdk_service;
 
 import 'chat_sdk_define.dart';
 
 import 'package:flutter/material.dart';
 
-import 'chat_sdk_wrapper_defines.dart';
+import 'chat_sdk_service_defines.dart';
 import 'observers/action_event_observer.dart';
 
 import 'actions/chat_actions.dart';
@@ -18,7 +18,7 @@ import 'actions/thread_actions.dart';
 import 'actions/user_info_actions.dart';
 
 import 'wrappers/chat_wrapper.dart';
-import 'wrappers/connect_wrapper.dart';
+// import 'wrappers/connect_wrapper.dart';
 import 'wrappers/contact_wrapper.dart';
 import 'wrappers/group_wrapper.dart';
 import 'wrappers/message_wrapper.dart';
@@ -59,16 +59,16 @@ export 'observers/presence_observer.dart';
 export 'observers/action_event_observer.dart';
 export 'observers/thread_observer.dart';
 
-export 'chat_sdk_wrapper_defines.dart';
+export 'chat_sdk_service_defines.dart';
 export 'chat_sdk_define.dart';
-export 'chat_sdk_wrapper_defines.dart';
+export 'chat_sdk_service_defines.dart';
 export '../chat_uikit_service/chat_uikit_insert_tools.dart';
 
 const String sdkEventKey = 'chat_uikit';
 
 abstract mixin class ChatUIKitObserverBase {}
 
-abstract class ChatUIKitWrapperBase {
+abstract class ChatUIKitServiceBase {
   @protected
   final List<ChatUIKitObserverBase> observers = [];
 
@@ -80,7 +80,7 @@ abstract class ChatUIKitWrapperBase {
   @mustCallSuper
   void removeListeners() {}
 
-  ChatUIKitWrapperBase() {
+  ChatUIKitServiceBase() {
     addListeners();
   }
 
@@ -128,12 +128,12 @@ abstract class ChatUIKitWrapperBase {
   }
 }
 
-class ChatSDKWrapper extends ChatUIKitWrapperBase
+class ChatSDKService extends ChatUIKitServiceBase
     with
         ChatWrapper,
         GroupWrapper,
         ContactWrapper,
-        ConnectWrapper,
+        // ConnectWrapper,
         MultiWrapper,
         MessageWrapper,
         NotificationWrapper,
@@ -148,9 +148,9 @@ class ChatSDKWrapper extends ChatUIKitWrapperBase
         PresenceActions,
         UserInfoActions,
         ChatSDKEventsObserver {
-  static ChatSDKWrapper? _instance;
-  static ChatSDKWrapper get instance {
-    return _instance ??= ChatSDKWrapper();
+  static ChatSDKService? _instance;
+  static ChatSDKService get instance {
+    return _instance ??= ChatSDKService();
   }
 
   Future<void> init({
@@ -194,6 +194,7 @@ class ChatSDKWrapper extends ChatUIKitWrapperBase
   Future<void> logout() {
     return checkResult(ChatSDKEvent.logout, () async {
       await Client.getInstance.logout();
+      Client.getInstance.removeConnectionEventHandler('chat_sdk_wrapper');
     });
   }
 
@@ -211,5 +212,52 @@ class ChatSDKWrapper extends ChatUIKitWrapperBase
   /// Return: current user id
   String? get currentUserId {
     return Client.getInstance.currentUserId;
+  }
+
+  Future<String> getAccessToken() async {
+    return await Client.getInstance.getAccessToken();
+  }
+
+  void connectHandler({
+    VoidCallback? onConnected,
+    VoidCallback? onDisconnected,
+    Function(String)? onUserDidLoginFromOtherDevice,
+    VoidCallback? onUserDidRemoveFromServer,
+    VoidCallback? onUserDidForbidByServer,
+    VoidCallback? onUserDidChangePassword,
+    VoidCallback? onUserDidLoginTooManyDevice,
+    VoidCallback? onUserKickedByOtherDevice,
+    VoidCallback? onUserAuthenticationFailed,
+    VoidCallback? onTokenWillExpire,
+    VoidCallback? onTokenDidExpire,
+    VoidCallback? onAppActiveNumberReachLimit,
+  }) {
+    Client.getInstance.addConnectionEventHandler(
+      'chat_sdk_wrapper',
+      ConnectionEventHandler(
+        onConnected: onConnected,
+        onDisconnected: onDisconnected,
+        onUserDidLoginFromOtherDevice: onUserDidLoginFromOtherDevice,
+        onUserDidRemoveFromServer: onUserDidRemoveFromServer,
+        onUserDidForbidByServer: onUserDidForbidByServer,
+        onUserDidChangePassword: onUserDidChangePassword,
+        onUserDidLoginTooManyDevice: onUserDidLoginTooManyDevice,
+        onUserKickedByOtherDevice: onUserKickedByOtherDevice,
+        onUserAuthenticationFailed: onUserAuthenticationFailed,
+        onTokenWillExpire: onTokenWillExpire,
+        onTokenDidExpire: onTokenDidExpire,
+        onAppActiveNumberReachLimit: onAppActiveNumberReachLimit,
+      ),
+    );
+    Client.getInstance.userInfoManager
+        .fetchOwnInfo()
+        .then((value) => null)
+        .catchError((e) {
+      if (e is ChatError) {
+        if (e.code == 401) {
+          onUserAuthenticationFailed?.call();
+        }
+      }
+    });
   }
 }

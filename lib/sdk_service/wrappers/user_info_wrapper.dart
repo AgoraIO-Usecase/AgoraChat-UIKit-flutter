@@ -1,3 +1,3 @@
-import '../chat_sdk_wrapper.dart';
+import '../chat_sdk_service.dart';
 
-mixin UserInfoWrapper on ChatUIKitWrapperBase {}
+mixin UserInfoWrapper on ChatUIKitServiceBase {}

@@ -1,9 +1,8 @@
 import 'dart:math';
 import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 
 import '../../../chat_uikit.dart';
-
-import 'package:flutter/material.dart';
 
 const double defaultLeftRightPadding = 14;
 Future<T?> showChatUIKitDialog<T>({
@@ -187,17 +186,19 @@ class _ChatUIKitDialogState extends State<ChatUIKitDialog> {
     return Dialog(
       backgroundColor: Colors.transparent,
       clipBehavior: Clip.hardEdge,
-      shape: ContinuousRectangleBorder(
-        borderRadius: BorderRadius.circular(() {
-          switch (widget.borderType) {
-            case ChatUIKitDialogRectangleType.circular:
-              return 32.0;
-            case ChatUIKitDialogRectangleType.filletCorner:
-              return 16.0;
-            case ChatUIKitDialogRectangleType.rightAngle:
-              return 0.0;
-          }
-        }()),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          () {
+            switch (widget.borderType) {
+              case ChatUIKitDialogRectangleType.circular:
+                return 16.0;
+              case ChatUIKitDialogRectangleType.filletCorner:
+                return 8.0;
+              case ChatUIKitDialogRectangleType.rightAngle:
+                return 0.0;
+            }
+          }(),
+        ),
       ),
       child: SizedBox(
         width: width,

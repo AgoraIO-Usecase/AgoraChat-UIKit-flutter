@@ -13,7 +13,7 @@ import 'observers/chat_uikit_multi_observers.dart';
 import 'observers/chat_uikit_thread_observers.dart';
 import 'package:flutter/widgets.dart';
 
-class ChatUIKit extends ChatSDKWrapper
+class ChatUIKit extends ChatSDKService
     with
         ChatUIKitChatActions,
         ChatUIKitContactActions,
@@ -86,9 +86,5 @@ class ChatUIKit extends ChatSDKWrapper
     } catch (e) {
       rethrow;
     }
-  }
-
-  int contactRequestCount() {
-    return ChatUIKitContext.instance.newRequestCount();
   }
 }

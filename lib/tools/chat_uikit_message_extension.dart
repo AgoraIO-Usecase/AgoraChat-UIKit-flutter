@@ -37,20 +37,6 @@ extension MessageHelper on Message {
     attributes?.remove(msgPreviewKey);
   }
 
-  void fetchPreviewing() {
-    attributes ??= {};
-    attributes!['fetching'] = true;
-  }
-
-  void removePreviewing() {
-    attributes?.remove('fetching');
-  }
-
-  bool hasFetchingPreview() {
-    attributes ??= {};
-    return attributes!['fetching'] == true;
-  }
-
   String? get avatarUrl {
     Map? userInfo = attributes?[msgUserInfoKey];
     return userInfo?[userAvatarKey];
@@ -311,7 +297,7 @@ extension MessageHelper on Message {
     if (needShowName) {
       if (chatType == ChatType.GroupChat) {
         String? showName =
-            ChatUIKitProvider.instance.profilesCache[from!]?.showName;
+            ChatUIKitProvider.instance.getProfileById(from!)?.showName;
         showName ??= nickname;
         title = "${showName ?? from ?? ""}: ";
       }

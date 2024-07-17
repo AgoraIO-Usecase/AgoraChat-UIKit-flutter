@@ -438,7 +438,7 @@ class ChatUIKitImageLoader {
       gaplessPlayback: true,
       width: width,
       height: height,
-      image: AssetImage('assets/images/message_long_press_report.png',
+      image: AssetImage('assets/images/message_long_press_delete.png',
           package: packageName),
       fit: BoxFit.fill,
     );

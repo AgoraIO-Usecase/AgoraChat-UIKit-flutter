@@ -105,7 +105,7 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
         Text(
           () {
             ChatUIKitProfile? profile =
-                ChatUIKitProvider.instance.profilesCache[message.from!];
+                ChatUIKitProvider.instance.getProfileById(message.from!);
             profile ??= message.fromProfile;
             return profile.showName;
           }(),
@@ -171,8 +171,9 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
       children: [
         Text(
           () {
-            return ChatUIKitProvider
-                    .instance.profilesCache[message.from!]?.showName ??
+            return ChatUIKitProvider.instance
+                    .getProfileById(message.from!)
+                    ?.showName ??
                 message.nickname ??
                 message.from!;
           }(),
@@ -335,8 +336,9 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
       children: [
         Text(
           () {
-            return ChatUIKitProvider
-                    .instance.profilesCache[message.from!]?.showName ??
+            return ChatUIKitProvider.instance
+                    .getProfileById(message.from!)
+                    ?.showName ??
                 message.nickname ??
                 message.from!;
           }(),
@@ -519,8 +521,9 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
       children: [
         Text(
           () {
-            return ChatUIKitProvider
-                    .instance.profilesCache[message.from!]?.showName ??
+            return ChatUIKitProvider.instance
+                    .getProfileById(message.from!)
+                    ?.showName ??
                 message.nickname ??
                 message.from!;
           }(),
@@ -595,8 +598,9 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
       children: [
         Text(
           () {
-            return ChatUIKitProvider
-                    .instance.profilesCache[message.from!]?.showName ??
+            return ChatUIKitProvider.instance
+                    .getProfileById(message.from!)
+                    ?.showName ??
                 message.nickname ??
                 message.from!;
           }(),
@@ -744,8 +748,9 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
         children: [
           Text(
             () {
-              return ChatUIKitProvider
-                      .instance.profilesCache[message.from!]?.showName ??
+              return ChatUIKitProvider.instance
+                      .getProfileById(message.from!)
+                      ?.showName ??
                   message.nickname ??
                   message.from!;
             }(),

@@ -1,6 +1,6 @@
 import '../../chat_uikit.dart';
 
-mixin ChatUIKitThreadObservers on ChatSDKWrapper {
+mixin ChatUIKitThreadObservers on ChatSDKService {
   @override
   void onChatThreadCreate(ChatThreadEvent event) {
     ChatUIKitInsertTools.insertCreateThreadEventMessage(event: event);

@@ -180,8 +180,8 @@ class _ChatReactionInfoWidgetState extends State<ChatReactionInfoWidget>
       }
 
       if (reaction.isAddedBySelf) {
-        ChatUIKitProfile profile = ChatUIKitProvider
-                .instance.profilesCache[ChatUIKit.instance.currentUserId!] ??
+        ChatUIKitProfile profile = ChatUIKitProvider.instance
+                .getProfileById(ChatUIKit.instance.currentUserId!) ??
             ChatUIKitProfile.contact(id: ChatUIKit.instance.currentUserId!);
 
         profiles.insert(0, profile);
