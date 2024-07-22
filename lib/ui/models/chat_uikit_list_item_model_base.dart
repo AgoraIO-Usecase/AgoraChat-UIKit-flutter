@@ -9,7 +9,7 @@ mixin NeedSearch on ChatUIKitListItemModelBase {
   ChatUIKitProfile get profile;
 }
 
-mixin NeedAlphabetical on ChatUIKitListItemModelBase {
+mixin NeedAlphabetical on ChatUIKitListItemModelBase, NeedSearch {
   double get itemHeight;
   String get firstLetter {
     if (showName.isEmpty) return '#';

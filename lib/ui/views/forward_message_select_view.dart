@@ -256,7 +256,7 @@ class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
 
     ChatUIKitRoute.pushOrPushNamed(
       context,
-      ChatUIKitRouteNames.searchUsersView,
+      ChatUIKitRouteNames.searchView,
       SearchViewArguments(
         attributes: widget.attributes,
         viewObserver: viewObserver,

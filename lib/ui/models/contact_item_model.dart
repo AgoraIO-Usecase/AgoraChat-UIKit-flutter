@@ -1,7 +1,7 @@
 import '../../chat_uikit.dart';
 
 class ContactItemModel
-    with ChatUIKitListItemModelBase, NeedAlphabetical, NeedSearch {
+    with ChatUIKitListItemModelBase, NeedSearch, NeedAlphabetical {
   @override
   ChatUIKitProfile profile;
 

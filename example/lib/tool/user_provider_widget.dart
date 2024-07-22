@@ -67,7 +67,8 @@ class _UserProviderWidgetState extends State<UserProviderWidget>
   }
 
   // 返回排序用首字母，比如中文显示时，可以返回首字母以便排序
-  String onAlphabetSortLetterRequest(String showName) {
+  String onAlphabetSortLetterRequest(
+      String? groupId, String userId, String showName) {
     return PinyinHelper.getPinyinE(showName,
             defPinyin: '#', format: PinyinFormat.WITHOUT_TONE)
         .substring(0, 1);

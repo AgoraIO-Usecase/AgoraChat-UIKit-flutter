@@ -17,6 +17,9 @@ class GroupMemberListView extends StatefulWidget {
     this.onTap,
     this.onLongPress,
     this.enableSearchBar = false,
+    this.onSelectLetterChanged,
+    this.sortAlphabetical,
+    this.universalAlphabeticalLetter = '#',
     super.key,
   });
 
@@ -34,6 +37,14 @@ class GroupMemberListView extends StatefulWidget {
   final GroupMemberListViewController? controller;
   final String groupId;
   final bool enableSearchBar;
+  final void Function(BuildContext context, String? letter)?
+      onSelectLetterChanged;
+
+  /// 通讯录列表的字母排序默认字，默认为 '#'
+  final String universalAlphabeticalLetter;
+
+  /// 字母排序
+  final String? sortAlphabetical;
 
   @override
   State<GroupMemberListView> createState() => _GroupMemberListViewState();
@@ -68,8 +79,10 @@ class _GroupMemberListViewState extends State<GroupMemberListView> {
       valueListenable: controller.loadingType,
       builder: (context, type, child) {
         return ChatUIKitAlphabeticalWidget(
-          onTapCancel: () {},
-          onTap: (context, alphabetical) {},
+          groupId: widget.groupId,
+          onSelectLetterChanged: widget.onSelectLetterChanged,
+          universalAlphabeticalLetter: widget.universalAlphabeticalLetter,
+          sortAlphabetical: widget.sortAlphabetical,
           beforeWidgets: widget.beforeWidgets,
           listViewHasSearchBar: enableSearchBar,
           list: controller.list,

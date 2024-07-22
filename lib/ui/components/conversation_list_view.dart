@@ -1,6 +1,6 @@
-import '../../chat_uikit.dart';
-
 import 'package:flutter/material.dart';
+
+import '../../chat_uikit.dart';
 
 class ConversationListView extends StatefulWidget {
   const ConversationListView({
@@ -17,6 +17,7 @@ class ConversationListView extends StatefulWidget {
     this.onLongPress,
     this.enableLongPress = true,
     this.enableSearchBar = true,
+    this.enablePinHighlight = true,
     super.key,
   });
 
@@ -35,6 +36,7 @@ class ConversationListView extends StatefulWidget {
   final ConversationListViewController? controller;
   final bool enableLongPress;
   final bool enableSearchBar;
+  final bool enablePinHighlight;
 
   @override
   State<ConversationListView> createState() => _ConversationListViewState();
@@ -62,6 +64,7 @@ class _ConversationListViewState extends State<ConversationListView> {
   @override
   @override
   Widget build(BuildContext context) {
+    final theme = ChatUIKitTheme.of(context);
     return ChatUIKitListView(
       type: controller.loadingType.value,
       list: controller.list,
@@ -105,7 +108,23 @@ class _ConversationListViewState extends State<ConversationListView> {
           if (widget.itemBuilder != null) {
             item = widget.itemBuilder!(context, model);
           }
-          item ??= InkWell(
+
+          item ??= ChatUIKitConversationListViewItem(model);
+
+          if (widget.enablePinHighlight) {
+            item = Container(
+              color: model.pinned
+                  ? (theme.color.isDark
+                      ? theme.color.neutralColor2
+                      : theme.color.neutralColor95)
+                  : (theme.color.isDark
+                      ? theme.color.neutralColor1
+                      : theme.color.neutralColor98),
+              child: item,
+            );
+          }
+
+          item = InkWell(
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
             onTap: () {
@@ -116,9 +135,7 @@ class _ConversationListViewState extends State<ConversationListView> {
                 widget.onLongPress?.call(context, model);
               }
             },
-            child: ChatUIKitConversationListViewItem(
-              model,
-            ),
+            child: item,
           );
 
           item = SizedBox(

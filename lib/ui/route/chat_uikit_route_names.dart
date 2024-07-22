@@ -22,7 +22,7 @@ class ChatUIKitRouteNames {
   static const String newRequestDetailsView = '/NewRequestDetailsView';
   static const String newRequestsView = '/NewRequestsView';
   static const String reportMessageView = '/ReportMessageView';
-  static const String searchUsersView = '/SearchUsersView';
+  static const String searchView = '/SearchView';
   static const String searchGroupMembersView = '/SearchGroupMembersView';
   static const String selectContactsView = '/SelectContactsView';
   static const String showImageView = '/ShowImageView';
@@ -91,7 +91,7 @@ class ChatUIKitRouteNames {
         return NewRequestsView.arguments(
           arguments as NewRequestsViewArguments,
         );
-      case ChatUIKitRouteNames.searchUsersView:
+      case ChatUIKitRouteNames.searchView:
         return SearchView.arguments(
           arguments as SearchViewArguments,
         );

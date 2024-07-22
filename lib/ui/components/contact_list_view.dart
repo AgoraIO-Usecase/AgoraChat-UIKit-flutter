@@ -16,6 +16,9 @@ class ContactListView extends StatefulWidget {
     this.enableSearchBar = true,
     this.onTap,
     this.onLongPress,
+    this.sortAlphabetical,
+    this.universalAlphabetical = '#',
+    this.onSelectLetterChanged,
     super.key,
   });
   final bool enableSearchBar;
@@ -31,6 +34,14 @@ class ContactListView extends StatefulWidget {
   final String? errorMessage;
   final String? reloadMessage;
   final ContactListViewController? controller;
+  final void Function(BuildContext context, String? letter)?
+      onSelectLetterChanged;
+
+  /// 通讯录列表的字母排序默认字，默认为 '#'
+  final String universalAlphabetical;
+
+  /// 字母排序
+  final String? sortAlphabetical;
 
   @override
   State<ContactListView> createState() => _ContactListViewState();
@@ -60,10 +71,11 @@ class _ContactListViewState extends State<ContactListView> {
   @override
   Widget build(BuildContext context) {
     return ChatUIKitAlphabeticalWidget(
-      onTapCancel: () {},
-      onTap: (context, alphabetical) {},
+      onSelectLetterChanged: widget.onSelectLetterChanged,
       beforeWidgets: widget.beforeWidgets,
       listViewHasSearchBar: widget.enableSearchBar,
+      universalAlphabeticalLetter: widget.universalAlphabetical,
+      sortAlphabetical: widget.sortAlphabetical,
       list: controller.list,
       scrollController: scrollController,
       builder: (context, list) {

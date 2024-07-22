@@ -16,6 +16,9 @@ class GroupMembersViewArguments implements ChatUIKitViewArguments {
     this.enableAppBar = true,
     this.viewObserver,
     this.attributes,
+    this.onSelectLetterChanged,
+    this.sortAlphabetical,
+    this.universalAlphabeticalLetter = '#',
   });
 
   final ChatUIKitProfile profile;
@@ -31,6 +34,14 @@ class GroupMembersViewArguments implements ChatUIKitViewArguments {
   final Widget? listViewBackground;
   final String? loadErrorMessage;
   final bool enableAppBar;
+  final void Function(BuildContext context, String? letter)?
+      onSelectLetterChanged;
+
+  /// 通讯录列表的字母排序默认字，默认为 '#'
+  final String universalAlphabeticalLetter;
+
+  /// 字母排序
+  final String? sortAlphabetical;
 
   @override
   String? attributes;
@@ -51,6 +62,9 @@ class GroupMembersViewArguments implements ChatUIKitViewArguments {
     bool? enableMemberOperation,
     bool? enableAppBar,
     ChatUIKitViewObserver? viewObserver,
+    String? universalAlphabeticalLetter,
+    String? sortAlphabetical,
+    Function(BuildContext context, String? letter)? onSelectLetterChanged,
     String? attributes,
   }) {
     return GroupMembersViewArguments(
@@ -62,10 +76,15 @@ class GroupMembersViewArguments implements ChatUIKitViewArguments {
       onTap: onTap ?? this.onTap,
       onLongPress: onLongPress ?? this.onLongPress,
       searchBarHideText: searchBarHideText ?? this.searchBarHideText,
-      listViewBackground: listViewBackground ?? this.listViewBackground,
+    listViewBackground: listViewBackground ?? this.listViewBackground,
       loadErrorMessage: loadErrorMessage ?? this.loadErrorMessage,
       enableAppBar: enableAppBar ?? this.enableAppBar,
       viewObserver: viewObserver ?? this.viewObserver,
+      onSelectLetterChanged:
+          onSelectLetterChanged ?? this.onSelectLetterChanged,
+      universalAlphabeticalLetter:
+          universalAlphabeticalLetter ?? this.universalAlphabeticalLetter,
+      sortAlphabetical: sortAlphabetical ?? this.sortAlphabetical,
       attributes: attributes ?? this.attributes,
     );
   }

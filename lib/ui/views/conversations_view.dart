@@ -19,6 +19,7 @@ class ConversationsView extends StatefulWidget {
         enableSearchBar = arguments.enableSearchBar,
         viewObserver = arguments.viewObserver,
         moreActionsBuilder = arguments.moreActionsBuilder,
+        enablePinHighlight = arguments.enablePinHighlight,
         attributes = arguments.attributes;
 
   /// 会话列表构造方法，如果需要自定义会话列表可以使用这个方法。
@@ -38,6 +39,7 @@ class ConversationsView extends StatefulWidget {
     this.attributes,
     this.viewObserver,
     this.moreActionsBuilder,
+    this.enablePinHighlight = true,
     super.key,
   });
 
@@ -84,6 +86,8 @@ class ConversationsView extends StatefulWidget {
 
   /// 更多操作构建器，用于构建更多操作的菜单，如果不设置将会使用默认的菜单。
   final ChatUIKitMoreActionsBuilder? moreActionsBuilder;
+
+  final bool enablePinHighlight;
 
   @override
   State<ConversationsView> createState() => _ConversationsViewState();
@@ -209,7 +213,7 @@ class _ConversationsViewState extends State<ConversationsView> {
 
     ChatUIKitRoute.pushOrPushNamed(
       context,
-      ChatUIKitRouteNames.searchUsersView,
+      ChatUIKitRouteNames.searchView,
       SearchViewArguments(
           onTap: (ctx, profile) {
             Navigator.of(ctx).pop(profile);
@@ -430,7 +434,7 @@ class _ConversationsViewState extends State<ConversationsView> {
       inputItems: [
         ChatUIKitDialogInputContentItem(
           hintText: ChatUIKitLocal.addContactInputHints.localString(context),
-        )
+        ),
       ],
       actionItems: [
         ChatUIKitDialogAction.cancel(

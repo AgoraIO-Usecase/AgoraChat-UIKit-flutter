@@ -107,7 +107,7 @@ class ChatUIKitRoute {
         arguments as NewRequestDetailsViewArguments,
       );
     },
-    ChatUIKitRouteNames.searchUsersView: (context, arguments) {
+    ChatUIKitRouteNames.searchView: (context, arguments) {
       return SearchView.arguments(
         arguments as SearchViewArguments,
       );

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class ChatUIKitConversationListViewItem extends StatelessWidget {
   const ChatUIKitConversationListViewItem(
     this.info, {
-    this.showAvatar,
-    this.subTitleLabel,
+    this.titleWidget,
+    this.showAvatar = true,
     this.unreadCount,
     this.showNewMessageTime = true,
     this.showTitle = true,
@@ -14,10 +14,11 @@ class ChatUIKitConversationListViewItem extends StatelessWidget {
     this.showNoDisturb = true,
     this.timestamp,
     super.key,
+    this.subTitleLabel,
   });
 
   final ConversationItemModel info;
-  final bool? showAvatar;
+  final bool showAvatar;
   final bool showNewMessageTime;
   final bool showTitle;
   final bool showSubTitle;
@@ -26,12 +27,13 @@ class ChatUIKitConversationListViewItem extends StatelessWidget {
   final String? subTitleLabel;
   final String? unreadCount;
   final int? timestamp;
+  final Widget? titleWidget;
 
   @override
   Widget build(BuildContext context) {
     final theme = ChatUIKitTheme.of(context);
 
-    Widget avatar = showAvatar ?? ChatUIKitSettings.showConversationListAvatar
+    Widget avatar = (showAvatar && ChatUIKitSettings.showConversationListAvatar)
         ? Container(
             margin: const EdgeInsets.only(right: 12),
             child: ChatUIKitAvatar(
@@ -41,21 +43,22 @@ class ChatUIKitConversationListViewItem extends StatelessWidget {
           )
         : const SizedBox();
 
-    Widget title = showTitle
-        ? Text(
-            info.showName,
-            textScaler: TextScaler.noScaling,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            style: TextStyle(
-              color: theme.color.isDark
-                  ? theme.color.neutralColor98
-                  : theme.color.neutralColor1,
-              fontSize: theme.font.titleLarge.fontSize,
-              fontWeight: theme.font.titleLarge.fontWeight,
-            ),
-          )
-        : const SizedBox();
+    Widget title = titleWidget ??
+        (showTitle
+            ? Text(
+                info.showName,
+                textScaler: TextScaler.noScaling,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                  color: theme.color.isDark
+                      ? theme.color.neutralColor98
+                      : theme.color.neutralColor1,
+                  fontSize: theme.font.titleLarge.fontSize,
+                  fontWeight: theme.font.titleLarge.fontWeight,
+                ),
+              )
+            : const SizedBox());
 
     Widget muteType = showNoDisturb && info.noDisturb
         ? Container(
@@ -228,14 +231,11 @@ class ChatUIKitConversationListViewItem extends StatelessWidget {
       ],
     );
     content = Container(
-      padding: const EdgeInsets.fromLTRB(16, 13, 16, 13),
-      color: info.pinned
-          ? (theme.color.isDark
-              ? theme.color.neutralColor2
-              : theme.color.neutralColor95)
-          : (theme.color.isDark
-              ? theme.color.neutralColor1
-              : theme.color.neutralColor98),
+      padding: EdgeInsets.fromLTRB(
+          (ChatUIKitSettings.showConversationListAvatar && showAvatar) ? 16 : 0,
+          13,
+          16,
+          13),
       child: content,
     );
 
@@ -244,7 +244,12 @@ class ChatUIKitConversationListViewItem extends StatelessWidget {
         content,
         Positioned(
           bottom: 0,
-          left: 78 - (ChatUIKitSettings.showConversationListAvatar ? 0 : 60),
+          left: (ChatUIKitSettings.showConversationListAvatar && showAvatar)
+              ? 16
+              : 0 -
+                  ((ChatUIKitSettings.showConversationListAvatar || showAvatar)
+                      ? 60
+                      : 0),
           right: 0,
           height: 0.5,
           child: Divider(

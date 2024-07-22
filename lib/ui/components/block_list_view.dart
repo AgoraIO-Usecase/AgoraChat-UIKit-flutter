@@ -61,8 +61,6 @@ class _BlockListViewState extends State<BlockListView>
   @override
   Widget build(BuildContext context) {
     return ChatUIKitAlphabeticalWidget(
-      onTapCancel: () {},
-      onTap: (context, alphabetical) {},
       beforeWidgets: widget.beforeWidgets,
       listViewHasSearchBar: widget.enableSearchBar,
       list: controller.list,

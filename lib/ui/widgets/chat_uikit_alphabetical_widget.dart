@@ -5,46 +5,50 @@ import 'package:flutter/material.dart';
 const double letterHeight = 16;
 const double letterWidth = 16;
 
+const defaultLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#';
+
 class ChatUIKitAlphabeticalWidget extends StatefulWidget {
   const ChatUIKitAlphabeticalWidget({
     required this.list,
     required this.scrollController,
     required this.builder,
+    this.groupId,
     this.enableSorting = true,
     this.showAlphabetical = true,
     this.selectionTextStyle,
     this.selectionHeight = 32,
     this.selectionBackgroundColor,
-    this.special = '#',
-    this.sortAlphabetical = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#',
+    this.universalAlphabeticalLetter = '#',
+    this.sortAlphabetical,
     this.rightPadding = 2,
-    this.onTap,
-    this.onTapCancel,
+    this.onSelectLetterChanged,
     this.highlight = true,
     this.highlightColor,
     this.listViewHasSearchBar = true,
     this.beforeWidgets,
+    this.itemModelBuilder,
     super.key,
   });
 
-  final String sortAlphabetical;
+  final String? sortAlphabetical;
   final TextStyle? selectionTextStyle;
   final double selectionHeight;
   final Color? selectionBackgroundColor;
   final bool showAlphabetical;
   final List<Widget>? beforeWidgets;
-  final String special;
+  final String universalAlphabeticalLetter;
   final ListViewBuilder builder;
   final bool enableSorting;
   final double rightPadding;
   final ScrollController scrollController;
-  final void Function(BuildContext context, String alphabetical)? onTap;
-  final VoidCallback? onTapCancel;
+  final void Function(BuildContext context, String? letter)?
+      onSelectLetterChanged;
   final bool listViewHasSearchBar;
   final bool highlight;
   final Color? highlightColor;
-
+  final String? groupId;
   final List<ChatUIKitListItemModelBase> list;
+  final AlphabeticalItemModel? Function(String alphabetical)? itemModelBuilder;
 
   @override
   State<ChatUIKitAlphabeticalWidget> createState() =>
@@ -170,7 +174,7 @@ class _ChatUIKitAlphabeticalWidgetState
               ),
               child: Center(
                 child: Text(
-                  element.toUpperCase(),
+                  element.substring(0, 1).toUpperCase(),
                   textAlign: TextAlign.right,
                   textScaler: TextScaler.noScaling,
                   overflow: TextOverflow.ellipsis,
@@ -256,7 +260,7 @@ class _ChatUIKitAlphabeticalWidgetState
     if (str == '·') {
       return;
     }
-    widget.onTap?.call(context, str);
+    widget.onSelectLetterChanged?.call(context, str);
     latestSelected = str;
     moveTo(str);
   }
@@ -265,42 +269,39 @@ class _ChatUIKitAlphabeticalWidgetState
     onTouch = false;
     // latestSelected = null;
     // selectIndex.value = -1;
-    widget.onTapCancel?.call();
+    widget.onSelectLetterChanged?.call(context, null);
   }
 
   List<ChatUIKitListItemModelBase> sortList() {
     targets.clear();
-    List<String> targetList = ChatUIKitSettings.sortAlphabetical.isNotEmpty
-        ? ChatUIKitSettings.sortAlphabetical.toLowerCase().split('')
-        : widget.sortAlphabetical.toLowerCase().split('');
+
+    List<String> targetList = List.from(
+        widget.sortAlphabetical?.characters.toList() ??
+            ChatUIKitSettings.sortAlphabetical.characters.toList());
 
     List<ChatUIKitListItemModelBase> ret = [];
-    List<NeedAlphabetical> tmp = [];
-    for (var item in widget.list) {
-      if (item is NeedAlphabetical) {
-        tmp.add(item);
-      }
-    }
+
+    List<NeedAlphabetical> tmp =
+        widget.list.whereType<NeedAlphabetical>().toList();
 
     Map<String, List<NeedAlphabetical>> map = {};
     for (var letter in targetList) {
       map[letter] = [];
     }
-    map[widget.special] = [];
+    map[widget.universalAlphabeticalLetter] = [];
 
     for (var item in tmp) {
-      if (item.showName.isEmpty) {
-        map[widget.special]?.add(item);
-      }
-
       String? letter = ChatUIKitAlphabetSortHelper.instance.sortHandler
-          ?.call(item.showName)
-          .toLowerCase();
-      letter ??= item.firstLetter.toLowerCase();
-      if (!targetList.contains(letter)) {
-        map[widget.special]?.add(item);
-      } else {
+          ?.call(widget.groupId, item.profile.id, item.showName);
+
+      letter ??= item.firstLetter;
+
+      letter = letter.toUpperCase();
+
+      if (targetList.any((element) => element.startsWith(letter!))) {
         map[letter]?.add(item);
+      } else {
+        map[widget.universalAlphabeticalLetter]?.add(item);
       }
     }
     // 对序列内容排序
@@ -312,8 +313,8 @@ class _ChatUIKitAlphabeticalWidgetState
     map.removeWhere((key, value) => value.isEmpty);
 
     // 修改special位置，如果target中没有special，则把special在最后。
-    if (!targetList.contains(widget.special)) {
-      targetList.add(widget.special);
+    if (!targetList.contains(widget.universalAlphabeticalLetter)) {
+      targetList.add(widget.universalAlphabeticalLetter);
     }
 
     // 清空不存在的target
@@ -335,12 +336,13 @@ class _ChatUIKitAlphabeticalWidgetState
     // 计算index 位置 转为最终序列
     for (var item in targetList) {
       positionMap[item] = position;
-      final letterModel = AlphabeticalItemModel(
-        item.toUpperCase(),
-        textStyle: widget.selectionTextStyle,
-        height: widget.selectionHeight,
-        backgroundColor: widget.selectionBackgroundColor,
-      );
+      final letterModel = widget.itemModelBuilder?.call(item) ??
+          AlphabeticalItemModel(
+            item.toUpperCase(),
+            textStyle: widget.selectionTextStyle,
+            height: widget.selectionHeight,
+            backgroundColor: widget.selectionBackgroundColor,
+          );
       ret.add(letterModel);
       position += letterModel.height;
       List<NeedAlphabetical> list = map[item]!;

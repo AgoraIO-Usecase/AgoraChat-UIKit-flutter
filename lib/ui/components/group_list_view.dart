@@ -15,6 +15,7 @@ class GroupListView extends StatefulWidget {
     this.reloadMessage,
     this.onTap,
     this.onLongPress,
+    this.enableSearch = false,
     super.key,
   });
   final void Function(List<GroupItemModel> data)? onSearchTap;
@@ -28,6 +29,7 @@ class GroupListView extends StatefulWidget {
   final String? errorMessage;
   final String? reloadMessage;
   final GroupListViewController? controller;
+  final bool enableSearch;
 
   @override
   State<GroupListView> createState() => _GroupListViewState();
@@ -75,7 +77,16 @@ class _GroupListViewState extends State<GroupListView>
           loadMore: () {
             controller.fetchMoreItemList();
           },
-          enableSearchBar: false,
+          enableSearchBar: widget.enableSearch,
+          onSearchTap: (data) {
+            List<GroupItemModel> list = [];
+            for (var item in data) {
+              if (item is GroupItemModel) {
+                list.add(item);
+              }
+            }
+            widget.onSearchTap?.call(list);
+          },
           errorMessage: widget.errorMessage,
           reloadMessage: widget.reloadMessage,
           background: widget.background,

@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+
 import '../../chat_uikit.dart';
 import '../../universal/inner_headers.dart';
 
@@ -66,6 +70,51 @@ class ConversationListViewController
   @override
   void onConversationsUpdate() {
     reload();
+  }
+
+  Future<void> deleteConversation({required String conversationId}) async {
+    int index = list.indexWhere((element) {
+      return (element as ConversationItemModel).profile.id == conversationId;
+    });
+    if (index != -1) {
+      list.removeAt(index);
+      await refresh();
+      await ChatUIKit.instance.deleteLocalConversation(
+        conversationId: conversationId,
+      );
+    }
+  }
+
+  Future<void> pinConversation({
+    required String conversationId,
+    required bool isPinned,
+  }) async {
+    int index = list.indexWhere((element) {
+      return (element as ConversationItemModel).profile.id == conversationId;
+    });
+    if (index != -1) {
+      ConversationItemModel item = list[index] as ConversationItemModel;
+      item = item.copyWith(pinned: !item.pinned);
+      list[index] = item;
+      await refresh();
+      await ChatUIKit.instance.pinConversation(
+        conversationId: conversationId,
+        isPinned: isPinned,
+      );
+    }
+  }
+
+  Future<void> markConversationAsRead(String conversationId) async {
+    try {
+      Conversation? conv = await ChatUIKit.instance
+          .getConversation(conversationId: conversationId);
+      await conv?.markAllMessagesAsRead();
+      await ChatUIKit.instance
+          .sendConversationReadAck(conversationId: conversationId);
+      reload();
+    } catch (e) {
+      chatPrint('conversation list markConversationAsRead: $e');
+    }
   }
 
   @override
@@ -141,12 +190,6 @@ class ConversationListViewController
     }
   }
 
-  // @override
-  // Future<List<ChatUIKitListItemModelBase>> fetchMoreItemList() async {
-  //   List<ChatUIKitListItemModelBase> list = [];
-  //   return list;
-  // }
-
   Future<List<Conversation>> _clearEmpty(List<Conversation> list) async {
     List<Conversation> tmp = [];
     for (var item in list) {
@@ -163,13 +206,18 @@ class ConversationListViewController
   Future<List<Conversation>> fetchConversations() async {
     List<Conversation> items = [];
     if (!hasFetchPinned) {
-      CursorResult<Conversation> result =
-          await ChatUIKit.instance.fetchPinnedConversations(
-        pageSize: 50,
-      );
-      items.addAll(result.data);
+      try {
+        CursorResult<Conversation> result =
+            await ChatUIKit.instance.fetchPinnedConversations(
+          pageSize: 50,
+        );
+        items.addAll(result.data);
+      } catch (e) {
+        debugPrint('fetchConversations error: $e');
+      }
       hasFetchPinned = true;
     }
+    bool hasError = false;
     try {
       CursorResult<Conversation> result =
           await ChatUIKit.instance.fetchConversations(
@@ -178,16 +226,19 @@ class ConversationListViewController
       );
       cursor = result.cursor;
       items.addAll(result.data);
-      if (result.data.length < pageSize) {
+      if (result.data.length < pageSize || cursor == '') {
         ChatUIKitContext.instance.setConversationLoadFinished();
         hasMore = false;
       }
-      // ignore: empty_catches
-    } catch (e) {}
+    } catch (e) {
+      ChatUIKitContext.instance.setConversationLoadFinished();
+      hasError = true;
+      debugPrint('fetchConversations error: $e');
+    }
 
     await _updateMuteType(items);
 
-    if (hasMore) {
+    if (hasMore && !hasError) {
       List<Conversation> tmp = await fetchConversations();
       items.addAll(tmp);
     }
@@ -196,10 +247,20 @@ class ConversationListViewController
 
   Future<void> _updateMuteType(List<Conversation> items) async {
     try {
-      await ChatUIKit.instance.fetchSilentModel(conversations: items);
-
-      // ignore: empty_catches
-    } catch (e) {}
+      List<List<Conversation>> data = [];
+      int index = 0;
+      while (index < items.length) {
+        int intMin = min((index + 20), items.length);
+        data.add(items.sublist(index, intMin));
+        index += intMin;
+      }
+      for (var list in data) {
+        if (list.isEmpty) continue;
+        await ChatUIKit.instance.fetchSilentModel(conversations: list);
+      }
+    } catch (e) {
+      debugPrint('fetchConversations error: $e');
+    }
   }
 
   Future<List<ConversationItemModel>> _mappers(

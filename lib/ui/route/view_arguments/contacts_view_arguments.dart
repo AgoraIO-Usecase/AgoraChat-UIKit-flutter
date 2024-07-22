@@ -17,8 +17,20 @@ class ContactsViewArguments implements ChatUIKitViewArguments {
     this.beforeItems,
     this.afterItems,
     this.viewObserver,
+    this.sortAlphabetical,
+    this.universalAlphabetical = '#',
+    this.onSelectLetterChanged,
     this.attributes,
   });
+
+  final void Function(BuildContext context, String? letter)?
+      onSelectLetterChanged;
+
+  /// 通讯录列表的字母排序默认字，默认为 '#'
+  final String universalAlphabetical;
+
+  /// 字母排序
+  final String? sortAlphabetical;
 
   /// 联系人列表控制器，用于控制联系人列表数据，如果不设置将会自动创建。详细参考 [ContactListViewController]。
   final ContactListViewController? controller;
@@ -81,6 +93,9 @@ class ContactsViewArguments implements ChatUIKitViewArguments {
     ChatUIKitViewObserver? viewObserver,
     String? attributes,
     Widget? appBarLeading,
+    String? universalAlphabetical,
+    String? sortAlphabetical,
+    Function(BuildContext context, String? letter)? onSelectLetterChanged,
     ChatUIKitAppBarActionsBuilder? appBarTrailingActionsBuilder,
   }) {
     return ContactsViewArguments(
@@ -96,6 +111,11 @@ class ContactsViewArguments implements ChatUIKitViewArguments {
       loadErrorMessage: loadErrorMessage ?? this.loadErrorMessage,
       enableAppBar: enableAppBar ?? this.enableAppBar,
       viewObserver: viewObserver ?? this.viewObserver,
+      onSelectLetterChanged:
+          onSelectLetterChanged ?? this.onSelectLetterChanged,
+      universalAlphabetical:
+          universalAlphabetical ?? this.universalAlphabetical,
+      sortAlphabetical: sortAlphabetical ?? this.sortAlphabetical,
       attributes: attributes ?? this.attributes,
     );
   }

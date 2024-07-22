@@ -71,45 +71,24 @@ class GroupMemberListViewController
   Future<List<String>> fetchAllMembers() async {
     List<String> ret = [];
     do {
-      CursorResult<String> items =
-          await ChatUIKit.instance.fetchGroupMemberList(
-        groupId: groupId,
-        pageSize: pageSize,
-        cursor: cursor,
-      );
-
-      cursor = items.cursor;
-      ret.addAll(items.data);
-      if (items.data.length < pageSize) {
-        hasMore = false;
-      }
-    } while (hasMore);
-
-    return ret;
-  }
-
-  @override
-  Future<void> fetchMoreItemList() async {
-    if (hasMore) {
       try {
-        loadingType.value = ChatUIKitListViewType.refresh;
         CursorResult<String> items =
             await ChatUIKit.instance.fetchGroupMemberList(
           groupId: groupId,
           pageSize: pageSize,
           cursor: cursor,
         );
+
         cursor = items.cursor;
+        ret.addAll(items.data);
         if (items.data.length < pageSize) {
           hasMore = false;
         }
-        List<ContactItemModel> tmp = mappers(items.data);
-        list.addAll(tmp);
-        loadingType.value = ChatUIKitListViewType.normal;
-        // ignore: empty_catches
-      } catch (e) {}
-      loadingType.value = ChatUIKitListViewType.normal;
-    }
+      } catch (e) {
+        hasMore = false;
+      }
+    } while (hasMore);
+    return ret;
   }
 
   List<ContactItemModel> mappers(List<String> userIds) {
