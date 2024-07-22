@@ -60,8 +60,6 @@ export 'observers/action_event_observer.dart';
 export 'observers/thread_observer.dart';
 
 export 'chat_sdk_service_defines.dart';
-export 'chat_sdk_define.dart';
-export 'chat_sdk_service_defines.dart';
 export '../chat_uikit_service/chat_uikit_insert_tools.dart';
 
 const String sdkEventKey = 'chat_uikit';

@@ -62,6 +62,8 @@ typedef MessagePinOperation = chat.MessagePinOperation;
 typedef MessagePinInfo = chat.MessagePinInfo;
  */
 
+library chat_sdk_define;
+
 import 'package:agora_chat_sdk/agora_chat_sdk.dart' as chat;
 
 typedef Client = chat.ChatClient;
