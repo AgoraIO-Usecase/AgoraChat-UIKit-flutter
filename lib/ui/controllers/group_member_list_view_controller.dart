@@ -1,15 +1,12 @@
 import '../../chat_uikit.dart';
 
-class GroupMemberListViewController
-    with ChatUIKitListViewControllerBase, ChatUIKitProviderObserver {
+class GroupMemberListViewController with ChatUIKitListViewControllerBase {
   GroupMemberListViewController({
     required this.groupId,
     this.willShowHandler,
     this.includeOwner = true,
     this.pageSize = 200,
-  }) {
-    ChatUIKitProvider.instance.addObserver(this);
-  }
+  });
   final String groupId;
   final int pageSize;
   final bool includeOwner;
@@ -17,28 +14,6 @@ class GroupMemberListViewController
 
   /// 会话列表显示前的回调，你可以在这里对会话列表进行处理，比如排序或者加减等。如果不设置将会直接显示。
   final ContactListViewShowHandler? willShowHandler;
-
-  @override
-  void dispose() {
-    ChatUIKitProvider.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
-    if (list.any((element) =>
-        map.keys.contains((element as ContactItemModel).profile.id))) {
-      for (var element in map.keys) {
-        int index = list
-            .indexWhere((e) => (e as ContactItemModel).profile.id == element);
-        if (index != -1) {
-          list[index] = (list[index] as ContactItemModel)
-              .copyWith(profile: map[element]!);
-        }
-      }
-      refresh();
-    }
-  }
 
   @override
   Future<void> fetchItemList({bool force = false}) async {
@@ -54,7 +29,7 @@ class GroupMemberListViewController
           userIds.insert(0, group!.owner!);
         }
       }
-      List<ContactItemModel> tmp = mappers(userIds);
+      List<ContactItemModel> tmp = mapperToContactItemModelItems(userIds);
       list.clear();
       list.addAll(tmp);
 
@@ -91,7 +66,7 @@ class GroupMemberListViewController
     return ret;
   }
 
-  List<ContactItemModel> mappers(List<String> userIds) {
+  List<ContactItemModel> mapperToContactItemModelItems(List<String> userIds) {
     List<ContactItemModel> models = [];
     Map<String, ChatUIKitProfile> map =
         ChatUIKitProvider.instance.getProfiles(() {

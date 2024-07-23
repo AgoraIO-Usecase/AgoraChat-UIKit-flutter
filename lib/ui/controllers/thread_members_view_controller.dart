@@ -4,8 +4,7 @@ import '../../universal/inner_headers.dart';
 
 import 'package:flutter/foundation.dart';
 
-class ThreadMembersViewController extends ChangeNotifier
-    with SafeAreaDisposed, ChatUIKitProviderObserver {
+class ThreadMembersViewController extends ChangeNotifier with SafeAreaDisposed {
   final ChatThread thread;
   bool loadFinished = false;
   bool fetching = false;
@@ -17,15 +16,7 @@ class ThreadMembersViewController extends ChangeNotifier
   ThreadMembersViewController({
     required this.thread,
     this.pageSize = 20,
-  }) {
-    ChatUIKitProvider.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    ChatUIKitProvider.instance.removeObserver(this);
-    super.dispose();
-  }
+  });
 
   Future<void> fetchMembers() async {
     if (fetching || loadFinished) {
@@ -64,15 +55,5 @@ class ThreadMembersViewController extends ChangeNotifier
 
   void refresh() {
     notifyListeners();
-  }
-
-  @override
-  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
-    if (modelsList.any((element) => map.keys.contains(element.profile.id))) {
-      for (var i = 0; i < modelsList.length; i++) {
-        modelsList[i].profile = map[modelsList[i].profile.id]!;
-      }
-      refresh();
-    }
   }
 }

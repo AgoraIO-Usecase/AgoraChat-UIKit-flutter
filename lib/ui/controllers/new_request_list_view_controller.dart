@@ -1,42 +1,15 @@
 import '../../chat_uikit.dart';
 
-import 'package:flutter/foundation.dart';
-
-class NewRequestListViewController
-    with ChatUIKitListViewControllerBase, ChatUIKitProviderObserver {
-  NewRequestListViewController() {
-    ChatUIKitProvider.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    ChatUIKitProvider.instance.removeObserver(this);
-    super.dispose();
-  }
+class NewRequestListViewController with ChatUIKitListViewControllerBase {
+  NewRequestListViewController();
 
   String? cursor;
-
-  @override
-  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
-    if (list.any((element) =>
-        map.keys.contains((element as NewRequestItemModel).profile.id))) {
-      for (var element in map.keys) {
-        int index = list.indexWhere(
-            (e) => (e as NewRequestItemModel).profile.id == element);
-        if (index != -1) {
-          list[index] = (list[index] as NewRequestItemModel)
-              .copyWith(profile: map[element]!);
-        }
-      }
-      refresh();
-    }
-  }
 
   @override
   Future<void> fetchItemList({bool force = false}) async {
     loadingType.value = ChatUIKitListViewType.refresh;
     List items = ChatUIKitContext.instance.requestList();
-    List<NewRequestItemModel> tmp = mappers(items);
+    List<NewRequestItemModel> tmp = mapperToNewRequestItemModelItems(items);
     list.clear();
     list.addAll(tmp);
     if (list.isEmpty) {
@@ -46,7 +19,7 @@ class NewRequestListViewController
     }
   }
 
-  List<NewRequestItemModel> mappers(List requests) {
+  List<NewRequestItemModel> mapperToNewRequestItemModelItems(List requests) {
     List<NewRequestItemModel> list = [];
     Map<String, ChatUIKitProfile> map =
         ChatUIKitProvider.instance.getProfiles(() {
@@ -77,9 +50,7 @@ class NewRequestListViewController
         }
       });
       // ignore: empty_catches
-    } catch (e) {
-      debugPrint('acceptRequest error: $e');
-    }
+    } catch (e) {}
     refresh();
   }
 }

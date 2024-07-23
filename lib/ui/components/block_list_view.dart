@@ -16,6 +16,9 @@ class BlockListView extends StatefulWidget {
     this.errorMessage,
     this.reloadMessage,
     this.controller,
+    this.onSelectLetterChanged,
+    this.sortAlphabetical,
+    this.universalAlphabeticalLetter = '#',
   });
 
   final bool enableSearchBar;
@@ -31,6 +34,14 @@ class BlockListView extends StatefulWidget {
   final String? errorMessage;
   final String? reloadMessage;
   final BlockListViewController? controller;
+  final void Function(BuildContext context, String? letter)?
+      onSelectLetterChanged;
+
+  /// 通讯录列表的字母排序默认字，默认为 '#'
+  final String universalAlphabeticalLetter;
+
+  /// 字母排序
+  final String? sortAlphabetical;
 
   @override
   State<BlockListView> createState() => _BlockListViewState();
@@ -44,6 +55,7 @@ class _BlockListViewState extends State<BlockListView>
   @override
   void initState() {
     super.initState();
+    ChatUIKitProvider.instance.addObserver(this);
     controller = widget.controller ?? BlockListViewController();
     controller.fetchItemList();
     controller.loadingType.addListener(() {
@@ -53,14 +65,34 @@ class _BlockListViewState extends State<BlockListView>
 
   @override
   void dispose() {
+    ChatUIKitProvider.instance.removeObserver(this);
     scrollController.dispose();
     controller.dispose();
     super.dispose();
   }
 
   @override
+  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
+    if (controller.list.any((element) =>
+        map.keys.contains((element as ContactItemModel).profile.id))) {
+      for (var element in map.keys) {
+        int index = controller.list
+            .indexWhere((e) => (e as ContactItemModel).profile.id == element);
+        if (index != -1) {
+          controller.list[index] = (controller.list[index] as ContactItemModel)
+              .copyWith(profile: map[element]!);
+        }
+      }
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChatUIKitAlphabeticalWidget(
+      onSelectLetterChanged: widget.onSelectLetterChanged,
+      universalAlphabeticalLetter: widget.universalAlphabeticalLetter,
+      sortAlphabetical: widget.sortAlphabetical,
       beforeWidgets: widget.beforeWidgets,
       listViewHasSearchBar: widget.enableSearchBar,
       list: controller.list,

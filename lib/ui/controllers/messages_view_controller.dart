@@ -16,12 +16,7 @@ enum MessageLastActionType {
 
 /// 消息列表控制器
 class MessagesViewController extends ChangeNotifier
-    with
-        SafeAreaDisposed,
-        ChatObserver,
-        MessageObserver,
-        ThreadObserver,
-        ChatUIKitProviderObserver {
+    with SafeAreaDisposed, ChatObserver, MessageObserver, ThreadObserver {
   /// 用户信息对象，用于设置对方信息, 详细参考 [ChatUIKitProfile]。如果你自己设置了 `MessageListViewController` 需要确保 `profile` 与 [MessagesView] 传入的 `profile` 一致。
   ChatUIKitProfile profile;
 
@@ -91,7 +86,6 @@ class MessagesViewController extends ChangeNotifier
     this.willSendHandler,
   }) {
     ChatUIKit.instance.addObserver(this);
-    ChatUIKitProvider.instance.addObserver(this);
     conversationType = () {
       if (profile.type == ChatUIKitProfileType.group) {
         return ConversationType.GroupChat;
@@ -120,18 +114,8 @@ class MessagesViewController extends ChangeNotifier
   }
 
   @override
-  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
-    userMap.addAll(map);
-    if (map.keys.contains(profile.id)) {
-      profile = map[profile.id]!;
-    }
-    refresh();
-  }
-
-  @override
   void dispose() {
     isDisposed = true;
-    ChatUIKitProvider.instance.removeObserver(this);
     ChatUIKit.instance.removeObserver(this);
     pinedMessages.dispose();
     super.dispose();
@@ -388,6 +372,7 @@ class MessagesViewController extends ChangeNotifier
   void onSuccess(String msgId, Message msg) {
     final index = msgModelList.indexWhere((element) =>
         element.message.msgId == msgId && msg.status != element.message.status);
+
     if (index != -1) {
       msgModelList[index] = msgModelList[index].copyWith(message: msg);
       refresh();
@@ -574,9 +559,8 @@ class MessagesViewController extends ChangeNotifier
       try {
         await ChatUIKit.instance.recallMessage(message: message);
         refresh();
-        // ignore: empty_catches
       } catch (e) {
-        debugPrint('recallMessage: $e');
+        debugPrint('recallMessage err: $e');
       }
     }
   }

@@ -16,6 +16,7 @@ Future<T?> showChatUIKitBottomSheet<T>({
   bool showCancel = true,
   TextStyle? cancelLabelStyle,
   double? height,
+  bool isDismissible = true,
 }) {
   assert(
     (items?.isNotEmpty == true || body != null),
@@ -24,6 +25,7 @@ Future<T?> showChatUIKitBottomSheet<T>({
 
   return showModalBottomSheet(
     clipBehavior: !enableRadius ? null : Clip.hardEdge,
+    isDismissible: isDismissible,
     shape: !enableRadius
         ? null
         : const RoundedRectangleBorder(
@@ -87,7 +89,7 @@ class ChatUIKitBottomSheetAction<T> {
   final String label;
   final TextStyle? style;
   final Widget? icon;
-  final Future<T?> Function()? onTap;
+  final VoidCallback? onTap;
   final ChatUIKitActionType actionType;
 
   ChatUIKitBottomSheetAction copyWith({
@@ -95,7 +97,7 @@ class ChatUIKitBottomSheetAction<T> {
     String? label,
     TextStyle? style,
     Widget? icon,
-    Future<T?> Function()? onTap,
+    T? Function()? onTap,
   }) {
     return ChatUIKitBottomSheetAction(
       actionType: this.actionType,
@@ -226,7 +228,9 @@ class ChatUIKitBottomSheet<T> extends StatelessWidget {
           InkWell(
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
-            onTap: element.onTap,
+            onTap: () {
+              element.onTap?.call();
+            },
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
               alignment: Alignment.center,

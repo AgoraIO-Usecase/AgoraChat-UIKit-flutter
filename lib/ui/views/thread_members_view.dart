@@ -35,13 +35,15 @@ class ThreadMembersView extends StatefulWidget {
   State<ThreadMembersView> createState() => _ThreadMembersViewState();
 }
 
-class _ThreadMembersViewState extends State<ThreadMembersView> {
+class _ThreadMembersViewState extends State<ThreadMembersView>
+    with ChatUIKitProviderObserver {
   late ThreadMembersViewController controller;
   late final ScrollController _scrollController = ScrollController();
   ChatUIKitAppBarModel? appBarModel;
   @override
   void initState() {
     super.initState();
+    ChatUIKitProvider.instance.addObserver(this);
     controller = widget.controller ??
         ThreadMembersViewController(
           thread: widget.thread,
@@ -57,8 +59,21 @@ class _ThreadMembersViewState extends State<ThreadMembersView> {
 
   @override
   void dispose() {
+    ChatUIKitProvider.instance.removeObserver(this);
     controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
+    if (controller.modelsList
+        .any((element) => map.keys.contains(element.profile.id))) {
+      for (var i = 0; i < controller.modelsList.length; i++) {
+        controller.modelsList[i].profile =
+            map[controller.modelsList[i].profile.id]!;
+      }
+      setState(() {});
+    }
   }
 
   void updateAppBarModel(ChatUIKitTheme theme) {

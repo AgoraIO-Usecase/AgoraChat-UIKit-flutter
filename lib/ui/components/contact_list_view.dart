@@ -47,13 +47,15 @@ class ContactListView extends StatefulWidget {
   State<ContactListView> createState() => _ContactListViewState();
 }
 
-class _ContactListViewState extends State<ContactListView> {
+class _ContactListViewState extends State<ContactListView>
+    with ChatUIKitProviderObserver {
   ScrollController scrollController = ScrollController();
   late final ContactListViewController controller;
 
   @override
   void initState() {
     super.initState();
+    ChatUIKitProvider.instance.addObserver(this);
     controller = widget.controller ?? ContactListViewController();
     controller.fetchItemList();
     controller.loadingType.addListener(() {
@@ -63,9 +65,26 @@ class _ContactListViewState extends State<ContactListView> {
 
   @override
   void dispose() {
+    ChatUIKitProvider.instance.removeObserver(this);
     scrollController.dispose();
     controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
+    if (controller.list.any((element) =>
+        map.keys.contains((element as ContactItemModel).profile.id))) {
+      for (var element in map.keys) {
+        int index = controller.list
+            .indexWhere((e) => (e as ContactItemModel).profile.id == element);
+        if (index != -1) {
+          controller.list[index] = (controller.list[index] as ContactItemModel)
+              .copyWith(profile: map[element]!);
+        }
+      }
+      setState(() {});
+    }
   }
 
   @override

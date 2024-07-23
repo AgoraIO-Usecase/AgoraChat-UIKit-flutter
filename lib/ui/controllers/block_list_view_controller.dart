@@ -1,15 +1,11 @@
 import '../../chat_uikit.dart';
 
 class BlockListViewController
-    with
-        ChatUIKitListViewControllerBase,
-        ChatUIKitProviderObserver,
-        ContactObserver {
+    with ChatUIKitListViewControllerBase, ContactObserver {
   BlockListViewController({
     this.willShowHandler,
     this.enableRefresh = true,
   }) {
-    ChatUIKitProvider.instance.addObserver(this);
     ChatUIKit.instance.addObserver(this);
   }
 
@@ -23,25 +19,8 @@ class BlockListViewController
 
   @override
   void dispose() {
-    ChatUIKitProvider.instance.removeObserver(this);
     ChatUIKit.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
-    if (list.any((element) =>
-        map.keys.contains((element as ContactItemModel).profile.id))) {
-      for (var element in map.keys) {
-        int index = list
-            .indexWhere((e) => (e as ContactItemModel).profile.id == element);
-        if (index != -1) {
-          list[index] = (list[index] as ContactItemModel)
-              .copyWith(profile: map[element]!);
-        }
-      }
-      refresh();
-    }
   }
 
   @override
@@ -50,7 +29,7 @@ class BlockListViewController
         .any((element) => (element as ContactItemModel).profile.id == userId)) {
       return;
     }
-    List<ContactItemModel> tmp = _mappers([userId]);
+    List<ContactItemModel> tmp = mapperToContactItemModelItems([userId]);
     list.addAll(tmp);
     refresh();
   }
@@ -82,13 +61,13 @@ class BlockListViewController
 
     try {
       if (force == true || hasFetched == false) {
-        items = await _fetchBlocks();
+        items = await fetchBlocks();
         hasFetched = true;
       } else {
         items = await ChatUIKit.instance.getAllBlockedContactIds();
       }
 
-      List<ContactItemModel> tmp = _mappers(items);
+      List<ContactItemModel> tmp = mapperToContactItemModelItems(items);
       list.clear();
       list.addAll(tmp);
       if (list.isEmpty) {
@@ -102,13 +81,13 @@ class BlockListViewController
     }
   }
 
-  Future<List<String>> _fetchBlocks() async {
+  Future<List<String>> fetchBlocks() async {
     List<String> result = await ChatUIKit.instance.fetchAllBlockedContactIds();
     ChatUIKitContext.instance.setContactLoadFinished();
     return result;
   }
 
-  List<ContactItemModel> _mappers(List<String> userIds) {
+  List<ContactItemModel> mapperToContactItemModelItems(List<String> userIds) {
     List<ContactItemModel> list = [];
     Map<String, ChatUIKitProfile> map =
         ChatUIKitProvider.instance.getProfiles(() {
@@ -137,7 +116,7 @@ class BlockListViewController
         .any((element) => element.profile.id == userId)) {
       return;
     }
-    List<ContactItemModel> tmp = _mappers([userId]);
+    List<ContactItemModel> tmp = mapperToContactItemModelItems([userId]);
     list.addAll(tmp);
   }
 
@@ -147,7 +126,7 @@ class BlockListViewController
     loadingType.value = ChatUIKitListViewType.refresh;
     List<String> items = await ChatUIKit.instance.getAllBlockedContactIds();
     ChatUIKitContext.instance.removeRequests(items);
-    List<ContactItemModel> tmp = _mappers(items);
+    List<ContactItemModel> tmp = mapperToContactItemModelItems(items);
     list.clear();
     list.addAll(tmp);
 

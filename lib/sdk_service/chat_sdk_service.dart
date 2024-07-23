@@ -199,9 +199,7 @@ class ChatSDKService extends ChatUIKitServiceBase
   /// Get current is logged
   ///
   /// Return: true is logged, false is not logged
-  bool isLogged() {
-    return Client.getInstance.currentUserId != null;
-  }
+  Future<bool> isLoginBefore() => Client.getInstance.isLoginBefore();
 
   Future<bool> isConnect() => Client.getInstance.isConnected();
 

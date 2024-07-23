@@ -63,7 +63,7 @@ class PinMessageListView extends StatefulWidget {
 }
 
 class _PinMessageListViewState extends State<PinMessageListView>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, ChatUIKitProviderObserver {
   late AnimationController _controller;
   Animation<double>? animation;
   late CurvedAnimation cure;
@@ -77,6 +77,7 @@ class _PinMessageListViewState extends State<PinMessageListView>
   @override
   void initState() {
     super.initState();
+    ChatUIKitProvider.instance.addObserver(this);
     barrierColor = widget.barrierColor ?? Colors.black.withOpacity(0.3);
     _controller = AnimationController(
       vsync: this,
@@ -119,10 +120,6 @@ class _PinMessageListViewState extends State<PinMessageListView>
         .animate(cure);
 
     widget.pinMessagesController.addListener(() {
-      if (widget.pinMessagesController.needReload) {
-        setState(() {});
-      }
-
       if (widget.pinMessagesController.isShow) {
         isShow = true;
         _controller.forward();
@@ -134,8 +131,18 @@ class _PinMessageListViewState extends State<PinMessageListView>
   }
 
   @override
-  void didUpdateWidget(covariant PinMessageListView oldWidget) {
-    super.didUpdateWidget(oldWidget);
+  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
+    List<PinListItemModel> models =
+        widget.pinMessagesController.list.value.toList();
+    List<String> updateIds = map.keys.toList();
+
+    bool needUpdate = updateIds.any(
+      (element) => models.any((model) =>
+          model.message.from == element || model.pinInfo.operatorId == element),
+    );
+    if (needUpdate) {
+      setState(() {});
+    }
   }
 
   @override
@@ -286,8 +293,9 @@ class _PinMessageListViewState extends State<PinMessageListView>
 
   @override
   void dispose() {
-    super.dispose();
+    ChatUIKitProvider.instance.removeObserver(this);
     _controller.dispose();
+    super.dispose();
   }
 }
 

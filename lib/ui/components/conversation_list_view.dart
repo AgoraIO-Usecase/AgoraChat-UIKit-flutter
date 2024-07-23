@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-
 import '../../chat_uikit.dart';
+
+import 'package:flutter/material.dart';
 
 class ConversationListView extends StatefulWidget {
   const ConversationListView({
@@ -42,12 +42,14 @@ class ConversationListView extends StatefulWidget {
   State<ConversationListView> createState() => _ConversationListViewState();
 }
 
-class _ConversationListViewState extends State<ConversationListView> {
+class _ConversationListViewState extends State<ConversationListView>
+    with ChatUIKitProviderObserver {
   late ConversationListViewController controller;
 
   @override
   void initState() {
     super.initState();
+    ChatUIKitProvider.instance.addObserver(this);
     controller = widget.controller ?? ConversationListViewController();
     controller.fetchItemList();
     controller.loadingType.addListener(() {
@@ -57,11 +59,28 @@ class _ConversationListViewState extends State<ConversationListView> {
 
   @override
   void dispose() {
+    ChatUIKitProvider.instance.removeObserver(this);
     controller.dispose();
     super.dispose();
   }
 
   @override
+  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) async {
+    if (controller.list.any((element) =>
+        map.keys.contains((element as ConversationItemModel).profile.id))) {
+      for (var element in map.keys) {
+        int index = controller.list.indexWhere(
+            (e) => (e as ConversationItemModel).profile.id == element);
+        if (index != -1) {
+          controller.list[index] =
+              (controller.list[index] as ConversationItemModel)
+                  .copyWith(profile: map[element]!);
+        }
+      }
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = ChatUIKitTheme.of(context);

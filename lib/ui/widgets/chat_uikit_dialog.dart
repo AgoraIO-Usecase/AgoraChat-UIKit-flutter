@@ -90,8 +90,8 @@ class ChatUIKitDialogAction<T> {
   final ChatUIKitDialogActionType type;
   final String label;
   final TextStyle? style;
-  final Future<void> Function()? onTap;
-  final Future<void> Function(List<String> inputs)? onInputsTap;
+  final VoidCallback? onTap;
+  final void Function(List<String> inputs)? onInputsTap;
 }
 
 class ChatUIKitDialogInputContentItem {

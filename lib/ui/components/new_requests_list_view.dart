@@ -36,12 +36,13 @@ class NewRequestsListView extends StatefulWidget {
 }
 
 class _NewRequestsListViewState extends State<NewRequestsListView>
-    with ContactObserver {
+    with ContactObserver, ChatUIKitProviderObserver {
   late final NewRequestListViewController controller;
 
   @override
   void initState() {
     super.initState();
+    ChatUIKitProvider.instance.addObserver(this);
     ChatUIKit.instance.addObserver(this);
     controller = widget.controller ?? NewRequestListViewController();
     controller.fetchItemList();
@@ -49,9 +50,27 @@ class _NewRequestsListViewState extends State<NewRequestsListView>
 
   @override
   void dispose() {
+    ChatUIKitProvider.instance.removeObserver(this);
     ChatUIKit.instance.removeObserver(this);
     controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
+    if (controller.list.any((element) =>
+        map.keys.contains((element as NewRequestItemModel).profile.id))) {
+      for (var element in map.keys) {
+        int index = controller.list.indexWhere(
+            (e) => (e as NewRequestItemModel).profile.id == element);
+        if (index != -1) {
+          controller.list[index] =
+              (controller.list[index] as NewRequestItemModel)
+                  .copyWith(profile: map[element]!);
+        }
+      }
+      setState(() {});
+    }
   }
 
   @override
@@ -112,5 +131,8 @@ class _NewRequestsListViewState extends State<NewRequestsListView>
   @override
   void onContactAdded(String userId) {
     controller.fetchItemList();
+
+    // Message.createCustomSendMessage(targetId: userId, event: );
+    // ChatUIKit.instance.insertMessage(message: message);
   }
 }

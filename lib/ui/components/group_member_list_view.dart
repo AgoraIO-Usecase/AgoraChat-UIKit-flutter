@@ -50,7 +50,8 @@ class GroupMemberListView extends StatefulWidget {
   State<GroupMemberListView> createState() => _GroupMemberListViewState();
 }
 
-class _GroupMemberListViewState extends State<GroupMemberListView> {
+class _GroupMemberListViewState extends State<GroupMemberListView>
+    with ChatUIKitProviderObserver {
   ScrollController scrollController = ScrollController();
   late final GroupMemberListViewController controller;
   bool enableSearchBar = true;
@@ -58,7 +59,7 @@ class _GroupMemberListViewState extends State<GroupMemberListView> {
   @override
   void initState() {
     super.initState();
-
+    ChatUIKitProvider.instance.addObserver(this);
     controller = widget.controller ??
         GroupMemberListViewController(
           groupId: widget.groupId,
@@ -68,9 +69,27 @@ class _GroupMemberListViewState extends State<GroupMemberListView> {
 
   @override
   void dispose() {
+    ChatUIKitProvider.instance.removeObserver(this);
     controller.dispose();
     scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
+    if (controller.list.any((element) =>
+        map.keys.contains((element as ContactItemModel).profile.id))) {
+      for (var element in map.keys) {
+        int index = controller.list
+            .indexWhere((e) => (e as ContactItemModel).profile.id == element);
+        if (index != -1) {
+          controller.list[index] = (controller.list[index] as ContactItemModel)
+              .copyWith(profile: map[element]!);
+        }
+      }
+      setState(() {});
+      ();
+    }
   }
 
   @override

@@ -6,7 +6,7 @@ class ConversationItemModel with ChatUIKitListItemModelBase, NeedSearch {
   final bool pinned;
   final bool noDisturb;
   final bool hasMention;
-  final String? attribute;
+  final Map<String, String>? attributes;
   @override
   ChatUIKitProfile profile;
 
@@ -17,7 +17,7 @@ class ConversationItemModel with ChatUIKitListItemModelBase, NeedSearch {
     this.noDisturb = false,
     this.pinned = false,
     this.hasMention = false,
-    this.attribute,
+    this.attributes,
   });
 
   static Future<ConversationItemModel> fromConversation(
@@ -37,6 +37,7 @@ class ConversationItemModel with ChatUIKitListItemModelBase, NeedSearch {
       pinned: conversation.isPinned,
       noDisturb: noDisturb,
       hasMention: conversation.ext?[hasMentionKey] == hasMentionValue,
+      attributes: conversation.ext,
     );
     return info;
   }
@@ -48,7 +49,7 @@ class ConversationItemModel with ChatUIKitListItemModelBase, NeedSearch {
     bool? pinned,
     bool? noDisturb,
     bool? hasMention,
-    String? attribute,
+    Map<String, String>? attributes,
   }) {
     return ConversationItemModel(
       profile: profile ?? this.profile,
@@ -57,8 +58,17 @@ class ConversationItemModel with ChatUIKitListItemModelBase, NeedSearch {
       pinned: pinned ?? this.pinned,
       noDisturb: noDisturb ?? this.noDisturb,
       hasMention: hasMention ?? this.hasMention,
-      attribute: attribute ?? this.attribute,
+      attributes: attributes ?? this.attributes,
     );
+  }
+
+  Future<void> setAttribute(Map<String, String> attribute) async {
+    Conversation? conversation = await ChatUIKit.instance.getConversation(
+        conversationId: profile.id,
+        type: profile.type == ChatUIKitProfileType.group
+            ? ConversationType.GroupChat
+            : ConversationType.Chat);
+    conversation?.setExt(attribute);
   }
 
   @override

@@ -487,7 +487,6 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
         label: ChatUIKitLocal.contactDetailViewDelete.localString(context),
         onTap: () async {
           Navigator.of(context).pop(true);
-          return true;
         },
       ),
     ];

@@ -36,12 +36,13 @@ class GroupListView extends StatefulWidget {
 }
 
 class _GroupListViewState extends State<GroupListView>
-    with MultiObserver, GroupObserver {
+    with MultiObserver, GroupObserver, ChatUIKitProviderObserver {
   late final GroupListViewController controller;
 
   @override
   void initState() {
     super.initState();
+    ChatUIKitProvider.instance.addObserver(this);
     ChatUIKit.instance.addObserver(this);
     controller = widget.controller ?? GroupListViewController();
     controller.fetchItemList();
@@ -49,9 +50,26 @@ class _GroupListViewState extends State<GroupListView>
 
   @override
   void dispose() {
+    ChatUIKitProvider.instance.removeObserver(this);
     ChatUIKit.instance.removeObserver(this);
     controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
+    if (controller.list.any((element) =>
+        map.keys.contains((element as GroupItemModel).profile.id))) {
+      for (var element in map.keys) {
+        int index = controller.list
+            .indexWhere((e) => (e as GroupItemModel).profile.id == element);
+        if (index != -1) {
+          controller.list[index] = (controller.list[index] as GroupItemModel)
+              .copyWith(profile: map[element]!);
+        }
+      }
+      setState(() {});
+    }
   }
 
   @override

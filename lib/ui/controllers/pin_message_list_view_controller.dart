@@ -4,19 +4,16 @@ import 'package:flutter/foundation.dart';
 import '../../tools/safe_disposed.dart';
 
 class PinMessageListViewController extends ChangeNotifier
-    with SafeAreaDisposed, ChatObserver, ChatUIKitProviderObserver {
+    with SafeAreaDisposed, ChatObserver {
   PinMessageListViewController(this.profile) {
     ChatUIKit.instance.addObserver(this);
-    ChatUIKitProvider.instance.addObserver(this);
   }
 
   final ChatUIKitProfile profile;
-  bool needReload = false;
 
   @override
   void dispose() {
     ChatUIKit.instance.removeObserver(this);
-    ChatUIKitProvider.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -83,21 +80,6 @@ class PinMessageListViewController extends ChangeNotifier
       debugPrint('Error fetching pinned messages: $e');
     }
     isFetching = false;
-  }
-
-  @override
-  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
-    List<PinListItemModel> models = list.value.toList();
-    List<String> updateIds = map.keys.toList();
-
-    needReload = updateIds.any(
-      (element) => models.any((model) =>
-          model.message.from == element || model.pinInfo.operatorId == element),
-    );
-    if (needReload) {
-      notifyListeners();
-      needReload = false;
-    }
   }
 
   @override

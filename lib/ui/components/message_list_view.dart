@@ -59,7 +59,8 @@ class MessageListView extends StatefulWidget {
   State<MessageListView> createState() => _MessageListViewState();
 }
 
-class _MessageListViewState extends State<MessageListView> {
+class _MessageListViewState extends State<MessageListView>
+    with ChatUIKitProviderObserver {
   late final MessagesViewController controller;
   late final AutoScrollController _scrollController;
   ChatUIKitTheme? theme;
@@ -68,14 +69,25 @@ class _MessageListViewState extends State<MessageListView> {
   @override
   void initState() {
     super.initState();
+    ChatUIKitProvider.instance.addObserver(this);
     _scrollController = widget.scrollController ?? AutoScrollController();
     controller = widget.controller;
   }
 
   @override
   void dispose() {
+    ChatUIKitProvider.instance.removeObserver(this);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
+    controller.userMap.addAll(map);
+    if (map.keys.contains(controller.profile.id)) {
+      controller.profile = map[controller.profile.id]!;
+    }
+    setState(() {});
   }
 
   @override

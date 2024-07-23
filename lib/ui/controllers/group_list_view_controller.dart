@@ -1,37 +1,12 @@
 import '../../chat_uikit.dart';
 
-class GroupListViewController
-    with ChatUIKitListViewControllerBase, ChatUIKitProviderObserver {
+class GroupListViewController with ChatUIKitListViewControllerBase {
   GroupListViewController({
     this.pageSize = 20,
-  }) {
-    ChatUIKitProvider.instance.addObserver(this);
-  }
+  });
 
   final int pageSize;
   int pageNum = 0;
-
-  @override
-  void dispose() {
-    ChatUIKitProvider.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void onProfilesUpdate(Map<String, ChatUIKitProfile> map) {
-    if (list.any((element) =>
-        map.keys.contains((element as GroupItemModel).profile.id))) {
-      for (var element in map.keys) {
-        int index =
-            list.indexWhere((e) => (e as GroupItemModel).profile.id == element);
-        if (index != -1) {
-          list[index] =
-              (list[index] as GroupItemModel).copyWith(profile: map[element]!);
-        }
-      }
-      refresh();
-    }
-  }
 
   @override
   Future<void> fetchItemList({bool force = false}) async {
@@ -42,7 +17,7 @@ class GroupListViewController
         pageSize: pageSize,
         pageNum: pageNum,
       );
-      List<GroupItemModel> tmp = mappers(items);
+      List<GroupItemModel> tmp = mapperToGroupItemModelItems(items);
       list.clear();
       list.addAll(tmp);
       if (list.isEmpty) {
@@ -66,7 +41,7 @@ class GroupListViewController
     if (items.isEmpty || items.length < pageSize) {
       hasMore = false;
     }
-    List<GroupItemModel> tmp = mappers(items);
+    List<GroupItemModel> tmp = mapperToGroupItemModelItems(items);
     list.addAll(tmp);
     refresh();
   }
@@ -84,7 +59,7 @@ class GroupListViewController
     refresh();
   }
 
-  List<GroupItemModel> mappers(List<Group> groups) {
+  List<GroupItemModel> mapperToGroupItemModelItems(List<Group> groups) {
     List<GroupItemModel> list = [];
     Map<String, ChatUIKitProfile> map =
         ChatUIKitProvider.instance.getProfiles(() {
