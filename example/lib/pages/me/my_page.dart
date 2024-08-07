@@ -223,11 +223,15 @@ class _MyPageState extends State<MyPage> with ChatUIKitProviderObserver {
           onTap: () async {
             Navigator.of(context).pop();
             ChatUIKit.instance.logout().then((value) {
-              Navigator.of(context).popAndPushNamed('/login');
+              toLoginPage();
             });
           },
         ),
       ],
     );
+  }
+
+  void toLoginPage() {
+    Navigator.of(context).popAndPushNamed('/login');
   }
 }

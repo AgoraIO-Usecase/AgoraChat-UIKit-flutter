@@ -219,6 +219,21 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
 
     List<Widget> items = [];
 
+    void toMessageView(Message message) {
+      ChatUIKitRoute.pushOrPushNamed(
+        context,
+        ChatUIKitRouteNames.messagesView,
+        MessagesViewArguments(
+          profile: widget.profile,
+          attributes: widget.attributes,
+          controller: MessagesViewController(
+            profile: widget.profile,
+            searchedMsg: message,
+          ),
+        ),
+      );
+    }
+
     List<ChatUIKitDetailContentAction> defaultActions = [
       ChatUIKitDetailContentAction(
         title: ChatUIKitLocal.contactDetailViewSend.localString(context),
@@ -251,18 +266,7 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
             ),
           ).then((value) {
             if (value != null && value is Message) {
-              ChatUIKitRoute.pushOrPushNamed(
-                context,
-                ChatUIKitRouteNames.messagesView,
-                MessagesViewArguments(
-                  profile: widget.profile,
-                  attributes: widget.attributes,
-                  controller: MessagesViewController(
-                    profile: widget.profile,
-                    searchedMsg: value,
-                  ),
-                ),
-              );
+              toMessageView(value);
             }
           });
         },
@@ -485,7 +489,7 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
       ChatUIKitBottomSheetAction.destructive(
         actionType: ChatUIKitActionType.delete,
         label: ChatUIKitLocal.contactDetailViewDelete.localString(context),
-        onTap: () async {
+        onTap: () {
           Navigator.of(context).pop(true);
         },
       ),
@@ -540,7 +544,9 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
       ChatUIKit.instance.deleteContact(userId: profile!.id).then((value) {
         widget.onContactDeleted?.call();
         ChatUIKit.instance.deleteLocalConversation(conversationId: profile!.id);
-        ChatUIKitRoute.pop(context);
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
       }).catchError((e) {});
     }
   }

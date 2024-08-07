@@ -213,7 +213,9 @@ class _NewRequestDetailsViewState extends State<NewRequestDetailsView> {
         await ChatUIKit.instance
             .acceptContactRequest(userId: widget.profile.id)
             .then((value) {
-          Navigator.of(context).pop();
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
         });
       } else {
         try {

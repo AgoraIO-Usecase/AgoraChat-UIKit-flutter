@@ -156,7 +156,9 @@ class _SelectContactViewState extends State<SelectContactView> {
       ),
     ).then((value) {
       if (value != null) {
-        Navigator.of(context).pop(value);
+        if (mounted) {
+          Navigator.of(context).pop(value);
+        }
       }
     });
   }

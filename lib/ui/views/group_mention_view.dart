@@ -184,7 +184,9 @@ class _GroupMentionViewState extends State<GroupMentionView> {
       },
     ).then((value) {
       if (value is ChatUIKitProfile) {
-        Navigator.of(context).pop(value);
+        if (mounted) {
+          Navigator.of(context).pop(value);
+        }
       }
     });
   }

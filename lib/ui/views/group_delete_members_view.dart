@@ -245,7 +245,9 @@ class _GroupDeleteMembersViewState extends State<GroupDeleteMembersView> {
       ],
     ).then((value) {
       if (value == true) {
-        Navigator.of(context).pop(selectedProfiles);
+        if (mounted) {
+          Navigator.of(context).pop(selectedProfiles);
+        }
       }
     });
   }

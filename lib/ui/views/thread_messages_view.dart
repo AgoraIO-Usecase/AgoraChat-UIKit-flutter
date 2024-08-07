@@ -776,7 +776,9 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
           Navigator.of(context).pop();
           if (controller.thread == null) return;
           controller.leaveChatThread().then((value) {
-            Navigator.of(context).pop();
+            if (mounted) {
+              Navigator.of(context).pop();
+            }
           }).catchError((e) {
             chatPrint('leaveChatThread: $e');
           });
@@ -1235,7 +1237,9 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                 ],
               ).then((value) {
                 if (value != null) {
-                  Navigator.of(context).pop();
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
                   if (value is ContactItemModel) {
                     controller.sendCardMessage(value.profile);
                   }

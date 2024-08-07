@@ -149,7 +149,7 @@ class _GroupChangeOwnerViewState extends State<GroupChangeOwnerView> {
     return content;
   }
 
-  void showConfirmDialog(BuildContext context, ContactItemModel model) async {
+  void showConfirmDialog(BuildContext ctx, ContactItemModel model) async {
     bool? ret = await showChatUIKitDialog(
       title: Strings.format(
           '${ChatUIKitLocal.groupChangeOwnerViewAlertTitle.localString(context)}"%a"?',
@@ -177,7 +177,9 @@ class _GroupChangeOwnerViewState extends State<GroupChangeOwnerView> {
       ChatUIKit.instance
           .changeGroupOwner(groupId: widget.groupId, newOwner: model.profile.id)
           .then((value) {
-        Navigator.of(context).pop(true);
+        if (mounted) {
+          Navigator.of(context).pop(true);
+        }
       }).catchError((e) {});
     }
   }

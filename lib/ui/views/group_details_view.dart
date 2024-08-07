@@ -315,14 +315,7 @@ class _GroupDetailsViewState extends State<GroupDetailsView>
         iconSize: const Size(32, 32),
         packageName: ChatUIKitImageLoader.packageName,
         onTap: (context) {
-          ChatUIKitRoute.pushOrPushNamed(
-            context,
-            ChatUIKitRouteNames.messagesView,
-            MessagesViewArguments(
-              profile: widget.profile,
-              attributes: widget.attributes,
-            ),
-          );
+          toMessageView();
         },
       ),
       ChatUIKitDetailContentAction(
@@ -340,18 +333,7 @@ class _GroupDetailsViewState extends State<GroupDetailsView>
             ),
           ).then((value) {
             if (value != null && value is Message) {
-              ChatUIKitRoute.pushOrPushNamed(
-                context,
-                ChatUIKitRouteNames.messagesView,
-                MessagesViewArguments(
-                  profile: widget.profile,
-                  attributes: widget.attributes,
-                  controller: MessagesViewController(
-                    profile: widget.profile,
-                    searchedMsg: value,
-                  ),
-                ),
-              );
+              toMessageView(message: value);
             }
           });
         },
@@ -773,11 +755,15 @@ class _GroupDetailsViewState extends State<GroupDetailsView>
     );
     if (ret == true) {
       ChatUIKit.instance.destroyGroup(groupId: profile!.id).then((value) {
-        ChatUIKitRoute.popToGroupsView(
-          context,
-          model: ChatUIKitRouteBackModel.remove(profile!.id),
-        );
-      }).catchError((e) {});
+        if (mounted) {
+          ChatUIKitRoute.popToGroupsView(
+            context,
+            model: ChatUIKitRouteBackModel.remove(profile!.id),
+          );
+        }
+      }).catchError((e) {
+        debugPrint(e.toString());
+      });
     }
   }
 
@@ -806,11 +792,15 @@ class _GroupDetailsViewState extends State<GroupDetailsView>
     );
     if (ret == true) {
       ChatUIKit.instance.leaveGroup(groupId: profile!.id).then((value) {
-        ChatUIKitRoute.popToGroupsView(
-          context,
-          model: ChatUIKitRouteBackModel.remove(profile!.id),
-        );
-      }).catchError((e) {});
+        if (mounted) {
+          ChatUIKitRoute.popToGroupsView(
+            context,
+            model: ChatUIKitRouteBackModel.remove(profile!.id),
+          );
+        }
+      }).catchError((e) {
+        debugPrint(e.toString());
+      });
     }
   }
 
@@ -885,5 +875,20 @@ class _GroupDetailsViewState extends State<GroupDetailsView>
         });
       }
     });
+  }
+
+  void toMessageView({Message? message}) {
+    ChatUIKitRoute.pushOrPushNamed(
+      context,
+      ChatUIKitRouteNames.messagesView,
+      MessagesViewArguments(
+        profile: widget.profile,
+        attributes: widget.attributes,
+        controller: MessagesViewController(
+          profile: widget.profile,
+          searchedMsg: message,
+        ),
+      ),
+    );
   }
 }

@@ -117,10 +117,14 @@ class _TokenStatusHandlerWidgetState extends State<TokenStatusHandlerWidget> {
             onTap: () async {
               Navigator.of(context).pop();
               ChatUIKit.instance.logout().then((value) {}).whenComplete(() {
-                Navigator.of(context).popAndPushNamed('/login');
+                toLoginPage();
               });
             },
           ),
         ]);
+  }
+
+  void toLoginPage() {
+    Navigator.of(context).popAndPushNamed('/login');
   }
 }

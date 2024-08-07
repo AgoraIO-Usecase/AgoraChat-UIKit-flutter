@@ -149,28 +149,30 @@ class _GroupsViewState extends State<GroupsView> {
     return content;
   }
 
-  void tapGroupInfo(BuildContext context, GroupItemModel model) {
+  void tapGroupInfo(BuildContext ctx, GroupItemModel model) {
     ChatUIKit.instance.getGroup(groupId: model.profile.id).then((value) {
-      ChatUIKitRoute.pushOrPushNamed(
-        context,
-        ChatUIKitRouteNames.groupDetailsView,
-        GroupDetailsViewArguments(
-          attributes: widget.attributes,
-          profile: model.profile,
-          group: value,
-        ),
-      ).then((value) {
-        ChatUIKitRouteBackModel? model = ChatUIKitRoute.lastModel;
-        if (model != null) {
-          if (model.type == ChatUIKitRouteBackType.remove) {
-            controller.list.removeWhere((element) {
-              return element is GroupItemModel &&
-                  element.profile.id == model.profileId;
-            });
-            controller.refresh();
+      if (mounted) {
+        ChatUIKitRoute.pushOrPushNamed(
+          context,
+          ChatUIKitRouteNames.groupDetailsView,
+          GroupDetailsViewArguments(
+            attributes: widget.attributes,
+            profile: model.profile,
+            group: value,
+          ),
+        ).then((value) {
+          ChatUIKitRouteBackModel? model = ChatUIKitRoute.lastModel;
+          if (model != null) {
+            if (model.type == ChatUIKitRouteBackType.remove) {
+              controller.list.removeWhere((element) {
+                return element is GroupItemModel &&
+                    element.profile.id == model.profileId;
+              });
+              controller.refresh();
+            }
           }
-        }
-      });
+        });
+      }
     });
   }
 }

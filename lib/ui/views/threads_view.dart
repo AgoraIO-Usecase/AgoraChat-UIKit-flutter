@@ -232,16 +232,18 @@ class _ThreadsViewState extends State<ThreadsView> with ThreadObserver {
         return MessageModel(message: msg, thread: thread);
       }
     }).then((value) {
-      ChatUIKitRoute.pushOrPushNamed(
-        context,
-        ChatUIKitRouteNames.threadMessagesView,
-        ThreadMessagesViewArguments(
-          controller: ThreadMessagesViewController(
-            model: value,
+      if (mounted) {
+        ChatUIKitRoute.pushOrPushNamed(
+          context,
+          ChatUIKitRouteNames.threadMessagesView,
+          ThreadMessagesViewArguments(
+            controller: ThreadMessagesViewController(
+              model: value,
+            ),
+            attributes: widget.attributes,
           ),
-          attributes: widget.attributes,
-        ),
-      );
+        );
+      }
     });
   }
 }

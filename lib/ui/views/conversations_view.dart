@@ -183,6 +183,7 @@ class _ConversationsViewState extends State<ConversationsView> {
       appBar: widget.enableAppBar ? ChatUIKitAppBar.model(appBarModel!) : null,
       body: SafeArea(
         child: ConversationListView(
+          enablePinHighlight: widget.enablePinHighlight,
           enableSearchBar: widget.enableSearchBar,
           controller: controller,
           itemBuilder: widget.listViewItemBuilder,
@@ -192,7 +193,7 @@ class _ConversationsViewState extends State<ConversationsView> {
           background: widget.listViewBackground,
           onTap: widget.onTap ??
               (BuildContext context, ConversationItemModel info) {
-                pushToMessagePage(info);
+                pushToMessagePage(info.profile);
               },
           onLongPress: (BuildContext context, ConversationItemModel info) {
             longPressed(info);
@@ -224,28 +225,19 @@ class _ConversationsViewState extends State<ConversationsView> {
           attributes: widget.attributes),
     ).then((value) {
       if (value != null && value is ChatUIKitProfile) {
-        ChatUIKitRoute.pushOrPushNamed(
-          context,
-          ChatUIKitRouteNames.messagesView,
-          MessagesViewArguments(
-            profile: value,
-            attributes: widget.attributes,
-          ),
-        ).then((value) {
-          if (mounted && value != null) {
-            controller.reload();
-          }
-        });
+        pushToMessagePage(value);
       }
     });
   }
 
-  void pushToMessagePage(ConversationItemModel info) {
+  void pushToMessagePage(ChatUIKitProfile profile) {
     ChatUIKitRoute.pushOrPushNamed(
       context,
       ChatUIKitRouteNames.messagesView,
       MessagesViewArguments(
-          profile: info.profile, attributes: widget.attributes),
+        profile: profile,
+        attributes: widget.attributes,
+      ),
     ).then((value) {
       if (mounted && value != null) {
         controller.reload();

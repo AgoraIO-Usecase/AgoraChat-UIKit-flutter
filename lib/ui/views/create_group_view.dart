@@ -266,7 +266,9 @@ class _CreateGroupViewState extends State<CreateGroupView> {
       if (info?.onGroupCreateCallback != null) {
         info?.onGroupCreateCallback?.call(value, null);
       } else {
-        Navigator.of(context).pop(value);
+        if (mounted) {
+          Navigator.of(context).pop(value);
+        }
       }
     }).catchError((e) {
       info?.onGroupCreateCallback?.call(null, e);

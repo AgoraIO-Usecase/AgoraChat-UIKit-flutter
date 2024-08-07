@@ -66,6 +66,8 @@ class ChatRouteFilter {
                     .remark ??
                 ''),
             onTap: () async {
+              String errStr =
+                  DemoLocalizations.contactRemarkFailed.localString(context);
               String? remark = await showChatUIKitDialog(
                 context: context,
                 title: DemoLocalizations.contactRemark.localString(context),
@@ -99,8 +101,7 @@ class ChatRouteFilter {
                   UserDataStore().saveUserData(profile);
                   ChatUIKitProvider.instance.addProfiles([profile]);
                 }).catchError((e) {
-                  EasyLoading.showError(DemoLocalizations.contactRemarkFailed
-                      .localString(context));
+                  EasyLoading.showError(errStr);
                 });
               }
             },

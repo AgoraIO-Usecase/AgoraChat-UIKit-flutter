@@ -22,11 +22,19 @@ class _WelcomePageState extends State<WelcomePage> {
       return ChatUIKit.instance.isLoginBefore();
     }).then((value) {
       if (value) {
-        Navigator.of(context).pushReplacementNamed('/sample_demo');
+        toSampleDemoPage();
       } else {
-        Navigator.of(context).pushReplacementNamed('/login');
+        toLoginPage();
       }
     });
+  }
+
+  void toSampleDemoPage() {
+    Navigator.of(context).pushReplacementNamed('/sample_demo');
+  }
+
+  void toLoginPage() {
+    Navigator.of(context).pushReplacementNamed('/login');
   }
 
   @override

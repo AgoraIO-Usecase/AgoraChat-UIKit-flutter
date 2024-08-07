@@ -690,8 +690,10 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
 
     content = PopScope(
       child: content,
-      onPopInvoked: (canPop) async {
-        await controller.markAllMessageAsRead();
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          controller.markAllMessageAsRead();
+        }
       },
     );
 
@@ -779,7 +781,7 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
   }
 
   Widget alertItem(
-    BuildContext context,
+    BuildContext ctx,
     MessageModel model,
   ) {
     Widget? content = widget.alertItemBuilder?.call(context, model);
@@ -907,16 +909,19 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
                     if (thread == null) return;
                     MessageModel model =
                         MessageModel(message: value, thread: thread);
-                    ChatUIKitRoute.pushOrPushNamed(
-                      context,
-                      ChatUIKitRouteNames.threadMessagesView,
-                      ThreadMessagesViewArguments(
-                        appBarModel: ChatUIKitAppBarModel(
-                            subtitle: controller.profile.showName),
-                        controller: ThreadMessagesViewController(model: model),
-                        attributes: widget.attributes,
-                      ),
-                    );
+                    if (mounted) {
+                      ChatUIKitRoute.pushOrPushNamed(
+                        context,
+                        ChatUIKitRouteNames.threadMessagesView,
+                        ThreadMessagesViewArguments(
+                          appBarModel: ChatUIKitAppBarModel(
+                              subtitle: controller.profile.showName),
+                          controller:
+                              ThreadMessagesViewController(model: model),
+                          attributes: widget.attributes,
+                        ),
+                      );
+                    }
                   });
                 }
               });
@@ -1720,9 +1725,11 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
                 ],
               ).then((value) {
                 if (value != null) {
-                  Navigator.of(context).pop();
                   if (value is ContactItemModel) {
                     controller.sendCardMessage(value.profile);
+                  }
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
                   }
                 }
               });
@@ -1820,7 +1827,8 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
       pushToCurrentUser(profile);
     } else if (profile.type == ChatUIKitProfileType.group) {
       // 点击的是群聊头像
-      pushToGroupInfo(profile);
+      Group? group = await ChatUIKit.instance.getGroup(groupId: profile.id);
+      pushToGroupInfo(profile, group);
     } else {
       List<String> contacts = await ChatUIKit.instance.getAllContactIds();
       // 是好友，不是当前聊天对象，跳转到好友页面，并可以发消息
@@ -1849,48 +1857,47 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
   }
 
   // 处理当前聊天对象是群时
-  void pushToGroupInfo(ChatUIKitProfile profile) {
-    ChatUIKit.instance.getGroup(groupId: profile.id).then((value) {
-      ChatUIKitRoute.pushOrPushNamed(
-        context,
-        ChatUIKitRouteNames.groupDetailsView,
-        GroupDetailsViewArguments(
-            profile: profile,
-            attributes: widget.attributes,
-            group: value,
-            onMessageDidClear: () {
-              replyMessage = null;
-              controller.clearMessages();
-            },
-            actionsBuilder: (context, defaultList) {
-              return [
-                ChatUIKitDetailContentAction(
-                  title:
-                      ChatUIKitLocal.groupDetailViewSend.localString(context),
-                  icon: 'assets/images/chat.png',
-                  iconSize: const Size(32, 32),
-                  packageName: ChatUIKitImageLoader.packageName,
-                  onTap: (context) {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ChatUIKitDetailContentAction(
-                  title: ChatUIKitLocal.contactDetailViewSearch
-                      .localString(context),
-                  icon: 'assets/images/search_history.png',
-                  packageName: ChatUIKitImageLoader.packageName,
-                  iconSize: const Size(32, 32),
-                  onTap: (context) {
-                    ChatUIKitRoute.pushOrPushNamed(
-                      context,
-                      ChatUIKitRouteNames.searchHistoryView,
-                      SearchHistoryViewArguments(
-                        profile: profile,
-                        attributes: widget.attributes,
-                      ),
-                    ).then((value) {
-                      if (value != null && value is Message) {
-                        int count = 0;
+  void pushToGroupInfo(ChatUIKitProfile profile, Group? group) {
+    ChatUIKitRoute.pushOrPushNamed(
+      context,
+      ChatUIKitRouteNames.groupDetailsView,
+      GroupDetailsViewArguments(
+          profile: profile,
+          attributes: widget.attributes,
+          group: group,
+          onMessageDidClear: () {
+            replyMessage = null;
+            controller.clearMessages();
+          },
+          actionsBuilder: (context, defaultList) {
+            return [
+              ChatUIKitDetailContentAction(
+                title: ChatUIKitLocal.groupDetailViewSend.localString(context),
+                icon: 'assets/images/chat.png',
+                iconSize: const Size(32, 32),
+                packageName: ChatUIKitImageLoader.packageName,
+                onTap: (context) {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ChatUIKitDetailContentAction(
+                title:
+                    ChatUIKitLocal.contactDetailViewSearch.localString(context),
+                icon: 'assets/images/search_history.png',
+                packageName: ChatUIKitImageLoader.packageName,
+                iconSize: const Size(32, 32),
+                onTap: (context) {
+                  ChatUIKitRoute.pushOrPushNamed(
+                    context,
+                    ChatUIKitRouteNames.searchHistoryView,
+                    SearchHistoryViewArguments(
+                      profile: profile,
+                      attributes: widget.attributes,
+                    ),
+                  ).then((value) {
+                    if (value != null && value is Message) {
+                      int count = 0;
+                      if (context.mounted) {
                         Navigator.of(context).popUntil((route) {
                           count++;
                           if (count == 2) return true;
@@ -1898,16 +1905,17 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
                                   ChatUIKitRouteNames.messagesView ||
                               route.isFirst;
                         });
-                        controller.jumpToSearchedMessage(value);
                       }
-                    });
-                  },
-                ),
-              ];
-            }),
-      ).then((value) {
-        controller.refresh();
-      });
+
+                      controller.jumpToSearchedMessage(value);
+                    }
+                  });
+                },
+              ),
+            ];
+          }),
+    ).then((value) {
+      controller.refresh();
     });
   }
 
@@ -1955,13 +1963,15 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
                   ).then((value) {
                     if (value != null && value is Message) {
                       int count = 0;
-                      Navigator.of(context).popUntil((route) {
-                        count++;
-                        if (count == 2) return true;
-                        return route.settings.name ==
-                                ChatUIKitRouteNames.messagesView ||
-                            route.isFirst;
-                      });
+                      if (context.mounted) {
+                        Navigator.of(context).popUntil((route) {
+                          count++;
+                          if (count == 2) return true;
+                          return route.settings.name ==
+                                  ChatUIKitRouteNames.messagesView ||
+                              route.isFirst;
+                        });
+                      }
                       controller.jumpToSearchedMessage(value);
                     }
                   });
@@ -2205,11 +2215,11 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
       }
 
       // 编辑
-      if (model.message.bodyType == MessageType.TXT &&
+      if (model.message.status == MessageStatus.SUCCESS &&
+          model.message.bodyType == MessageType.TXT &&
           model.message.direction == MessageDirection.SEND &&
           element == ChatUIKitActionType.edit &&
-          ChatUIKitSettings.enableMessageEdit &&
-          model.message.status == MessageStatus.SUCCESS) {
+          ChatUIKitSettings.enableMessageEdit) {
         items.add(ChatUIKitBottomSheetAction.normal(
           actionType: ChatUIKitActionType.edit,
           label: ChatUIKitLocal.messagesViewLongPressActionsTitleEdit
@@ -2233,9 +2243,9 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
         ));
       }
 
-      if (element == ChatUIKitActionType.report &&
-          ChatUIKitSettings.enableMessageReport &&
-          model.message.status == MessageStatus.SUCCESS) {
+      if (model.message.status == MessageStatus.SUCCESS &&
+          element == ChatUIKitActionType.report &&
+          ChatUIKitSettings.enableMessageReport) {
         // 举报
         items.add(ChatUIKitBottomSheetAction.normal(
           actionType: ChatUIKitActionType.report,
@@ -2285,13 +2295,13 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
       }
 
       // 撤回
-      if (model.message.direction == MessageDirection.SEND &&
+      if (model.message.status == MessageStatus.SUCCESS &&
+          model.message.direction == MessageDirection.SEND &&
           model.message.serverTime >=
               DateTime.now().millisecondsSinceEpoch -
                   ChatUIKitSettings.recallExpandTime * 1000 &&
           element == ChatUIKitActionType.recall &&
-          ChatUIKitSettings.enableMessageRecall &&
-          model.message.status == MessageStatus.SUCCESS) {
+          ChatUIKitSettings.enableMessageRecall) {
         items.add(ChatUIKitBottomSheetAction.normal(
           actionType: ChatUIKitActionType.recall,
           label: ChatUIKitLocal.messagesViewLongPressActionsTitleRecall
@@ -2520,27 +2530,27 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
           ),
           style: ButtonStyle(
             splashFactory: NoSplash.splashFactory,
-            backgroundColor: MaterialStateProperty.all(
+            backgroundColor: WidgetStateProperty.all(
               theme.color.isDark
                   ? theme.color.neutralColor2
                   : theme.color.neutralColor98,
             ),
-            overlayColor: MaterialStateProperty.all(Colors.transparent),
-            elevation: MaterialStateProperty.all(0),
-            shadowColor: MaterialStateProperty.all(Colors.transparent),
-            foregroundColor: MaterialStateProperty.all(
+            overlayColor: WidgetStateProperty.all(Colors.transparent),
+            elevation: WidgetStateProperty.all(0),
+            shadowColor: WidgetStateProperty.all(Colors.transparent),
+            foregroundColor: WidgetStateProperty.all(
               theme.color.isDark
                   ? theme.color.primaryColor6
                   : theme.color.primaryColor5,
             ),
-            side: MaterialStatePropertyAll<BorderSide>(
+            side: WidgetStatePropertyAll<BorderSide>(
               BorderSide(
                 color: theme.color.isDark
                     ? theme.color.neutralColor3
                     : theme.color.neutralColor9,
               ),
             ),
-            shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+            shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),

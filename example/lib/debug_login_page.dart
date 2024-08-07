@@ -77,11 +77,15 @@ class _DebugLoginPageState extends State<DebugLoginPage> {
     ChatUIKit.instance
         .loginWithPassword(userId: userId, password: password)
         .then((value) {
-      Navigator.of(context).pushReplacementNamed('/home');
+      toHomePage();
     }).catchError((e) {
       EasyLoading.showError(e.toString());
     }).whenComplete(() {
       EasyLoading.dismiss();
     });
+  }
+
+  void toHomePage() {
+    Navigator.of(context).pushReplacementNamed('/home');
   }
 }

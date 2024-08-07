@@ -200,9 +200,9 @@ class _ContactsViewState extends State<ContactsView> with ContactObserver {
       appBar: widget.enableAppBar ? ChatUIKitAppBar.model(appBarModel!) : null,
       body: SafeArea(
         child: ContactListView(
-          onSelectLetterChanged: widget.onSelectLetterChanged,
           controller: controller,
           itemBuilder: widget.listViewItemBuilder,
+          onSelectLetterChanged: widget.onSelectLetterChanged,
           sortAlphabetical: widget.sortAlphabetical,
           universalAlphabetical: widget.universalAlphabeticalLetter,
           beforeWidgets: widget.beforeItems ?? beforeWidgets(),
@@ -211,7 +211,7 @@ class _ContactsViewState extends State<ContactsView> with ContactObserver {
           background: widget.listViewBackground,
           onTap: widget.onTap ??
               (ctx, model) {
-                tapContactInfo(ctx, model.profile);
+                tapContactInfo(model.profile);
               },
           onLongPress: widget.onLongPress,
           onSearchTap: widget.onSearchTap ?? onSearchTap,
@@ -276,12 +276,12 @@ class _ContactsViewState extends State<ContactsView> with ContactObserver {
           attributes: widget.attributes),
     ).then((value) {
       if (value != null && value is ChatUIKitProfile) {
-        tapContactInfo(context, value);
+        tapContactInfo(value);
       }
     });
   }
 
-  void tapContactInfo(BuildContext context, ChatUIKitProfile profile) {
+  void tapContactInfo(ChatUIKitProfile profile) {
     ChatUIKitRoute.pushOrPushNamed(
         context,
         ChatUIKitRouteNames.contactDetailsView,
