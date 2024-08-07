@@ -13,7 +13,8 @@ dependencies:
     sdk: flutter
 
   # im_flutter_sdk: ^4.6.1
-  agora_chat_sdk: 1.2.0
+  agora_chat_sdk:
+    path: ../../../agora_chat_sdk_130/
 
   flutter_sound_record: ^3.3.2
 
@@ -40,10 +41,6 @@ dependencies:
   cached_network_image: ^3.3.1
 
   html: ^0.15.4
-
-dependency_overrides:
-  agora_chat_sdk:
-    path: ../../../agora_chat_sdk_130/
 
 dev_dependencies:
   flutter_test:

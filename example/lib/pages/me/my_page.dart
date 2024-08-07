@@ -144,12 +144,6 @@ class _MyPageState extends State<MyPage> with ChatUIKitProviderObserver {
           title: DemoLocalizations.notification.localString(context),
           onTap: nonsupport,
         ),
-        ListItem(
-          imageWidget: Image.asset('assets/images/info.png'),
-          title: DemoLocalizations.about.localString(context),
-          enableArrow: true,
-          onTap: about,
-        ),
         const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),
@@ -178,14 +172,6 @@ class _MyPageState extends State<MyPage> with ChatUIKitProviderObserver {
 
   void generalSettings() {
     Navigator.of(context).pushNamed('/general_page').then(
-      (value) {
-        setState(() {});
-      },
-    );
-  }
-
-  void about() {
-    Navigator.of(context).pushNamed('/about_page').then(
       (value) {
         setState(() {});
       },

@@ -3,7 +3,6 @@ import 'package:em_chat_uikit_example/debug_login_page.dart';
 import 'package:em_chat_uikit_example/demo_localizations.dart';
 import 'package:em_chat_uikit_example/home_page.dart';
 import 'package:em_chat_uikit_example/notifications/app_settings_notification.dart';
-import 'package:em_chat_uikit_example/pages/me/about_page.dart';
 import 'package:em_chat_uikit_example/pages/me/settings/general_page.dart';
 import 'package:em_chat_uikit_example/pages/me/settings/language_page.dart';
 import 'package:em_chat_uikit_example/pages/me/settings/translate_page.dart';
@@ -19,6 +18,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'pages/me/settings/advanced_page.dart';
 
 const appKey = 'easemob#easeim';
+const userId = '';
+const token = '';
 
 const bool appDebug = false;
 
@@ -109,8 +110,6 @@ class _MyAppState extends State<MyApp> {
                     return const TranslatePage();
                   } else if (settings.name == '/advanced_page') {
                     return const AdvancedPage();
-                  } else if (settings.name == '/about_page') {
-                    return const AboutPage();
                   } else {
                     return const SizedBox();
                   }

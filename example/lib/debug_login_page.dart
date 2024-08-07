@@ -15,15 +15,22 @@ class _DebugLoginPageState extends State<DebugLoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('当前AppKey: $appKey'),
+        title: const Text('AppKey: $appKey'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('如果没有设置Appkey，请在main.dart中设置'),
+            const Text('If AppKey is not set, set it in main.dart'),
+            const Text('userId: $userId'),
+            const Text('token: $token'),
             ElevatedButton(
               onPressed: () {
+                if (userId.isNotEmpty && token.isNotEmpty) {
+                  loginWithToken();
+                } else {
+                  showDialog(context);
+                }
                 showDialog(context);
               },
               child: const Text('Login'),
@@ -70,6 +77,19 @@ class _DebugLoginPageState extends State<DebugLoginPage> {
     if (ret != null) {
       login((ret as List<String>).first, ret.last);
     }
+  }
+
+  void loginWithToken() async {
+    EasyLoading.show(status: 'Loading...');
+    ChatUIKit.instance
+        .loginWithToken(userId: userId, token: token)
+        .then((value) {
+      toHomePage();
+    }).catchError((e) {
+      EasyLoading.showError(e.toString());
+    }).whenComplete(() {
+      EasyLoading.dismiss();
+    });
   }
 
   void login(String userId, String password) async {

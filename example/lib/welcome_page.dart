@@ -22,15 +22,15 @@ class _WelcomePageState extends State<WelcomePage> {
       return ChatUIKit.instance.isLoginBefore();
     }).then((value) {
       if (value) {
-        toSampleDemoPage();
+        toHomePage();
       } else {
         toLoginPage();
       }
     });
   }
 
-  void toSampleDemoPage() {
-    Navigator.of(context).pushReplacementNamed('/sample_demo');
+  void toHomePage() {
+    Navigator.of(context).pushReplacementNamed('/home');
   }
 
   void toLoginPage() {
@@ -56,7 +56,7 @@ class _WelcomePageState extends State<WelcomePage> {
               ),
               const SizedBox(height: 38),
               Text(
-                DemoLocalizations.welcome.localString(context),
+                'Agora Chat',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25,
@@ -72,7 +72,7 @@ class _WelcomePageState extends State<WelcomePage> {
             left: 0,
             right: 0,
             child: Text(
-              'Powered by Easemob',
+              'Powered by Agora',
               textAlign: TextAlign.center,
               style: TextStyle(color: theme.color.neutralColor5),
             ),
