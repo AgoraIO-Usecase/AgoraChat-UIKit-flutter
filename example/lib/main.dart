@@ -5,9 +5,9 @@ import 'package:example/messages_page.dart';
 import 'package:flutter/material.dart';
 
 class ChatConfig {
-  static const String appKey = "easemob#easeim";
-  static const String userId = "du001";
-  static const String agoraToken = '1';
+  static const String appKey = "";
+  static const String userId = "";
+  static const String agoraToken = '';
 }
 
 void main() async {
@@ -224,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _addLogToConsole('begin sign in...');
     if (ChatConfig.agoraToken.isNotEmpty) {
       try {
-        await ChatClient.getInstance.loginWithPassword(
+        await ChatClient.getInstance.loginWithToken(
           ChatConfig.userId,
           ChatConfig.agoraToken,
         );

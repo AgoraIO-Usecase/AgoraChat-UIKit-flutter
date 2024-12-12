@@ -86,7 +86,7 @@ dependencies:
   file_picker: ^5.5.0
   record: ^4.4.4
   audioplayers: ^5.2.0
-  agora_chat_sdk: ^1.1.1
+  agora_chat_sdk: ^1.3.0
 ```
 
 ## Permissions
@@ -311,7 +311,7 @@ class _MyHomePageState extends State<MyHomePage> {
       bool judgmentPwdOrToken = false;
       do {
         if (ChatConfig.agoraToken.isNotEmpty) {
-          await ChatClient.getInstance.login(
+          await ChatClient.getInstance.loginWithToken(
             ChatConfig.userId,
             ChatConfig.agoraToken,
           );
