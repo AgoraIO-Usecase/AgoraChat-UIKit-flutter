@@ -307,26 +307,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _signIn() async {
     _addLogToConsole('begin sign in...');
-    try {
-      bool judgmentPwdOrToken = false;
-      do {
-        if (ChatConfig.agoraToken.isNotEmpty) {
-          await ChatClient.getInstance.loginWithToken(
-            ChatConfig.userId,
-            ChatConfig.agoraToken,
-          );
-          judgmentPwdOrToken = true;
-          break;
-        }
-      } while (false);
-      if (judgmentPwdOrToken) {
+    if (ChatConfig.agoraToken.isNotEmpty) {
+      try {
+        await ChatClient.getInstance.loginWithToken(
+          ChatConfig.userId,
+          ChatConfig.agoraToken,
+        );
         _addLogToConsole('sign in success');
-      } else {
-        _addLogToConsole(
-            'sign in fail: The password and agoraToken cannot both be null.');
+      } on ChatError catch (e) {
+        _addLogToConsole('sign in fail: ${e.description}');
       }
-    } on ChatError catch (e) {
-      _addLogToConsole('sign in fail: ${e.description}');
+    } else {
+      _addLogToConsole(
+          'sign in fail: The agoraToken cannot be null.');
     }
   }
 

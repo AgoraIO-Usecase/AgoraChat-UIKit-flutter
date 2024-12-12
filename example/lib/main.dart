@@ -234,7 +234,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     } else {
       _addLogToConsole(
-          'sign in fail: The password and agoraToken cannot both be null.');
+          'sign in fail: The agoraToken cannot be null.');
     }
   }
 
