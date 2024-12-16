@@ -42,7 +42,7 @@ class ForwardMessageSelectView extends StatefulWidget {
 }
 
 class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, ChatUIKitThemeMixin {
   late TabController _tabController;
 
   List<String> forwardedList = [];
@@ -125,7 +125,7 @@ class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
     super.dispose();
   }
 
-  void updateAppBarModel(ChatUIKitTheme theme) {
+  void updateAppBarModel() {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           ChatUIKitLocal.forwardMessageViewTitle.localString(context),
@@ -149,9 +149,8 @@ class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    updateAppBarModel(theme);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+    updateAppBarModel();
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -164,20 +163,19 @@ class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
             dividerColor: Colors.transparent,
             indicator: CustomTabIndicator(
               radius: 2,
-              color: ChatUIKitTheme.of(context).color.isDark
-                  ? ChatUIKitTheme.of(context).color.primaryColor6
-                  : ChatUIKitTheme.of(context).color.primaryColor5,
+              color: theme.color.isDark
+                  ? theme.color.primaryColor6
+                  : theme.color.primaryColor5,
               size: const Size(28, 4),
             ),
             controller: _tabController,
             labelStyle: TextStyle(
-              fontWeight:
-                  ChatUIKitTheme.of(context).font.titleMedium.fontWeight,
-              fontSize: ChatUIKitTheme.of(context).font.titleMedium.fontSize,
+              fontWeight: theme.font.titleMedium.fontWeight,
+              fontSize: theme.font.titleMedium.fontSize,
             ),
-            labelColor: (ChatUIKitTheme.of(context).color.isDark
-                ? ChatUIKitTheme.of(context).color.neutralColor98
-                : ChatUIKitTheme.of(context).color.neutralColor1),
+            labelColor: (theme.color.isDark
+                ? theme.color.neutralColor98
+                : theme.color.neutralColor1),
             tabs: [
               Tab(
                   text: ChatUIKitLocal.forwardSelectContacts

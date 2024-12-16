@@ -13,7 +13,7 @@ class ChatUIKitNewRequestListViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
 
     TextStyle normalStyle = TextStyle(
       color: theme.color.isDark

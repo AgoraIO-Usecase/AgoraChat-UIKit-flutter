@@ -47,7 +47,7 @@ class SearchView extends StatefulWidget {
   State<SearchView> createState() => _SearchViewState();
 }
 
-class _SearchViewState extends State<SearchView> {
+class _SearchViewState extends State<SearchView> with ChatUIKitThemeMixin {
   ValueNotifier<List<ChatUIKitProfile>> selectedProfiles = ValueNotifier([]);
 
   @override
@@ -69,8 +69,7 @@ class _SearchViewState extends State<SearchView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Widget? content;
     if (widget.enableMulti) {
       content = ValueListenableBuilder(

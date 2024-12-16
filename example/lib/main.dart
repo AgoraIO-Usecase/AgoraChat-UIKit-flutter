@@ -79,16 +79,7 @@ class _MyAppState extends State<MyApp> {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
         ),
-        builder: EasyLoading.init(
-          builder: (context, child) {
-            return ChatUIKitTheme(
-              color: AppSettingsNotification.isLight
-                  ? ChatUIKitColor.light()
-                  : ChatUIKitColor.dark(),
-              child: child!,
-            );
-          },
-        ),
+        builder: EasyLoading.init(),
         home: const WelcomePage(),
         onGenerateRoute: (settings) {
           RouteSettings newSettings =

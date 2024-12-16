@@ -15,7 +15,7 @@ class ChatUIKitNonsupportMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
     bool left =
         forceLeft ?? model.message.direction == MessageDirection.RECEIVE;
     Widget content = Text(

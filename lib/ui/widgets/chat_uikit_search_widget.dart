@@ -32,7 +32,8 @@ class ChatUIKitSearchWidget extends StatefulWidget {
   State<ChatUIKitSearchWidget> createState() => _ChatUIKitSearchWidgetState();
 }
 
-class _ChatUIKitSearchWidgetState extends State<ChatUIKitSearchWidget> {
+class _ChatUIKitSearchWidgetState extends State<ChatUIKitSearchWidget>
+    with ChatUIKitThemeMixin {
   late final List<ChatUIKitListItemModelBase> list;
   TextEditingController searchController = TextEditingController();
   bool isSearch = false;
@@ -58,7 +59,7 @@ class _ChatUIKitSearchWidgetState extends State<ChatUIKitSearchWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     if (!widget.enableSearch) {
       return widget.builder(context, '', list);
     }
@@ -95,8 +96,6 @@ class _ChatUIKitSearchWidgetState extends State<ChatUIKitSearchWidget> {
   }
 
   Widget searchTextInputBar() {
-    final theme = ChatUIKitTheme.of(context);
-
     return SizedBox(
       height: 44,
       child: Container(
@@ -124,15 +123,14 @@ class _ChatUIKitSearchWidgetState extends State<ChatUIKitSearchWidget> {
                     ChatUIKitImageLoader.search(
                       width: 22,
                       height: 22,
-                      color: ChatUIKitTheme.of(context).color.neutralColor3,
+                      color: theme.color.neutralColor3,
                     ),
                     const SizedBox(width: 6),
                     Expanded(
                       child: TextField(
-                        keyboardAppearance:
-                            ChatUIKitTheme.of(context).color.isDark
-                                ? Brightness.dark
-                                : Brightness.light,
+                        keyboardAppearance: theme.color.isDark
+                            ? Brightness.dark
+                            : Brightness.light,
                         autofocus: true,
                         style: TextStyle(
                             fontWeight: theme.font.bodyLarge.fontWeight,
@@ -236,9 +234,9 @@ class _ChatUIKitSearchWidgetState extends State<ChatUIKitSearchWidget> {
           decoration: BoxDecoration(
             borderRadius:
                 BorderRadius.circular(CornerRadiusHelper.searchBarRadius(36)),
-            color: ChatUIKitTheme.of(context).color.isDark
-                ? ChatUIKitTheme.of(context).color.neutralColor2
-                : ChatUIKitTheme.of(context).color.neutralColor95,
+            color: theme.color.isDark
+                ? theme.color.neutralColor2
+                : theme.color.neutralColor95,
           ),
           height: 36,
           child: Center(
@@ -248,7 +246,7 @@ class _ChatUIKitSearchWidgetState extends State<ChatUIKitSearchWidget> {
                 ChatUIKitImageLoader.search(
                   width: 22,
                   height: 22,
-                  color: ChatUIKitTheme.of(context).color.neutralColor3,
+                  color: theme.color.neutralColor3,
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -256,9 +254,9 @@ class _ChatUIKitSearchWidgetState extends State<ChatUIKitSearchWidget> {
                   overflow: TextOverflow.ellipsis,
                   textScaler: TextScaler.noScaling,
                   style: TextStyle(
-                    color: ChatUIKitTheme.of(context).color.isDark
-                        ? ChatUIKitTheme.of(context).color.neutralColor4
-                        : ChatUIKitTheme.of(context).color.neutralColor6,
+                    color: theme.color.isDark
+                        ? theme.color.neutralColor4
+                        : theme.color.neutralColor6,
                   ),
                 )
               ],

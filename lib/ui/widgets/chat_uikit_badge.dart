@@ -21,7 +21,7 @@ class ChatUIKitBadge extends StatelessWidget {
       return const SizedBox();
     }
 
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
     return Container(
       padding: const EdgeInsets.fromLTRB(4, 1, 4, 2),
       constraints: const BoxConstraints(

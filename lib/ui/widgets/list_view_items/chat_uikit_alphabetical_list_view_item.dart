@@ -11,7 +11,7 @@ class ChatUIKitAlphabeticalListViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
 
     return Container(
       padding: const EdgeInsets.only(left: 16, bottom: 6, top: 6),

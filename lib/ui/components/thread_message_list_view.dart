@@ -61,10 +61,11 @@ class ThreadMessageListView extends StatefulWidget {
   State<ThreadMessageListView> createState() => _ThreadMessageListViewState();
 }
 
-class _ThreadMessageListViewState extends State<ThreadMessageListView> {
+class _ThreadMessageListViewState extends State<ThreadMessageListView>
+    with ChatUIKitThemeMixin {
   late final ThreadMessagesViewController controller;
   late final AutoScrollController _scrollController;
-  ChatUIKitTheme? theme;
+
   Size? size;
 
   @override
@@ -95,8 +96,7 @@ class _ThreadMessageListViewState extends State<ThreadMessageListView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    theme ??= ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     size ??= MediaQuery.of(context).size;
     Widget content = CustomScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -310,16 +310,16 @@ class _ThreadMessageListViewState extends State<ThreadMessageListView> {
                   ? Icon(
                       Icons.check_box,
                       size: 28,
-                      color: theme!.color.isDark
-                          ? theme!.color.primaryColor6
-                          : theme!.color.primaryColor5,
+                      color: theme.color.isDark
+                          ? theme.color.primaryColor6
+                          : theme.color.primaryColor5,
                     )
                   : Icon(
                       Icons.check_box_outline_blank,
                       size: 28,
-                      color: theme!.color.isDark
-                          ? theme!.color.neutralColor4
-                          : theme!.color.neutralColor7,
+                      color: theme.color.isDark
+                          ? theme.color.neutralColor4
+                          : theme.color.neutralColor7,
                     ),
             ),
           ),
@@ -332,9 +332,9 @@ class _ThreadMessageListViewState extends State<ThreadMessageListView> {
       key: ValueKey(model.id),
       controller: _scrollController,
       index: index,
-      highlightColor: theme!.color.isDark
-          ? theme!.color.neutralColor2
-          : theme!.color.neutralColor95,
+      highlightColor: theme.color.isDark
+          ? theme.color.neutralColor2
+          : theme.color.neutralColor95,
       child: content,
     );
 

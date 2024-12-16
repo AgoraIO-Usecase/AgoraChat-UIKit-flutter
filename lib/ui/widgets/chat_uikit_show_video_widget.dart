@@ -33,7 +33,7 @@ class ChatUIKitShowVideoWidget extends StatefulWidget {
 }
 
 class _ChatUIKitShowVideoWidgetState extends State<ChatUIKitShowVideoWidget>
-    with MessageObserver {
+    with MessageObserver, ChatUIKitThemeMixin {
   Message? message;
   VideoPlayerController? _controller;
 
@@ -182,7 +182,6 @@ class _ChatUIKitShowVideoWidgetState extends State<ChatUIKitShowVideoWidget>
   }
 
   Widget playerWidget() {
-    final theme = ChatUIKitTheme.of(context);
     return Center(
       child: Stack(
         children: [
@@ -231,7 +230,7 @@ class _ChatUIKitShowVideoWidgetState extends State<ChatUIKitShowVideoWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Widget content = Stack(
       children: [
         Positioned.fill(

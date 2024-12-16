@@ -27,11 +27,10 @@ class ChatUIKitReplyBar extends StatefulWidget {
   State<ChatUIKitReplyBar> createState() => _ChatUIKitReplyBarState();
 }
 
-class _ChatUIKitReplyBarState extends State<ChatUIKitReplyBar> {
+class _ChatUIKitReplyBarState extends State<ChatUIKitReplyBar>
+    with ChatUIKitThemeMixin {
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Widget content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -464,7 +463,6 @@ class _ChatUIKitReplyBarState extends State<ChatUIKitReplyBar> {
         }
       }
 
-      final theme = ChatUIKitTheme.of(context);
       content ??= Center(
         child: ChatUIKitImageLoader.imageDefault(
           width: 24,
@@ -507,7 +505,6 @@ class _ChatUIKitReplyBarState extends State<ChatUIKitReplyBar> {
   }
 
   Widget _videoPreview() {
-    final theme = ChatUIKitTheme.of(context);
     return () {
       Widget? content;
       if (widget.messageModel.message.thumbnailLocalPath?.isNotEmpty == true) {

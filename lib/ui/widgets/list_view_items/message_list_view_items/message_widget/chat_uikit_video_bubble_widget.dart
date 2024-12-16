@@ -24,7 +24,7 @@ class ChatUIKitVideoBubbleWidget extends StatefulWidget {
 }
 
 class _ChatUIKitVideoBubbleWidgetState extends State<ChatUIKitVideoBubbleWidget>
-    with MessageObserver {
+    with MessageObserver, ChatUIKitThemeMixin {
   late MessageModel model;
   bool downloading = false;
   bool downloadError = false;
@@ -69,8 +69,7 @@ class _ChatUIKitVideoBubbleWidgetState extends State<ChatUIKitVideoBubbleWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     bool left =
         widget.forceLeft ?? model.message.direction == MessageDirection.RECEIVE;
     String? thumbnailLocalPath = model.message.thumbnailLocalPath;
@@ -228,7 +227,6 @@ class _ChatUIKitVideoBubbleWidgetState extends State<ChatUIKitVideoBubbleWidget>
   }
 
   Widget loadError(double width, double height) {
-    final theme = ChatUIKitTheme.of(context);
     return Container(
       width: width,
       height: height,

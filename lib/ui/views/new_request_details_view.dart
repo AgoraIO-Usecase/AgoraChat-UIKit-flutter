@@ -40,7 +40,8 @@ class NewRequestDetailsView extends StatefulWidget {
   State<NewRequestDetailsView> createState() => _NewRequestDetailsViewState();
 }
 
-class _NewRequestDetailsViewState extends State<NewRequestDetailsView> {
+class _NewRequestDetailsViewState extends State<NewRequestDetailsView>
+    with ChatUIKitThemeMixin {
   bool hasSend = false;
   ChatUIKitAppBarModel? appBarModel;
 
@@ -58,7 +59,7 @@ class _NewRequestDetailsViewState extends State<NewRequestDetailsView> {
     super.dispose();
   }
 
-  void updateAppBarModel(ChatUIKitTheme theme) {
+  void updateAppBarModel() {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title,
       centerWidget: widget.appBarModel?.centerWidget,
@@ -78,9 +79,8 @@ class _NewRequestDetailsViewState extends State<NewRequestDetailsView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    updateAppBarModel(theme);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+    updateAppBarModel();
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -94,7 +94,6 @@ class _NewRequestDetailsViewState extends State<NewRequestDetailsView> {
   }
 
   Widget _buildContent() {
-    final theme = ChatUIKitTheme.of(context);
     Widget avatar = ChatUIKitAvatar(
       avatarUrl: widget.profile.avatarUrl,
       size: 100,

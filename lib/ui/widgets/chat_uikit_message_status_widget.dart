@@ -25,7 +25,7 @@ class ChatUIKitMessageStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
     switch (statusType) {
       case MessageStatusType.loading:
         {

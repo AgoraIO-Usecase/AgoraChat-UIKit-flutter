@@ -36,7 +36,7 @@ class ThreadMembersView extends StatefulWidget {
 }
 
 class _ThreadMembersViewState extends State<ThreadMembersView>
-    with ChatUIKitProviderObserver {
+    with ChatUIKitProviderObserver, ChatUIKitThemeMixin {
   late ThreadMembersViewController controller;
   late final ScrollController _scrollController = ScrollController();
   ChatUIKitAppBarModel? appBarModel;
@@ -76,7 +76,7 @@ class _ThreadMembersViewState extends State<ThreadMembersView>
     }
   }
 
-  void updateAppBarModel(ChatUIKitTheme theme) {
+  void updateAppBarModel() {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           ChatUIKitLocal.threadMembers.localString(context),
@@ -104,9 +104,8 @@ class _ThreadMembersViewState extends State<ThreadMembersView>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    updateAppBarModel(theme);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+    updateAppBarModel();
 
     return Scaffold(
       backgroundColor: theme.color.isDark

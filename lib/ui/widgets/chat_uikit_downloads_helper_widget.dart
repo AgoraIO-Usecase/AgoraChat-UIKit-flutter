@@ -54,7 +54,8 @@ class ChatUIKitDownloadsHelperWidget extends StatefulWidget {
 }
 
 class _ChatUIKitDownloadsHelperWidgetState
-    extends State<ChatUIKitDownloadsHelperWidget> with MessageObserver {
+    extends State<ChatUIKitDownloadsHelperWidget>
+    with MessageObserver, ChatUIKitThemeMixin {
   ValueNotifier<ChatUIKitMessageDownloadState> isDownloading =
       ValueNotifier(ChatUIKitMessageDownloadState.idle);
   ValueNotifier<int> progress = ValueNotifier(0);
@@ -104,8 +105,7 @@ class _ChatUIKitDownloadsHelperWidgetState
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     if ((widget.message.bodyType == MessageType.FILE ||
             widget.message.bodyType == MessageType.IMAGE ||
             widget.message.bodyType == MessageType.VIDEO ||

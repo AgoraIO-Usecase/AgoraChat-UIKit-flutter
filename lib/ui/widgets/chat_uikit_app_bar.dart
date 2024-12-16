@@ -100,7 +100,8 @@ class ChatUIKitAppBar extends StatefulWidget implements PreferredSizeWidget {
   }
 }
 
-class _ChatUIKitAppBarState extends State<ChatUIKitAppBar> {
+class _ChatUIKitAppBarState extends State<ChatUIKitAppBar>
+    with ChatUIKitThemeMixin {
   @override
   void initState() {
     super.initState();
@@ -112,9 +113,7 @@ class _ChatUIKitAppBarState extends State<ChatUIKitAppBar> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Color backgroundColor = widget.backgroundColor ??
         (theme.color.isDark
             ? theme.color.neutralColor1

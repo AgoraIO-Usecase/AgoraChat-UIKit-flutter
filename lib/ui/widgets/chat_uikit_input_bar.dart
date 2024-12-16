@@ -115,7 +115,8 @@ class ChatUIKitInputBar extends StatefulWidget {
   State<ChatUIKitInputBar> createState() => _ChatUIKitInputBarState();
 }
 
-class _ChatUIKitInputBarState extends State<ChatUIKitInputBar> {
+class _ChatUIKitInputBarState extends State<ChatUIKitInputBar>
+    with ChatUIKitThemeMixin {
   late ScrollController? scrollController;
   bool isEditing = false;
 
@@ -153,9 +154,7 @@ class _ChatUIKitInputBarState extends State<ChatUIKitInputBar> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Widget content = Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -187,7 +186,6 @@ class _ChatUIKitInputBarState extends State<ChatUIKitInputBar> {
   }
 
   Widget _buildInputField() {
-    final theme = ChatUIKitTheme.of(context);
     return Container(
       decoration: BoxDecoration(
         color: theme.color.isDark
@@ -200,9 +198,8 @@ class _ChatUIKitInputBarState extends State<ChatUIKitInputBar> {
       ),
       child: TextField(
         scrollController: scrollController,
-        keyboardAppearance: ChatUIKitTheme.of(context).color.isDark
-            ? Brightness.dark
-            : Brightness.light,
+        keyboardAppearance:
+            theme.color.isDark ? Brightness.dark : Brightness.light,
         autofocus: widget.autofocus,
         onChanged: widget.onChanged,
         focusNode: widget.inputBarController.focusNode,

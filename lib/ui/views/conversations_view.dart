@@ -93,7 +93,8 @@ class ConversationsView extends StatefulWidget {
   State<ConversationsView> createState() => _ConversationsViewState();
 }
 
-class _ConversationsViewState extends State<ConversationsView> {
+class _ConversationsViewState extends State<ConversationsView>
+    with ChatUIKitThemeMixin {
   late ConversationListViewController controller;
   ChatUIKitAppBarModel? appBarModel;
   @override
@@ -111,7 +112,7 @@ class _ConversationsViewState extends State<ConversationsView> {
     super.dispose();
   }
 
-  void updateAppBarModel(ChatUIKitTheme theme) {
+  void updateAppBarModel() {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ?? 'Chats',
       centerWidget: widget.appBarModel?.centerWidget,
@@ -172,9 +173,8 @@ class _ConversationsViewState extends State<ConversationsView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    updateAppBarModel(theme);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+    updateAppBarModel();
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -351,7 +351,6 @@ class _ConversationsViewState extends State<ConversationsView> {
   }
 
   List<ChatUIKitBottomSheetAction> defaultItems() {
-    final theme = ChatUIKitTheme.of(context);
     return [
       ChatUIKitBottomSheetAction.normal(
         actionType: ChatUIKitActionType.newChat,

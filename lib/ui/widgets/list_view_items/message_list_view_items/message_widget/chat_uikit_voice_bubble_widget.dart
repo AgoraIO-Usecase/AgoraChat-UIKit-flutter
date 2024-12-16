@@ -25,7 +25,7 @@ class ChatUIKitVoiceBubbleWidget extends StatefulWidget {
 }
 
 class _ChatUIKitVoiceBubbleWidgetState extends State<ChatUIKitVoiceBubbleWidget>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, ChatUIKitThemeMixin {
   late final MessageModel model;
   late AnimationController controller;
   late Animation<int> animation;
@@ -48,7 +48,7 @@ class _ChatUIKitVoiceBubbleWidgetState extends State<ChatUIKitVoiceBubbleWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     if (widget.playing) {
       if (!controller.isAnimating) {
         controller.repeat();
@@ -56,7 +56,7 @@ class _ChatUIKitVoiceBubbleWidgetState extends State<ChatUIKitVoiceBubbleWidget>
     } else {
       controller.stop();
     }
-    final theme = ChatUIKitTheme.of(context);
+
     bool left =
         widget.forceLeft ?? model.message.direction == MessageDirection.RECEIVE;
 

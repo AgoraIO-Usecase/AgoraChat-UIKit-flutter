@@ -16,7 +16,8 @@ class ChatUIKitQuoteWidget extends StatefulWidget {
   State<ChatUIKitQuoteWidget> createState() => _ChatUIKitQuoteWidgetState();
 }
 
-class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
+class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget>
+    with ChatUIKitThemeMixin {
   late final QuoteModel model;
   Message? message;
   bool fetched = false;
@@ -36,7 +37,7 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Widget content = _buildContext(context, message: message);
     content = Padding(
       padding: const EdgeInsets.only(bottom: 2),
@@ -60,7 +61,6 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
       );
     }
 
-    final theme = ChatUIKitTheme.of(context);
     return Container(
       decoration: BoxDecoration(
         color: theme.color.isDark
@@ -252,7 +252,6 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
                 }
               }
 
-              final theme = ChatUIKitTheme.of(context);
               content ??= Center(
                 child: ChatUIKitImageLoader.imageDefault(
                   width: 24,
@@ -389,7 +388,6 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget> {
         );
       }
 
-      final theme = ChatUIKitTheme.of(context);
       content ??= () {
         hasLoad = false;
         return Center(

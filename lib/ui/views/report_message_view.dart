@@ -36,7 +36,8 @@ class ReportMessageView extends StatefulWidget {
   State<ReportMessageView> createState() => _ReportMessageViewState();
 }
 
-class _ReportMessageViewState extends State<ReportMessageView> {
+class _ReportMessageViewState extends State<ReportMessageView>
+    with ChatUIKitThemeMixin {
   int selectedIndex = -1;
   ChatUIKitAppBarModel? appBarModel;
   final scrollController = ScrollController();
@@ -56,7 +57,7 @@ class _ReportMessageViewState extends State<ReportMessageView> {
     super.dispose();
   }
 
-  void updateAppBarModel(ChatUIKitTheme theme) {
+  void updateAppBarModel() {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           ChatUIKitLocal.reportMessageViewTitle.localString(context),
@@ -77,9 +78,8 @@ class _ReportMessageViewState extends State<ReportMessageView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    updateAppBarModel(theme);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+    updateAppBarModel();
     Widget content = CustomScrollView(
       controller: scrollController,
       slivers: [
@@ -186,7 +186,6 @@ class _ReportMessageViewState extends State<ReportMessageView> {
   }
 
   Widget tile(String title, bool selected) {
-    final theme = ChatUIKitTheme.of(context);
     return SizedBox(
       height: 54,
       child: Row(

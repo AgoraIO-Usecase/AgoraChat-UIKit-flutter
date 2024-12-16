@@ -58,7 +58,7 @@ class ChatUIKitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
     return InkWell(
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,

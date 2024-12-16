@@ -58,7 +58,8 @@ class CreateGroupView extends StatefulWidget {
   State<CreateGroupView> createState() => _CreateGroupViewState();
 }
 
-class _CreateGroupViewState extends State<CreateGroupView> {
+class _CreateGroupViewState extends State<CreateGroupView>
+    with ChatUIKitThemeMixin {
   late final ContactListViewController controller;
   List<ChatUIKitProfile> selectedProfiles = [];
   ChatUIKitAppBarModel? appBarModel;
@@ -78,7 +79,7 @@ class _CreateGroupViewState extends State<CreateGroupView> {
     super.dispose();
   }
 
-  void updateAppBarModel(ChatUIKitTheme theme) {
+  void updateAppBarModel() {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           ChatUIKitLocal.createGroupViewTitle.localString(context),
@@ -129,9 +130,8 @@ class _CreateGroupViewState extends State<CreateGroupView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    updateAppBarModel(theme);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+    updateAppBarModel();
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark

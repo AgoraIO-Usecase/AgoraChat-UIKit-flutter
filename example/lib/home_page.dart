@@ -23,7 +23,8 @@ class _HomePageState extends State<HomePage>
         ChatObserver,
         ContactObserver,
         ChatUIKitEventsObservers,
-        ChatSDKEventsObserver {
+        ChatSDKEventsObserver,
+        ChatUIKitThemeMixin {
   int _currentIndex = 0;
 
   ValueNotifier<int> unreadMessageCount = ValueNotifier(0);
@@ -49,9 +50,8 @@ class _HomePageState extends State<HomePage>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     super.build(context);
-    final theme = ChatUIKitTheme.of(context);
 
     Widget content = Scaffold(
       body: IndexedStack(

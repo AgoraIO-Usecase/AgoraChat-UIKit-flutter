@@ -11,7 +11,8 @@ class MyPage extends StatefulWidget {
   State<MyPage> createState() => _MyPageState();
 }
 
-class _MyPageState extends State<MyPage> with ChatUIKitProviderObserver {
+class _MyPageState extends State<MyPage>
+    with ChatUIKitProviderObserver, ChatUIKitThemeMixin {
   ChatUIKitProfile? _userProfile;
   bool isLight = true;
   @override
@@ -37,8 +38,7 @@ class _MyPageState extends State<MyPage> with ChatUIKitProviderObserver {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -61,8 +61,6 @@ class _MyPageState extends State<MyPage> with ChatUIKitProviderObserver {
   }
 
   Widget _buildContent() {
-    final theme = ChatUIKitTheme.of(context);
-
     Widget name = Text(
       _userProfile?.showName ?? ChatUIKit.instance.currentUserId ?? '',
       textScaler: TextScaler.noScaling,

@@ -60,10 +60,10 @@ class MessageListView extends StatefulWidget {
 }
 
 class _MessageListViewState extends State<MessageListView>
-    with ChatUIKitProviderObserver {
+    with ChatUIKitProviderObserver, ChatUIKitThemeMixin {
   late final MessagesViewController controller;
   late final AutoScrollController _scrollController;
-  ChatUIKitTheme? theme;
+
   Size? size;
 
   @override
@@ -91,8 +91,7 @@ class _MessageListViewState extends State<MessageListView>
   }
 
   @override
-  Widget build(BuildContext context) {
-    theme ??= ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     size ??= MediaQuery.of(context).size;
     Widget content = CustomScrollView(
       physics: controller.msgModelList.length > 30
@@ -138,9 +137,9 @@ class _MessageListViewState extends State<MessageListView>
     content = Scaffold(
       key: ValueKey(controller.profile.id),
       body: content,
-      backgroundColor: theme!.color.isDark
-          ? theme!.color.neutralColor1
-          : theme!.color.neutralColor98,
+      backgroundColor: theme.color.isDark
+          ? theme.color.neutralColor1
+          : theme.color.neutralColor98,
     );
 
     return content;
@@ -299,16 +298,16 @@ class _MessageListViewState extends State<MessageListView>
                   ? Icon(
                       Icons.check_box,
                       size: 28,
-                      color: theme!.color.isDark
-                          ? theme!.color.primaryColor6
-                          : theme!.color.primaryColor5,
+                      color: theme.color.isDark
+                          ? theme.color.primaryColor6
+                          : theme.color.primaryColor5,
                     )
                   : Icon(
                       Icons.check_box_outline_blank,
                       size: 28,
-                      color: theme!.color.isDark
-                          ? theme!.color.neutralColor4
-                          : theme!.color.neutralColor7,
+                      color: theme.color.isDark
+                          ? theme.color.neutralColor4
+                          : theme.color.neutralColor7,
                     ),
             ),
           ),
@@ -321,9 +320,9 @@ class _MessageListViewState extends State<MessageListView>
       key: ValueKey(model.id),
       controller: _scrollController,
       index: index,
-      highlightColor: theme!.color.isDark
-          ? theme!.color.neutralColor2
-          : theme!.color.neutralColor95,
+      highlightColor: theme.color.isDark
+          ? theme.color.neutralColor2
+          : theme.color.neutralColor95,
       child: content,
     );
 

@@ -181,7 +181,8 @@ class MessagesView extends StatefulWidget {
   State<MessagesView> createState() => _MessagesViewState();
 }
 
-class _MessagesViewState extends State<MessagesView> with ChatObserver {
+class _MessagesViewState extends State<MessagesView>
+    with ChatObserver, ChatUIKitThemeMixin {
   late final MessagesViewController controller;
   late final ChatUIKitInputBarController inputBarController;
   late final ImagePicker _picker;
@@ -293,7 +294,7 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
     );
   }
 
-  void updateAppBarModel(ChatUIKitTheme theme) {
+  void updateAppBarModel() {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           (controller.conversationType == ConversationType.GroupChat
@@ -461,9 +462,8 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    updateAppBarModel(theme);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+    updateAppBarModel();
     Widget content = MessageListView(
       scrollController: _scrollController,
       forceLeft: widget.forceLeft,
@@ -690,7 +690,7 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
 
     content = PopScope(
       child: content,
-      onPopInvokedWithResult: (didPop, result) {
+      onPopInvoked: (didPop) {
         if (didPop) {
           controller.markAllMessageAsRead();
         }
@@ -1476,7 +1476,6 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
   }
 
   void onItemLongPress(MessageModel model) async {
-    final theme = ChatUIKitTheme.of(context);
     clearAllType();
     List<ChatUIKitBottomSheetAction>? items =
         defaultItemLongPressed(model, theme);
@@ -2530,27 +2529,27 @@ class _MessagesViewState extends State<MessagesView> with ChatObserver {
           ),
           style: ButtonStyle(
             splashFactory: NoSplash.splashFactory,
-            backgroundColor: WidgetStateProperty.all(
+            backgroundColor: MaterialStatePropertyAll(
               theme.color.isDark
                   ? theme.color.neutralColor2
                   : theme.color.neutralColor98,
             ),
-            overlayColor: WidgetStateProperty.all(Colors.transparent),
-            elevation: WidgetStateProperty.all(0),
-            shadowColor: WidgetStateProperty.all(Colors.transparent),
-            foregroundColor: WidgetStateProperty.all(
+            overlayColor: const MaterialStatePropertyAll(Colors.transparent),
+            elevation: const MaterialStatePropertyAll(0),
+            shadowColor: const MaterialStatePropertyAll(Colors.transparent),
+            foregroundColor: MaterialStatePropertyAll(
               theme.color.isDark
                   ? theme.color.primaryColor6
                   : theme.color.primaryColor5,
             ),
-            side: WidgetStatePropertyAll<BorderSide>(
+            side: MaterialStatePropertyAll<BorderSide>(
               BorderSide(
                 color: theme.color.isDark
                     ? theme.color.neutralColor3
                     : theme.color.neutralColor9,
               ),
             ),
-            shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
+            shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),

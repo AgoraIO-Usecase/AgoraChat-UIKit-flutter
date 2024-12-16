@@ -33,7 +33,7 @@ class ChatUIKitDetailsListViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
 
     Widget content = Row(
       crossAxisAlignment: CrossAxisAlignment.center,

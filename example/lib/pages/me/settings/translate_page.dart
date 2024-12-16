@@ -11,7 +11,8 @@ class TranslatePage extends StatefulWidget {
   State<TranslatePage> createState() => _TranslatePageState();
 }
 
-class _TranslatePageState extends State<TranslatePage> {
+class _TranslatePageState extends State<TranslatePage>
+    with ChatUIKitThemeMixin {
   String? translate;
 
   @override
@@ -21,8 +22,7 @@ class _TranslatePageState extends State<TranslatePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Widget content = ListView(
       children: [
         ListItem(

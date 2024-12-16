@@ -35,7 +35,7 @@ class ChatUIKitMessageListViewAlertItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
     final defaultStyle = style ??
         TextStyle(
           fontSize: theme.font.labelSmall.fontSize,

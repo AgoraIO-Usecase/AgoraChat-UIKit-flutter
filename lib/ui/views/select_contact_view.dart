@@ -51,7 +51,8 @@ class SelectContactView extends StatefulWidget {
   State<SelectContactView> createState() => _SelectContactViewState();
 }
 
-class _SelectContactViewState extends State<SelectContactView> {
+class _SelectContactViewState extends State<SelectContactView>
+    with ChatUIKitThemeMixin {
   late final ContactListViewController controller;
   ChatUIKitAppBarModel? appBarModel;
 
@@ -70,7 +71,7 @@ class _SelectContactViewState extends State<SelectContactView> {
     super.dispose();
   }
 
-  void updateAppBarModel(ChatUIKitTheme theme) {
+  void updateAppBarModel() {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title,
       centerWidget: widget.appBarModel?.centerWidget,
@@ -114,9 +115,8 @@ class _SelectContactViewState extends State<SelectContactView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    updateAppBarModel(theme);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+    updateAppBarModel();
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark

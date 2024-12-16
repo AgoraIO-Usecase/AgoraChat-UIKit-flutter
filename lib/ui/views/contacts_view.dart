@@ -105,7 +105,8 @@ class ContactsView extends StatefulWidget {
   State<ContactsView> createState() => _ContactsViewState();
 }
 
-class _ContactsViewState extends State<ContactsView> with ContactObserver {
+class _ContactsViewState extends State<ContactsView>
+    with ContactObserver, ChatUIKitThemeMixin {
   late final ContactListViewController controller;
   ChatUIKitAppBarModel? appBarModel;
 
@@ -128,7 +129,7 @@ class _ContactsViewState extends State<ContactsView> with ContactObserver {
     super.dispose();
   }
 
-  void updateAppBarModel(ChatUIKitTheme theme) {
+  void updateAppBarModel() {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ?? 'Contacts',
       titleTextStyle: widget.appBarModel?.titleTextStyle ??
@@ -189,9 +190,8 @@ class _ContactsViewState extends State<ContactsView> with ContactObserver {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    updateAppBarModel(theme);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+    updateAppBarModel();
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark

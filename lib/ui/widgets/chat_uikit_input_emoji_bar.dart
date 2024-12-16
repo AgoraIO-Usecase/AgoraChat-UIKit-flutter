@@ -40,6 +40,7 @@ class ChatUIKitInputEmojiBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ChatUIKitTheme.instance;
     Widget content = GridView.custom(
       shrinkWrap: true,
       padding: padding ??
@@ -73,19 +74,19 @@ class ChatUIKitInputEmojiBar extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  boxShadow: ChatUIKitTheme.of(context).color.isDark
+                  boxShadow: theme.color.isDark
                       ? ChatUIKitShadow.darkSmall
                       : ChatUIKitShadow.lightSmall,
                   borderRadius: BorderRadius.circular(24),
-                  color: (ChatUIKitTheme.of(context).color.isDark
-                      ? ChatUIKitTheme.of(context).color.neutralColor3
-                      : ChatUIKitTheme.of(context).color.neutralColor98),
+                  color: (theme.color.isDark
+                      ? theme.color.neutralColor3
+                      : theme.color.neutralColor98),
                 ),
                 child: ChatUIKitImageLoader.emojiDelete(
                   size: 20,
-                  color: (ChatUIKitTheme.of(context).color.isDark
-                      ? ChatUIKitTheme.of(context).color.neutralColor98
-                      : ChatUIKitTheme.of(context).color.neutralColor3),
+                  color: (theme.color.isDark
+                      ? theme.color.neutralColor98
+                      : theme.color.neutralColor3),
                 ),
               ),
             ),
@@ -100,9 +101,9 @@ class ChatUIKitInputEmojiBar extends StatelessWidget {
           colors: [
             Colors.transparent,
             Colors.transparent,
-            ChatUIKitTheme.of(context).color.isDark
-                ? ChatUIKitTheme.of(context).color.neutralColor3
-                : ChatUIKitTheme.of(context).color.neutralColor98,
+            theme.color.isDark
+                ? theme.color.neutralColor3
+                : theme.color.neutralColor98,
           ],
           stops: const [0.05, 0.9, 1.0],
           begin: Alignment.topCenter,

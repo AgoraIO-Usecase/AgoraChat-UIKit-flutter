@@ -131,7 +131,8 @@ class ChatUIKitRecordBar extends StatefulWidget {
   State<ChatUIKitRecordBar> createState() => _ChatUIKitRecordBarState();
 }
 
-class _ChatUIKitRecordBarState extends State<ChatUIKitRecordBar> {
+class _ChatUIKitRecordBarState extends State<ChatUIKitRecordBar>
+    with ChatUIKitThemeMixin {
   late final ChatAudioRecord _audioRecorder;
   bool voiceShow = false;
   bool isClose = false;
@@ -160,9 +161,7 @@ class _ChatUIKitRecordBarState extends State<ChatUIKitRecordBar> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!voiceShow && !isClose) {
         safeSetState(() {

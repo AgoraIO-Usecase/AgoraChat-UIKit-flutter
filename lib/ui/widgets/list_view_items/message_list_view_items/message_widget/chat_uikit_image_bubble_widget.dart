@@ -27,7 +27,7 @@ class ChatUIKitImageBubbleWidget extends StatefulWidget {
 }
 
 class _ChatUIKitImageBubbleWidgetState extends State<ChatUIKitImageBubbleWidget>
-    with MessageObserver {
+    with MessageObserver, ChatUIKitThemeMixin {
   late MessageModel model;
 
   bool downloading = false;
@@ -74,9 +74,7 @@ class _ChatUIKitImageBubbleWidgetState extends State<ChatUIKitImageBubbleWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     bool left =
         widget.isLeft ?? model.message.direction == MessageDirection.RECEIVE;
 
@@ -250,7 +248,6 @@ class _ChatUIKitImageBubbleWidgetState extends State<ChatUIKitImageBubbleWidget>
   }
 
   Widget loadError(double width, double height) {
-    final theme = ChatUIKitTheme.of(context);
     return Container(
       width: width,
       height: height,

@@ -63,7 +63,10 @@ class PinMessageListView extends StatefulWidget {
 }
 
 class _PinMessageListViewState extends State<PinMessageListView>
-    with SingleTickerProviderStateMixin, ChatUIKitProviderObserver {
+    with
+        SingleTickerProviderStateMixin,
+        ChatUIKitProviderObserver,
+        ChatUIKitThemeMixin {
   late AnimationController _controller;
   Animation<double>? animation;
   late CurvedAnimation cure;
@@ -146,8 +149,7 @@ class _PinMessageListViewState extends State<PinMessageListView>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -312,7 +314,7 @@ class PinListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
     return Container(
       padding: const EdgeInsets.only(bottom: 8, left: 12, right: 12),
       height: itemHeight,

@@ -58,7 +58,8 @@ class ChatUIKitListView extends StatefulWidget {
   State<ChatUIKitListView> createState() => _ChatUIKitListViewState();
 }
 
-class _ChatUIKitListViewState extends State<ChatUIKitListView> {
+class _ChatUIKitListViewState extends State<ChatUIKitListView>
+    with ChatUIKitThemeMixin {
   ScrollController? controller;
 
   bool hasError = false;
@@ -71,9 +72,7 @@ class _ChatUIKitListViewState extends State<ChatUIKitListView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Widget? sliverView;
 
     if (widget.type == ChatUIKitListViewType.loading) {
@@ -249,7 +248,6 @@ class _ChatUIKitListViewState extends State<ChatUIKitListView> {
   }
 
   Widget fakeSearchBar() {
-    final theme = ChatUIKitTheme.of(context);
     return SizedBox(
       height: 44,
       child: InkWell(

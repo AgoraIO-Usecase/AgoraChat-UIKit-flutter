@@ -74,7 +74,7 @@ class GroupMembersView extends StatefulWidget {
 }
 
 class _GroupMembersViewState extends State<GroupMembersView>
-    with GroupObserver {
+    with GroupObserver, ChatUIKitThemeMixin {
   late final GroupMemberListViewController controller;
   List<ContactItemModel>? addedBuffers;
   List<ContactItemModel>? deleteBuffer;
@@ -121,7 +121,7 @@ class _GroupMembersViewState extends State<GroupMembersView>
     } catch (e) {}
   }
 
-  void updateAppBarModel(ChatUIKitTheme theme) {
+  void updateAppBarModel() {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title,
       centerWidget: widget.appBarModel?.centerWidget ??
@@ -210,9 +210,8 @@ class _GroupMembersViewState extends State<GroupMembersView>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    updateAppBarModel(theme);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+    updateAppBarModel();
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -242,7 +241,6 @@ class _GroupMembersViewState extends State<GroupMembersView>
   }
 
   Widget actionsWidget() {
-    final theme = ChatUIKitTheme.of(context);
     Widget content = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

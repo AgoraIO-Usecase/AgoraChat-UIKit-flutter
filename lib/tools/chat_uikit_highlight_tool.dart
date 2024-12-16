@@ -9,7 +9,7 @@ class HighlightTool {
     TextStyle? textStyle,
     TextStyle? highlightStyle,
   }) {
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
     TextStyle normalStyle = textStyle ??
         TextStyle(
           color: theme.color.isDark

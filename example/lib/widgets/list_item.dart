@@ -25,7 +25,7 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
     Widget content = SizedBox(
       height: 54,
       child: Row(

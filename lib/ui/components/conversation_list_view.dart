@@ -43,7 +43,7 @@ class ConversationListView extends StatefulWidget {
 }
 
 class _ConversationListViewState extends State<ConversationListView>
-    with ChatUIKitProviderObserver {
+    with ChatUIKitProviderObserver, ChatUIKitThemeMixin {
   late ConversationListViewController controller;
 
   @override
@@ -82,8 +82,7 @@ class _ConversationListViewState extends State<ConversationListView>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     return ChatUIKitListView(
       type: controller.loadingType.value,
       list: controller.list,

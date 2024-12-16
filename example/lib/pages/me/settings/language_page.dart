@@ -12,14 +12,13 @@ class LanguagePage extends StatefulWidget {
   State<LanguagePage> createState() => _LanguagePageState();
 }
 
-class _LanguagePageState extends State<LanguagePage> {
+class _LanguagePageState extends State<LanguagePage> with ChatUIKitThemeMixin {
   ValueNotifier<String> language =
       ValueNotifier<String>(SettingsDataStore().currentLanguage);
 
   @override
   void initState() {
     super.initState();
-
     language.addListener(() {
       SettingsDataStore().saveLanguage(language.value);
       ChatUIKitLocalizations().translate(language.value);
@@ -28,8 +27,7 @@ class _LanguagePageState extends State<LanguagePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Widget content = ListView(
       children: [
         ListItem(

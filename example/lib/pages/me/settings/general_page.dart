@@ -14,11 +14,9 @@ class GeneralPage extends StatefulWidget {
   State<GeneralPage> createState() => _GeneralPageState();
 }
 
-class _GeneralPageState extends State<GeneralPage> {
+class _GeneralPageState extends State<GeneralPage> with ChatUIKitThemeMixin {
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Widget content = ListView(
       children: [
         // ListItem(

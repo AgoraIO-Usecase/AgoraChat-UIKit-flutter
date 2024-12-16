@@ -145,7 +145,7 @@ class ChatUIKitBottomSheet<T> extends StatelessWidget {
 
   Widget _build(BuildContext context) {
     List<Widget> list = [];
-    ChatUIKitTheme theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
 
     TextStyle? normalStyle = TextStyle(
       fontWeight: theme.font.bodyLarge.fontWeight,

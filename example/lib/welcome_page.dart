@@ -1,5 +1,4 @@
 import 'package:agora_chat_uikit/chat_uikit.dart';
-import 'package:em_chat_uikit_example/demo_localizations.dart';
 
 import 'package:flutter/material.dart';
 
@@ -10,7 +9,7 @@ class WelcomePage extends StatefulWidget {
   State<WelcomePage> createState() => _WelcomePageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> {
+class _WelcomePageState extends State<WelcomePage> with ChatUIKitThemeMixin {
   @override
   void initState() {
     super.initState();
@@ -38,8 +37,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     return Scaffold(
       backgroundColor: theme.color.primaryColor95,
       body: Stack(

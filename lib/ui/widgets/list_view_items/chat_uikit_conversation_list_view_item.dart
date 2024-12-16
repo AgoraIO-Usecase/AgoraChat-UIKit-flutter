@@ -31,7 +31,7 @@ class ChatUIKitConversationListViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+    final theme = ChatUIKitTheme.instance;
 
     Widget avatar = (showAvatar && ChatUIKitSettings.showConversationListAvatar)
         ? Container(

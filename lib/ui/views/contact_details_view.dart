@@ -50,7 +50,7 @@ class ContactDetailsView extends StatefulWidget {
 }
 
 class _ContactDetailsViewState extends State<ContactDetailsView>
-    with ChatUIKitProviderObserver {
+    with ChatUIKitProviderObserver, ChatUIKitThemeMixin {
   ValueNotifier<bool> isNotDisturb = ValueNotifier<bool>(false);
   ChatUIKitProfile? profile;
 
@@ -108,7 +108,7 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
     }
   }
 
-  void updateAppBarModel(ChatUIKitTheme theme) {
+  void updateAppBarModel() {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title,
       centerWidget: widget.appBarModel?.centerWidget,
@@ -147,9 +147,8 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    updateAppBarModel(theme);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+    updateAppBarModel();
     Widget content = Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: theme.color.isDark
@@ -163,7 +162,6 @@ class _ContactDetailsViewState extends State<ContactDetailsView>
   }
 
   Widget _buildContent() {
-    final theme = ChatUIKitTheme.of(context);
     Widget avatar = statusAvatar();
 
     Widget name = Text(

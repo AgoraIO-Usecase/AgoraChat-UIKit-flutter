@@ -139,7 +139,8 @@ class ChatUIKitDialog<T> extends StatefulWidget {
   State<ChatUIKitDialog> createState() => _ChatUIKitDialogState();
 }
 
-class _ChatUIKitDialogState extends State<ChatUIKitDialog> {
+class _ChatUIKitDialogState extends State<ChatUIKitDialog>
+    with ChatUIKitThemeMixin {
   final List<TextEditingController> _controllers = [];
   int confirmCount = 0;
   @override
@@ -179,7 +180,7 @@ class _ChatUIKitDialogState extends State<ChatUIKitDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     double width = min(MediaQuery.of(context).size.width,
             MediaQuery.of(context).size.height) -
         50;
@@ -208,9 +209,8 @@ class _ChatUIKitDialogState extends State<ChatUIKitDialog> {
   }
 
   _buildContent(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
-    final themeColor = ChatUIKitTheme.of(context).color;
-    final themeFont = ChatUIKitTheme.of(context).font;
+    final themeColor = theme.color;
+    final themeFont = theme.font;
 
     Widget contentWidget = Container(
       padding: const EdgeInsets.fromLTRB(0, 12, 0, 16),
@@ -324,7 +324,6 @@ class _ChatUIKitDialogState extends State<ChatUIKitDialog> {
 
   // 当有需要输入的内容时，会使用这个组件
   Widget inputContents() {
-    final theme = ChatUIKitTheme.of(context);
     final themeColor = theme.color;
     final themeFont = theme.font;
 
@@ -373,9 +372,8 @@ class _ChatUIKitDialogState extends State<ChatUIKitDialog> {
           child: Padding(
             padding: const EdgeInsets.only(left: 14, right: 14),
             child: TextField(
-              keyboardAppearance: ChatUIKitTheme.of(context).color.isDark
-                  ? Brightness.dark
-                  : Brightness.light,
+              keyboardAppearance:
+                  theme.color.isDark ? Brightness.dark : Brightness.light,
               style: textStyle,
               controller: _controllers[i],
               inputFormatters: () {

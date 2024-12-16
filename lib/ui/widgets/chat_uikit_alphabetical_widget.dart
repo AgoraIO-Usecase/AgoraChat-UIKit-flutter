@@ -56,7 +56,7 @@ class ChatUIKitAlphabeticalWidget extends StatefulWidget {
 }
 
 class _ChatUIKitAlphabeticalWidgetState
-    extends State<ChatUIKitAlphabeticalWidget> {
+    extends State<ChatUIKitAlphabeticalWidget> with ChatUIKitThemeMixin {
   List<String> targets = [];
   String? latestSelected;
   ValueNotifier<int> selectIndex = ValueNotifier(-1);
@@ -97,7 +97,7 @@ class _ChatUIKitAlphabeticalWidgetState
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     if (!widget.enableSorting || widget.list.isEmpty) {
       return widget.builder.call(
         context,
@@ -147,7 +147,6 @@ class _ChatUIKitAlphabeticalWidgetState
       targets = tmp;
     }
 
-    final theme = ChatUIKitTheme.of(context);
     List<Widget> letters = [];
     for (var i = 0; i < targets.length; i++) {
       final element = targets[i];

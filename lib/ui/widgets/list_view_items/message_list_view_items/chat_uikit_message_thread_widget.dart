@@ -26,14 +26,13 @@ class ChatUIKitMessageThreadWidget extends StatefulWidget {
 }
 
 class _ChatUIKitMessageThreadWidgetState
-    extends State<ChatUIKitMessageThreadWidget> {
+    extends State<ChatUIKitMessageThreadWidget> with ChatUIKitThemeMixin {
   int threadMessageCount = 0;
   String threadName = '';
   String subtitle = '';
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     threadMessageCount = widget.chatThread.messageCount;
     threadName = widget.chatThread.threadName ?? '';
     subtitle = widget.chatThread.lastMessage?.showInfoTranslate(

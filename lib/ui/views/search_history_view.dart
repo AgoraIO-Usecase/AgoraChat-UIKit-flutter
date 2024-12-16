@@ -26,7 +26,8 @@ class SearchHistoryView extends StatefulWidget {
   State<SearchHistoryView> createState() => _SearchHistoryViewState();
 }
 
-class _SearchHistoryViewState extends State<SearchHistoryView> {
+class _SearchHistoryViewState extends State<SearchHistoryView>
+    with ChatUIKitThemeMixin {
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocusNode = FocusNode();
   ValueNotifier<String> searchKeyword = ValueNotifier('');
@@ -47,8 +48,7 @@ class _SearchHistoryViewState extends State<SearchHistoryView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ChatUIKitTheme.of(context);
+  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     return Scaffold(
       backgroundColor: theme.color.isDark
           ? theme.color.neutralColor1
@@ -112,7 +112,6 @@ class _SearchHistoryViewState extends State<SearchHistoryView> {
   }
 
   Widget searchTextInputBar() {
-    final theme = ChatUIKitTheme.of(context);
     return SizedBox(
       height: 44,
       child: Container(
@@ -140,16 +139,15 @@ class _SearchHistoryViewState extends State<SearchHistoryView> {
                     ChatUIKitImageLoader.search(
                       width: 22,
                       height: 22,
-                      color: ChatUIKitTheme.of(context).color.neutralColor3,
+                      color: theme.color.neutralColor3,
                     ),
                     const SizedBox(width: 6),
                     Expanded(
                       child: TextField(
                         focusNode: searchFocusNode,
-                        keyboardAppearance:
-                            ChatUIKitTheme.of(context).color.isDark
-                                ? Brightness.dark
-                                : Brightness.light,
+                        keyboardAppearance: theme.color.isDark
+                            ? Brightness.dark
+                            : Brightness.light,
                         autofocus: true,
                         style: TextStyle(
                             fontWeight: theme.font.bodyLarge.fontWeight,
@@ -246,9 +244,9 @@ class ChatUIKitSearchHistoryViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ChatUIKitTheme.instance;
     ChatUIKitProfile? profile =
         ChatUIKitProvider.instance.getProfileById(message.from!);
-    final theme = ChatUIKitTheme.of(context);
     Widget title = Text(
       profile?.showName ?? message.nickname ?? message.from!,
       maxLines: 1,
