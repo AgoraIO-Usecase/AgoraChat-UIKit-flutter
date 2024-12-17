@@ -3,6 +3,8 @@ import '../../universal/inner_headers.dart';
 
 import 'package:flutter/material.dart';
 
+/// The thread message list view.
+/// This widget is used to display the list of thread messages.
 class ThreadMessageListView extends StatefulWidget {
   const ThreadMessageListView({
     required this.controller,
@@ -31,30 +33,74 @@ class ThreadMessageListView extends StatefulWidget {
     super.key,
   });
 
+  /// The controller of the list.
   final ThreadMessagesViewController controller;
-  final MessageItemTapHandler? onItemTap;
-  final MessageItemTapHandler? onItemLongPress;
-  final MessageItemTapHandler? onItemDoubleTap;
+
+  /// Callback when the list item is clicked.
+  final MessageItemGlobalPositionTapHandler? onItemTap;
+
+  /// Callback when the list item is long pressed.
+  final MessageItemGlobalPositionTapHandler? onItemLongPress;
+
+  /// Callback when the list item is double clicked.
+  final MessageItemGlobalPositionTapHandler? onItemDoubleTap;
+
+  /// Callback when the avatar is clicked.
   final MessageItemTapHandler? onAvatarTap;
+
+  /// Callback when the avatar is long pressed.
   final MessageItemTapHandler? onAvatarLongPressed;
+
+  /// Callback when the nickname is clicked.
   final MessageItemTapHandler? onNicknameTap;
 
+  /// The builder of the list item.
   final MessageItemBuilder? itemBuilder;
+
+  /// The builder of the alert item.
   final MessageItemBuilder? alertItemBuilder;
+
+  /// The builder of the show avatar.
   final MessageItemShowHandler? showAvatar;
+
+  /// The builder of the show nickname.
   final MessageItemShowHandler? showNickname;
+
+  /// The builder of the quote.
   final Widget Function(BuildContext context, QuoteModel model)? quoteBuilder;
+
+  /// Callback when the error button is clicked.
   final void Function(MessageModel model)? onErrorBtnTap;
+
+  /// The builder of the bubble.
   final MessageItemBubbleBuilder? bubbleBuilder;
+
+  /// The builder of the bubble content.
   final MessageItemBuilder? bubbleContentBuilder;
+
+  /// Whether to force the message to the left.
   final bool? forceLeft;
+
+  /// Callback when the reaction item is clicked.
   final void Function(MessageModel model, MessageReaction reaction)?
       onReactionItemTap;
+
+  /// Callback when the reaction info is clicked.
   final MessageItemTapHandler? onReactionInfoTap;
+
+  /// The builder of the reaction items.
   final MessageItemBuilder? reactionItemsBuilder;
+
+  /// Callback when the thread item is clicked.
   final MessageItemTapHandler? onThreadItemTap;
+
+  /// The builder of the thread item.
   final MessageItemBuilder? threadItemBuilder;
+
+  /// The controller of the scroll.
   final AutoScrollController? scrollController;
+
+  /// The header of the list.
   final Widget? header;
 
   @override
@@ -65,7 +111,6 @@ class _ThreadMessageListViewState extends State<ThreadMessageListView>
     with ChatUIKitThemeMixin {
   late final ThreadMessagesViewController controller;
   late final AutoScrollController _scrollController;
-
   Size? size;
 
   @override
@@ -198,20 +243,6 @@ class _ThreadMessageListViewState extends State<ThreadMessageListView>
     Widget? content = widget.itemBuilder?.call(context, model);
     content ??= ChatUIKitMessageListViewMessageItem(
       enableThread: false,
-      enableSelected: controller.isMultiSelectMode
-          ? () {
-              if (controller.selectedMessages
-                  .map((e) => e.msgId)
-                  .toList()
-                  .contains(model.message.msgId)) {
-                controller.selectedMessages
-                    .removeWhere((e) => model.message.msgId == e.msgId);
-              } else {
-                controller.selectedMessages.add(model.message);
-              }
-              setState(() {});
-            }
-          : null,
       forceLeft: widget.forceLeft,
       bubbleContentBuilder: widget.bubbleContentBuilder,
       bubbleBuilder: widget.bubbleBuilder,
@@ -236,14 +267,14 @@ class _ThreadMessageListViewState extends State<ThreadMessageListView>
       onAvatarLongPressed: () {
         widget.onAvatarLongPressed?.call(context, model);
       },
-      onBubbleDoubleTap: () {
-        widget.onItemDoubleTap?.call(context, model);
+      onBubbleDoubleTap: (rect) {
+        widget.onItemDoubleTap?.call(context, model, rect);
       },
-      onBubbleLongPressed: () {
-        widget.onItemLongPress?.call(context, model);
+      onBubbleLongPressed: (rect) {
+        widget.onItemLongPress?.call(context, model, rect);
       },
-      onBubbleTap: () {
-        widget.onItemTap?.call(context, model);
+      onBubbleTap: (rect) {
+        widget.onItemTap?.call(context, model, rect);
       },
       onNicknameTap: () {
         widget.onNicknameTap?.call(context, model);

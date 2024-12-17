@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 class ConversationsView extends StatefulWidget {
   /// 会话列表构造方法，如果需要自定义会话列表可以使用这个方法。具体参考 [ConversationsViewArguments]。
   ConversationsView.arguments(ConversationsViewArguments arguments, {super.key})
-      : listViewItemBuilder = arguments.listViewItemBuilder,
+      : itemBuilder = arguments.itemBuilder,
         beforeWidgets = arguments.beforeWidgets,
         afterWidgets = arguments.afterWidgets,
         onSearchTap = arguments.onSearchTap,
         searchBarHideText = arguments.searchBarHideText,
-        listViewBackground = arguments.listViewBackground,
-        onTap = arguments.onTap,
-        onLongPressHandler = arguments.onLongPressHandler,
+        emptyBackground = arguments.emptyBackground,
+        onItemTap = arguments.onItemTap,
+        onItemLongPressHandler = arguments.onItemLongPressHandler,
         appBarModel = arguments.appBarModel,
         controller = arguments.controller,
         enableAppBar = arguments.enableAppBar,
@@ -20,18 +20,19 @@ class ConversationsView extends StatefulWidget {
         viewObserver = arguments.viewObserver,
         moreActionsBuilder = arguments.moreActionsBuilder,
         enablePinHighlight = arguments.enablePinHighlight,
+        backgroundWidget = arguments.backgroundWidget,
         attributes = arguments.attributes;
 
   /// 会话列表构造方法，如果需要自定义会话列表可以使用这个方法。
   const ConversationsView({
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.beforeWidgets,
     this.afterWidgets,
     this.onSearchTap,
     this.searchBarHideText,
-    this.listViewBackground,
-    this.onTap,
-    this.onLongPressHandler,
+    this.emptyBackground,
+    this.onItemTap,
+    this.onItemLongPressHandler,
     this.appBarModel,
     this.controller,
     this.enableAppBar = true,
@@ -40,12 +41,14 @@ class ConversationsView extends StatefulWidget {
     this.viewObserver,
     this.moreActionsBuilder,
     this.enablePinHighlight = true,
+    this.backgroundWidget,
     super.key,
   });
 
   /// 会话列表控制器，用户管理会话列表数据，如果不设置将会自动创建。详细参考 [ConversationListViewController]。
   final ConversationListViewController? controller;
 
+  /// 会话列表的AppBar模型，用于自定义AppBar。具体参考 [ChatUIKitAppBarModel]。
   final ChatUIKitAppBarModel? appBarModel;
 
   /// 点击搜索按钮的回调，点击后会把当前的会话列表数据传递过来。如果不设置默认会跳转到搜索页面。具体参考 [SearchView]。
@@ -58,13 +61,14 @@ class ConversationsView extends StatefulWidget {
   final List<Widget>? afterWidgets;
 
   /// 会话列表的 `item` 构建器，如果设置后需要显示会话时会直接回调，如果不处理可以返回 `null`。
-  final ConversationItemBuilder? listViewItemBuilder;
+  final ConversationItemBuilder? itemBuilder;
 
   /// 点击会话列表的回调，点击后会把当前的会话数据传递过来。具体参考 [ConversationItemModel]。 如果不是设置默认会跳转到消息页面。具体参考 [MessagesView]。
-  final void Function(BuildContext context, ConversationItemModel info)? onTap;
+  final void Function(BuildContext context, ConversationItemModel info)?
+      onItemTap;
 
   /// 长按会话列表的回调，如果不设置默认会弹出默认的长按菜单。如果设置长按时会把默认的弹出菜单项传给你，你需要调整后返回来，返回来的数据会用于菜单显示，如果返回 `null` 将不会显示菜单。
-  final ConversationsViewItemLongPressHandler? onLongPressHandler;
+  final ConversationsViewItemLongPressHandler? onItemLongPressHandler;
 
   /// 会话搜索框的隐藏文字。
   final String? searchBarHideText;
@@ -73,7 +77,7 @@ class ConversationsView extends StatefulWidget {
   final bool enableSearchBar;
 
   /// 会话列表的背景，会话为空时会显示，如果设置后将会替换默认的背景。
-  final Widget? listViewBackground;
+  final Widget? emptyBackground;
 
   /// 是否显示AppBar, 默认为 `true`。 当为 `false` 时将不会显示AppBar。同时也会影响到是否显示标题。
   final bool enableAppBar;
@@ -87,7 +91,11 @@ class ConversationsView extends StatefulWidget {
   /// 更多操作构建器，用于构建更多操作的菜单，如果不设置将会使用默认的菜单。
   final ChatUIKitMoreActionsBuilder? moreActionsBuilder;
 
+  /// 是否开启置顶消息点击高亮，默认为 `true`。如果设置为 `false` 将不会显示置顶高亮。
   final bool enablePinHighlight;
+
+  /// 背景组件，如果设置后将会替换默认的背景组件。
+  final Widget? backgroundWidget;
 
   @override
   State<ConversationsView> createState() => _ConversationsViewState();
@@ -112,7 +120,7 @@ class _ConversationsViewState extends State<ConversationsView>
     super.dispose();
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ?? 'Chats',
       centerWidget: widget.appBarModel?.centerWidget,
@@ -169,29 +177,29 @@ class _ConversationsViewState extends State<ConversationsView>
       centerTitle: widget.appBarModel?.centerTitle ?? true,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: theme.color.isDark
-          ? theme.color.neutralColor1
-          : theme.color.neutralColor98,
+      backgroundColor: Colors.transparent,
       appBar: widget.enableAppBar ? ChatUIKitAppBar.model(appBarModel!) : null,
       body: SafeArea(
         child: ConversationListView(
           enablePinHighlight: widget.enablePinHighlight,
           enableSearchBar: widget.enableSearchBar,
           controller: controller,
-          itemBuilder: widget.listViewItemBuilder,
+          itemBuilder: widget.itemBuilder,
           beforeWidgets: widget.beforeWidgets,
           afterWidgets: widget.afterWidgets,
           searchBarHideText: widget.searchBarHideText,
-          background: widget.listViewBackground,
-          onTap: widget.onTap ??
+          emptyBackground: widget.emptyBackground,
+          onTap: widget.onItemTap ??
               (BuildContext context, ConversationItemModel info) {
                 pushToMessagePage(info.profile);
               },
@@ -201,6 +209,18 @@ class _ConversationsViewState extends State<ConversationsView>
           onSearchTap: widget.onSearchTap ?? onSearchTap,
         ),
       ),
+    );
+
+    content = Stack(
+      children: [
+        Container(
+          color: theme.color.isDark
+              ? theme.color.neutralColor1
+              : theme.color.neutralColor98,
+          child: widget.backgroundWidget,
+        ),
+        content,
+      ],
     );
 
     return content;
@@ -246,9 +266,9 @@ class _ConversationsViewState extends State<ConversationsView>
   }
 
   void longPressed(ConversationItemModel info) async {
-    List<ChatUIKitBottomSheetAction>? list;
-    if (widget.onLongPressHandler != null) {
-      list = widget.onLongPressHandler
+    List<ChatUIKitEventAction>? list;
+    if (widget.onItemLongPressHandler != null) {
+      list = widget.onItemLongPressHandler
           ?.call(context, info, defaultLongPressActions(info));
     } else {
       list = defaultLongPressActions(info);
@@ -264,10 +284,10 @@ class _ConversationsViewState extends State<ConversationsView>
     }
   }
 
-  List<ChatUIKitBottomSheetAction> defaultLongPressActions(
+  List<ChatUIKitEventAction> defaultLongPressActions(
       ConversationItemModel info) {
     return [
-      ChatUIKitBottomSheetAction.normal(
+      ChatUIKitEventAction.normal(
         actionType: ChatUIKitActionType.mute,
         label: info.noDisturb
             ? ChatUIKitLocal.conversationListLongPressMenuUnmute
@@ -298,7 +318,7 @@ class _ConversationsViewState extends State<ConversationsView>
           Navigator.of(context).pop();
         },
       ),
-      ChatUIKitBottomSheetAction.normal(
+      ChatUIKitEventAction.normal(
         actionType: ChatUIKitActionType.pinConversation,
         label: info.pinned
             ? ChatUIKitLocal.conversationListLongPressMenuUnPin
@@ -314,7 +334,7 @@ class _ConversationsViewState extends State<ConversationsView>
         },
       ),
       if (info.unreadCount > 0)
-        ChatUIKitBottomSheetAction.normal(
+        ChatUIKitEventAction.normal(
           actionType: ChatUIKitActionType.read,
           label: ChatUIKitLocal.conversationListLongPressMenuRead
               .localString(context),
@@ -325,7 +345,7 @@ class _ConversationsViewState extends State<ConversationsView>
             Navigator.of(context).pop();
           },
         ),
-      ChatUIKitBottomSheetAction.destructive(
+      ChatUIKitEventAction.destructive(
         actionType: ChatUIKitActionType.delete,
         label: ChatUIKitLocal.conversationListLongPressMenuDelete
             .localString(context),
@@ -340,7 +360,7 @@ class _ConversationsViewState extends State<ConversationsView>
   }
 
   void showMoreInfo() {
-    List<ChatUIKitBottomSheetAction> list = defaultItems();
+    List<ChatUIKitEventAction> list = defaultItems();
     list = widget.moreActionsBuilder?.call(context, list) ?? list;
     showChatUIKitBottomSheet(
       cancelLabel:
@@ -350,9 +370,9 @@ class _ConversationsViewState extends State<ConversationsView>
     );
   }
 
-  List<ChatUIKitBottomSheetAction> defaultItems() {
+  List<ChatUIKitEventAction> defaultItems() {
     return [
-      ChatUIKitBottomSheetAction.normal(
+      ChatUIKitEventAction.normal(
         actionType: ChatUIKitActionType.newChat,
         label: ChatUIKitLocal.conversationsViewMenuCreateNewChat
             .localString(context),
@@ -367,7 +387,7 @@ class _ConversationsViewState extends State<ConversationsView>
           newConversations();
         },
       ),
-      ChatUIKitBottomSheetAction.normal(
+      ChatUIKitEventAction.normal(
         actionType: ChatUIKitActionType.addContact,
         label:
             ChatUIKitLocal.conversationsViewMenuAddContact.localString(context),
@@ -382,7 +402,7 @@ class _ConversationsViewState extends State<ConversationsView>
           addContact();
         },
       ),
-      ChatUIKitBottomSheetAction.normal(
+      ChatUIKitEventAction.normal(
         actionType: ChatUIKitActionType.create,
         label: ChatUIKitLocal.conversationsViewMenuCreateGroup
             .localString(context),

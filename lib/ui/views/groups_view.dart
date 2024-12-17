@@ -7,7 +7,7 @@ class GroupsView extends StatefulWidget {
       : controller = arguments.controller,
         appBarModel = arguments.appBarModel,
         onSearchTap = arguments.onSearchTap,
-        listViewItemBuilder = arguments.listViewItemBuilder,
+        itemBuilder = arguments.itemBuilder,
         onTap = arguments.onTap,
         onLongPress = arguments.onLongPress,
         searchBarHideText = arguments.searchBarHideText,
@@ -21,7 +21,7 @@ class GroupsView extends StatefulWidget {
     this.controller,
     this.appBarModel,
     this.onSearchTap,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onTap,
     this.onLongPress,
     this.searchBarHideText,
@@ -36,7 +36,7 @@ class GroupsView extends StatefulWidget {
   final GroupListViewController? controller;
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<GroupItemModel> data)? onSearchTap;
-  final ChatUIKitGroupItemBuilder? listViewItemBuilder;
+  final ChatUIKitGroupItemBuilder? itemBuilder;
   final void Function(BuildContext context, GroupItemModel model)? onTap;
   final void Function(BuildContext context, GroupItemModel model)? onLongPress;
   final String? searchBarHideText;
@@ -86,7 +86,7 @@ class _GroupsViewState extends State<GroupsView> with ChatUIKitThemeMixin {
     }
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title,
       centerWidget: widget.appBarModel?.centerWidget ??
@@ -120,12 +120,14 @@ class _GroupsViewState extends State<GroupsView> with ChatUIKitThemeMixin {
       centerTitle: widget.appBarModel?.centerTitle ?? false,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -135,9 +137,9 @@ class _GroupsViewState extends State<GroupsView> with ChatUIKitThemeMixin {
       body: SafeArea(
         child: GroupListView(
           controller: controller,
-          itemBuilder: widget.listViewItemBuilder,
-          searchHideText: widget.searchBarHideText,
-          background: widget.listViewBackground,
+          itemBuilder: widget.itemBuilder,
+          searchBarHideText: widget.searchBarHideText,
+          emptyBackground: widget.listViewBackground,
           errorMessage: widget.loadErrorMessage,
           onTap: widget.onTap ?? tapGroupInfo,
           onLongPress: widget.onLongPress,

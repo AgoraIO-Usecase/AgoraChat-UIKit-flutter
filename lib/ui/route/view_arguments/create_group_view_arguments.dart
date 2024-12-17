@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 class CreateGroupViewArguments implements ChatUIKitViewArguments {
   CreateGroupViewArguments({
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onSearchTap,
     this.searchBarHideText,
     this.listViewBackground,
@@ -23,7 +23,7 @@ class CreateGroupViewArguments implements ChatUIKitViewArguments {
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<ContactItemModel> data)? onSearchTap;
 
-  final ChatUIKitContactItemBuilder? listViewItemBuilder;
+  final ChatUIKitContactItemBuilder? itemBuilder;
   final void Function(ContactItemModel model)? onItemTap;
   final void Function(ContactItemModel model)? onItemLongPress;
   final String? searchBarHideText;
@@ -41,7 +41,7 @@ class CreateGroupViewArguments implements ChatUIKitViewArguments {
     ContactListViewController? controller,
     ChatUIKitAppBarModel? appBarModel,
     void Function(List<ContactItemModel> data)? onSearchTap,
-    ChatUIKitContactItemBuilder? listViewItemBuilder,
+    ChatUIKitContactItemBuilder? itemBuilder,
     void Function(ContactItemModel model)? onItemTap,
     void Function(ContactItemModel model)? onItemLongPress,
     String? searchBarHideText,
@@ -58,7 +58,7 @@ class CreateGroupViewArguments implements ChatUIKitViewArguments {
       controller: controller ?? this.controller,
       appBarModel: appBarModel ?? this.appBarModel,
       onSearchTap: onSearchTap ?? this.onSearchTap,
-      listViewItemBuilder: listViewItemBuilder ?? this.listViewItemBuilder,
+      itemBuilder: itemBuilder ?? this.itemBuilder,
       onItemTap: onItemTap ?? this.onItemTap,
       onItemLongPress: onItemLongPress ?? this.onItemLongPress,
       searchBarHideText: searchBarHideText ?? this.searchBarHideText,

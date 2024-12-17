@@ -6,7 +6,7 @@ class GroupsViewArguments implements ChatUIKitViewArguments {
     this.controller,
     this.appBarModel,
     this.onSearchTap,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onTap,
     this.onLongPress,
     this.searchBarHideText,
@@ -19,7 +19,7 @@ class GroupsViewArguments implements ChatUIKitViewArguments {
   final GroupListViewController? controller;
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<GroupItemModel> data)? onSearchTap;
-  final ChatUIKitGroupItemBuilder? listViewItemBuilder;
+  final ChatUIKitGroupItemBuilder? itemBuilder;
   final void Function(BuildContext context, GroupItemModel model)? onTap;
   final void Function(BuildContext context, GroupItemModel model)? onLongPress;
   final String? searchBarHideText;
@@ -37,7 +37,7 @@ class GroupsViewArguments implements ChatUIKitViewArguments {
     GroupListViewController? controller,
     ChatUIKitAppBarModel? appBarModel,
     void Function(List<GroupItemModel> data)? onSearchTap,
-    ChatUIKitGroupItemBuilder? listViewItemBuilder,
+    ChatUIKitGroupItemBuilder? itemBuilder,
     void Function(BuildContext context, GroupItemModel model)? onTap,
     void Function(BuildContext context, GroupItemModel model)? onLongPress,
     String? searchBarHideText,
@@ -51,7 +51,7 @@ class GroupsViewArguments implements ChatUIKitViewArguments {
       controller: controller ?? this.controller,
       appBarModel: appBarModel ?? this.appBarModel,
       onSearchTap: onSearchTap ?? this.onSearchTap,
-      listViewItemBuilder: listViewItemBuilder ?? this.listViewItemBuilder,
+      itemBuilder: itemBuilder ?? this.itemBuilder,
       onTap: onTap ?? this.onTap,
       onLongPress: onLongPress ?? this.onLongPress,
       searchBarHideText: searchBarHideText ?? this.searchBarHideText,

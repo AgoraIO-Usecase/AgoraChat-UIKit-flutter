@@ -56,7 +56,7 @@ class UserDataStore {
       'INSERT OR REPLACE INTO "${ChatUIKit.instance.currentUserId!}" (id, nickname, avatar, remark, type) VALUES (?, ?, ?, ?, ?)',
       [
         profile.id,
-        profile.name,
+        profile.showName,
         profile.avatarUrl,
         profile.remark,
         profile.type.index
@@ -72,7 +72,7 @@ class UserDataStore {
         ChatUIKit.instance.currentUserId!,
         {
           'id': profile.id,
-          'nickname': profile.name,
+          'nickname': profile.showName,
           'avatar': profile.avatarUrl,
           'remark': profile.remark,
           'type': profile.type.index,
@@ -93,7 +93,7 @@ class UserDataStore {
     if (maps?.isNotEmpty == true) {
       return ChatUIKitProfile(
         id: maps?.first['id'] as String,
-        name: maps?.first['nickname'] as String,
+        showName: maps?.first['nickname'] as String,
         avatarUrl: maps?.first['avatar'] as String,
         remark: maps?.first['remark'] as String,
         type: ChatUIKitProfileType.values[maps?.first['type'] as int],
@@ -110,7 +110,7 @@ class UserDataStore {
       final info = maps?[i];
       return ChatUIKitProfile(
         id: info?['id'] as String,
-        name: info?['nickname'] as String?,
+        showName: info?['nickname'] as String?,
         avatarUrl: info?['avatar'] as String?,
         remark: info?['remark'] as String?,
         type: ChatUIKitProfileType.values[info?['type'] as int],

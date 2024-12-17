@@ -2,6 +2,8 @@ import '../../chat_uikit.dart';
 
 import 'package:flutter/material.dart';
 
+/// The group member list view.
+/// This widget is used to display the list of group members.
 class GroupMemberListView extends StatefulWidget {
   const GroupMemberListView({
     required this.groupId,
@@ -10,41 +12,76 @@ class GroupMemberListView extends StatefulWidget {
     this.beforeWidgets,
     this.afterWidgets,
     this.onSearchTap,
-    this.searchHideText,
-    this.background,
+    this.searchBarHideText,
+    this.emptyBackground,
     this.errorMessage,
     this.reloadMessage,
     this.onTap,
     this.onLongPress,
-    this.enableSearchBar = false,
+    this.enableSearchBar = true,
     this.onSelectLetterChanged,
     this.sortAlphabetical,
     this.universalAlphabeticalLetter = '#',
+    this.enableSorting = true,
+    this.showAlphabeticalIndicator = true,
     super.key,
   });
 
+  /// Callback when the search bar is clicked, the parameter is the search data source list.
   final void Function(List<ContactItemModel> data)? onSearchTap;
+
+  /// The widget list displayed before the list.
   final List<Widget>? beforeWidgets;
+
+  /// The widget list displayed after the list.
   final List<Widget>? afterWidgets;
+
+  /// The builder of the list item.
   final ChatUIKitContactItemBuilder? itemBuilder;
+
+  /// Callback when the list item is clicked.
   final void Function(BuildContext context, ContactItemModel model)? onTap;
+
+  /// Callback when the list item is long pressed.
   final void Function(BuildContext context, ContactItemModel model)?
       onLongPress;
-  final String? searchHideText;
-  final Widget? background;
+
+  /// The text displayed when the search bar is hidden.
+  final String? searchBarHideText;
+
+  /// The widget displayed when the list is empty.
+  final Widget? emptyBackground;
+
+  /// The error message displayed when the list fails to load.
   final String? errorMessage;
+
+  /// The message displayed when the list fails to load.
   final String? reloadMessage;
+
+  /// The controller of the list.
   final GroupMemberListViewController? controller;
+
+  /// The group ID of the group member list.
   final String groupId;
+
+  /// Whether to enable the search bar, the default is true.
   final bool enableSearchBar;
+
+  /// Callback when the letter is selected.
   final void Function(BuildContext context, String? letter)?
       onSelectLetterChanged;
 
-  /// 通讯录列表的字母排序默认字，默认为 '#'
+  /// The special alphabetical letter. The default is '#'.
   final String universalAlphabeticalLetter;
 
-  /// 字母排序
+  /// The alphabetical order of the list, the default is 'A-Z'.
   final String? sortAlphabetical;
+
+  /// Whether to enable sorting, the default is true.
+  final bool enableSorting;
+
+  /// Whether to display the alphabetical indicator, the default is true.
+  final bool showAlphabeticalIndicator;
 
   @override
   State<GroupMemberListView> createState() => _GroupMemberListViewState();
@@ -54,7 +91,6 @@ class _GroupMemberListViewState extends State<GroupMemberListView>
     with ChatUIKitProviderObserver {
   ScrollController scrollController = ScrollController();
   late final GroupMemberListViewController controller;
-  bool enableSearchBar = true;
 
   @override
   void initState() {
@@ -64,7 +100,10 @@ class _GroupMemberListViewState extends State<GroupMemberListView>
         GroupMemberListViewController(
           groupId: widget.groupId,
         );
-    controller.fetchItemList();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      controller.fetchItemList();
+    });
   }
 
   @override
@@ -98,12 +137,14 @@ class _GroupMemberListViewState extends State<GroupMemberListView>
       valueListenable: controller.loadingType,
       builder: (context, type, child) {
         return ChatUIKitAlphabeticalWidget(
+          enableSorting: widget.enableSorting,
+          showAlphabeticalIndicator: widget.showAlphabeticalIndicator,
           groupId: widget.groupId,
           onSelectLetterChanged: widget.onSelectLetterChanged,
-          universalAlphabeticalLetter: widget.universalAlphabeticalLetter,
+          specialAlphabeticalLetter: widget.universalAlphabeticalLetter,
           sortAlphabetical: widget.sortAlphabetical,
           beforeWidgets: widget.beforeWidgets,
-          listViewHasSearchBar: enableSearchBar,
+          listViewHasSearchBar: widget.enableSearchBar,
           list: controller.list,
           scrollController: scrollController,
           builder: (context, list) {
@@ -114,12 +155,12 @@ class _GroupMemberListViewState extends State<GroupMemberListView>
               refresh: () {
                 controller.fetchItemList();
               },
-              enableSearchBar: enableSearchBar,
+              enableSearchBar: widget.enableSearchBar,
               errorMessage: widget.errorMessage,
               reloadMessage: widget.reloadMessage,
               beforeWidgets: widget.beforeWidgets,
               afterWidgets: widget.afterWidgets,
-              background: widget.background,
+              background: widget.emptyBackground,
               onSearchTap: (data) {
                 List<ContactItemModel> list = [];
                 for (var item in data) {
@@ -129,7 +170,7 @@ class _GroupMemberListViewState extends State<GroupMemberListView>
                 }
                 widget.onSearchTap?.call(list);
               },
-              searchBarHideText: widget.searchHideText,
+              searchBarHideText: widget.searchBarHideText,
               itemBuilder: (context, model) {
                 if (model is ContactItemModel) {
                   Widget? item;

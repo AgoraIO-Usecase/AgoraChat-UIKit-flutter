@@ -9,16 +9,17 @@ class ConversationsViewArguments implements ChatUIKitViewArguments {
     this.onSearchTap,
     this.beforeWidgets,
     this.afterWidgets,
-    this.listViewItemBuilder,
-    this.onTap,
-    this.onLongPressHandler,
+    this.itemBuilder,
+    this.onItemTap,
+    this.onItemLongPressHandler,
     this.searchBarHideText,
-    this.listViewBackground,
+    this.emptyBackground,
     this.enableAppBar = true,
     this.enableSearchBar = true,
     this.viewObserver,
     this.moreActionsBuilder,
     this.enablePinHighlight = true,
+    this.backgroundWidget,
     this.attributes,
   });
 
@@ -37,13 +38,14 @@ class ConversationsViewArguments implements ChatUIKitViewArguments {
   final List<Widget>? afterWidgets;
 
   /// 会话列表的 `item` 构建器，如果设置后需要显示会话时会直接回调，如果不处理可以返回 `null`。
-  final ConversationItemBuilder? listViewItemBuilder;
+  final ConversationItemBuilder? itemBuilder;
 
   /// 点击会话列表的回调，点击后会把当前的会话数据传递过来。具体参考 [ConversationItemModel]。 如果不是设置默认会跳转到消息页面。具体参考 [MessagesView]。
-  final void Function(BuildContext context, ConversationItemModel info)? onTap;
+  final void Function(BuildContext context, ConversationItemModel info)?
+      onItemTap;
 
   /// 长按会话列表的回调，如果不设置默认会弹出默认的长按菜单。如果设置长按时会把默认的弹出菜单项传给你，你需要调整后返回来，返回来的数据会用于菜单显示，如果返回 `null` 将不会显示菜单。
-  final ConversationsViewItemLongPressHandler? onLongPressHandler;
+  final ConversationsViewItemLongPressHandler? onItemLongPressHandler;
 
   /// 会话搜索框的隐藏文字。
   final String? searchBarHideText;
@@ -52,12 +54,15 @@ class ConversationsViewArguments implements ChatUIKitViewArguments {
   final bool enableSearchBar;
 
   /// 会话列表的背景，会话为空时会显示，如果设置后将会替换默认的背景。
-  final Widget? listViewBackground;
+  final Widget? emptyBackground;
 
   /// 是否显示AppBar, 默认为 `true`。 当为 `false` 时将不会显示AppBar。同时也会影响到是否显示标题。
   final bool enableAppBar;
 
   final bool enablePinHighlight;
+
+  /// 背景组件，如果设置后将会替换默认的背景组件。
+  final Widget? backgroundWidget;
 
   /// View 附加属性，设置后的内容将会带入到下一个页面。
   @override
@@ -67,40 +72,44 @@ class ConversationsViewArguments implements ChatUIKitViewArguments {
 
   final ChatUIKitMoreActionsBuilder? moreActionsBuilder;
 
-  ConversationsViewArguments copyWith(
-      {ConversationListViewController? controller,
-      ChatUIKitAppBarModel? appBarModel,
-      void Function(List<ConversationItemModel> data)? onSearchTap,
-      List<NeedAlphabeticalWidget>? beforeWidgets,
-      List<NeedAlphabeticalWidget>? afterWidgets,
-      ChatUIKitListItemBuilder? listViewItemBuilder,
-      void Function(BuildContext context, ConversationItemModel model)? onTap,
-      ConversationsViewItemLongPressHandler? onLongPressHandler,
-      String? searchBarHideText,
-      Widget? listViewBackground,
-      bool? enableAppBar,
-      bool? enableSearchBar,
-      ChatUIKitViewObserver? viewObserver,
-      ChatUIKitMoreActionsBuilder? moreActionsBuilder,
-      String? attributes,
-      bool? enablePinHighlight}) {
+  ConversationsViewArguments copyWith({
+    ConversationListViewController? controller,
+    ChatUIKitAppBarModel? appBarModel,
+    void Function(List<ConversationItemModel> data)? onSearchTap,
+    List<NeedAlphabeticalWidget>? beforeWidgets,
+    List<NeedAlphabeticalWidget>? afterWidgets,
+    ChatUIKitListItemBuilder? itemBuilder,
+    void Function(BuildContext context, ConversationItemModel model)? onItemTap,
+    ConversationsViewItemLongPressHandler? onItemLongPressHandler,
+    String? searchBarHideText,
+    Widget? emptyBackground,
+    bool? enableAppBar,
+    bool? enableSearchBar,
+    ChatUIKitViewObserver? viewObserver,
+    ChatUIKitMoreActionsBuilder? moreActionsBuilder,
+    String? attributes,
+    bool? enablePinHighlight,
+    Widget? backgroundWidget,
+  }) {
     return ConversationsViewArguments(
       controller: controller ?? this.controller,
       appBarModel: appBarModel ?? this.appBarModel,
       onSearchTap: onSearchTap ?? this.onSearchTap,
       beforeWidgets: beforeWidgets ?? this.beforeWidgets,
       afterWidgets: afterWidgets ?? this.afterWidgets,
-      listViewItemBuilder: listViewItemBuilder ?? this.listViewItemBuilder,
-      onTap: onTap ?? this.onTap,
+      itemBuilder: itemBuilder ?? this.itemBuilder,
+      onItemTap: onItemTap ?? this.onItemTap,
       enableSearchBar: enableSearchBar ?? this.enableSearchBar,
-      onLongPressHandler: onLongPressHandler ?? this.onLongPressHandler,
+      onItemLongPressHandler:
+          onItemLongPressHandler ?? this.onItemLongPressHandler,
       searchBarHideText: searchBarHideText ?? this.searchBarHideText,
-      listViewBackground: listViewBackground ?? this.listViewBackground,
+      emptyBackground: emptyBackground ?? this.emptyBackground,
       enableAppBar: enableAppBar ?? this.enableAppBar,
       viewObserver: viewObserver ?? this.viewObserver,
       attributes: attributes ?? this.attributes,
       moreActionsBuilder: moreActionsBuilder ?? this.moreActionsBuilder,
       enablePinHighlight: enablePinHighlight ?? this.enablePinHighlight,
+      backgroundWidget: backgroundWidget ?? this.backgroundWidget,
     );
   }
 }

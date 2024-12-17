@@ -3,6 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ChatUIKitAppBarModel {
+  /// ChatUIKitAppBarModel 构造函数
+  /// [title] 标题
+  /// [centerWidget] 中间控件, 优先级高于title 和 subtitle，如果设置了centerWidget，title 和 subtitle 将不会显示
+  /// [titleTextStyle] 标题样式
+  /// [subtitle] 副标题
+  /// [subTitleTextStyle] 副标题样式
+  /// [leadingActions] 左侧控件
+  /// [leadingActionsBuilder] 左侧控件构建器, 当存在默认值时会回调。
+  /// [trailingActions] 右侧控件
+  /// [trailingActionsBuilder] 右侧控件构建器, 当存在默认值时会回调。
+  /// [showBackButton] 是否显示返回键
+  /// [onBackButtonPressed] 返回键点击事件, 不设置是默认为返回上一页
+  /// [centerTitle] 是否居中显示标题
+  /// [systemOverlayStyle] 状态栏样式
+  /// [backgroundColor] 状态栏样式
+  /// [bottomLine] 是否显示底部分割线
+  /// [bottomLineColor] 底部分割线颜色
   ChatUIKitAppBarModel({
     this.title,
     this.centerWidget,
@@ -19,23 +36,56 @@ class ChatUIKitAppBarModel {
     this.systemOverlayStyle,
     this.backgroundColor,
     this.bottomLine,
+    this.bottomLineColor,
   });
 
+  /// 是否显示返回键
   bool showBackButton;
+
+  /// 返回键点击事件
   VoidCallback? onBackButtonPressed;
+
+  /// 中间控件, 优先级高于title 和 subtitle，如果设置了centerWidget，title 和 subtitle 将不会显示
   Widget? centerWidget;
+
+  /// 标题
   String? title;
+
+  /// 标题样式
   TextStyle? titleTextStyle;
+
+  /// 副标题
   String? subtitle;
+
+  /// 副标题样式
   TextStyle? subTitleTextStyle;
+
+  /// 左侧控件
   List<ChatUIKitAppBarAction>? leadingActions;
+
+  /// 左侧控件构建器
   ChatUIKitAppBarActionsBuilder? leadingActionsBuilder;
+
+  /// 右侧控件
   List<ChatUIKitAppBarAction>? trailingActions;
+
+  /// 右侧控件构建器
   ChatUIKitAppBarActionsBuilder? trailingActionsBuilder;
+
+  /// 是否居中显示标题
   bool centerTitle;
+
+  /// 状态栏样式
   Color? backgroundColor;
+
+  /// 状态栏样式
   SystemUiOverlayStyle? systemOverlayStyle;
+
+  /// 是否显示底部分割线
   bool? bottomLine;
+
+  /// 底部分割线颜色
+  Color? bottomLineColor;
 }
 
 class ChatUIKitAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -55,6 +105,7 @@ class ChatUIKitAppBar extends StatefulWidget implements PreferredSizeWidget {
       systemOverlayStyle: model.systemOverlayStyle,
       backgroundColor: model.backgroundColor,
       bottomLine: model.bottomLine ?? false,
+      bottomLineColor: model.bottomLineColor,
     );
   }
 
@@ -73,6 +124,7 @@ class ChatUIKitAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.systemOverlayStyle,
     this.backgroundColor,
     this.bottomLine = false,
+    this.bottomLineColor,
     super.key,
   });
 
@@ -90,6 +142,7 @@ class ChatUIKitAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Color? backgroundColor;
   final SystemUiOverlayStyle? systemOverlayStyle;
   final bool bottomLine;
+  final Color? bottomLineColor;
 
   @override
   State<ChatUIKitAppBar> createState() => _ChatUIKitAppBarState();
@@ -281,11 +334,12 @@ class _ChatUIKitAppBarState extends State<ChatUIKitAppBar>
         children: [
           content,
           Divider(
-            height: 1,
-            thickness: 1,
-            color: theme.color.isDark
-                ? theme.color.neutralColor2
-                : theme.color.neutralColor9,
+            height: 0.3,
+            thickness: 0.3,
+            color: widget.bottomLineColor ??
+                (theme.color.isDark
+                    ? theme.color.neutralColor2
+                    : theme.color.neutralColor9),
           )
         ],
       );

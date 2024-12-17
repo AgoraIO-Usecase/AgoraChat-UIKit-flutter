@@ -7,7 +7,7 @@ class NewRequestsView extends StatefulWidget {
       : controller = arguments.controller,
         appBarModel = arguments.appBarModel,
         onSearchTap = arguments.onSearchTap,
-        listViewItemBuilder = arguments.listViewItemBuilder,
+        itemBuilder = arguments.itemBuilder,
         onTap = arguments.onTap,
         onLongPress = arguments.onLongPress,
         searchBarHideText = arguments.searchBarHideText,
@@ -21,7 +21,7 @@ class NewRequestsView extends StatefulWidget {
     this.controller,
     this.appBarModel,
     this.onSearchTap,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onTap,
     this.onLongPress,
     this.searchBarHideText,
@@ -36,7 +36,7 @@ class NewRequestsView extends StatefulWidget {
   final NewRequestListViewController? controller;
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<NewRequestItemModel> data)? onSearchTap;
-  final ChatUIKitNewRequestItemBuilder? listViewItemBuilder;
+  final ChatUIKitNewRequestItemBuilder? itemBuilder;
   final void Function(BuildContext context, NewRequestItemModel model)? onTap;
   final void Function(BuildContext context, NewRequestItemModel model)?
       onLongPress;
@@ -74,7 +74,7 @@ class _NewRequestsViewState extends State<NewRequestsView>
     super.dispose();
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           ChatUIKitLocal.newRequestsViewTitle.localString(context),
@@ -91,6 +91,8 @@ class _NewRequestsViewState extends State<NewRequestsView>
       centerTitle: widget.appBarModel?.centerTitle ?? false,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
@@ -98,7 +100,7 @@ class _NewRequestsViewState extends State<NewRequestsView>
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     Future(() => {ChatUIKitContext.instance.markAllRequestsAsRead()});
 
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: theme.color.isDark
@@ -109,9 +111,9 @@ class _NewRequestsViewState extends State<NewRequestsView>
         body: SafeArea(
           child: NewRequestsListView(
             controller: controller,
-            itemBuilder: widget.listViewItemBuilder,
-            searchHideText: widget.searchBarHideText,
-            background: widget.listViewBackground,
+            itemBuilder: widget.itemBuilder,
+            searchBarHideText: widget.searchBarHideText,
+            emptyBackground: widget.listViewBackground,
             errorMessage: widget.loadErrorMessage,
             // onTap: widget.onTap ?? onItemTap,
             onTap: widget.onTap,

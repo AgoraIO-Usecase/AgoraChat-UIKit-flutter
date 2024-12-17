@@ -19,7 +19,7 @@ class ChatUIKitSearchListViewItem extends StatelessWidget {
 
     Widget name = HighlightTool.highlightWidget(
       context,
-      profile.showName,
+      profile.contactShowName,
       searchKey: highlightWord,
     );
 

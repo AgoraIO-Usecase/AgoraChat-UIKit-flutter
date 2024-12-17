@@ -2,13 +2,12 @@ import '../chat_sdk_service.dart';
 import 'package:flutter/foundation.dart';
 
 mixin ChatWrapper on ChatUIKitServiceBase {
-  @protected
   @override
   void addListeners() {
     super.addListeners();
     Client.getInstance.chatManager.addEventHandler(
       sdkEventKey,
-      ChatEventHandle(
+      ChatEventHandler(
         onMessagesReceived: onMessagesReceived,
         onCmdMessagesReceived: onCmdMessagesReceived,
         onMessagesRead: onMessagesRead,

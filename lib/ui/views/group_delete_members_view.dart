@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class GroupDeleteMembersView extends StatefulWidget {
   GroupDeleteMembersView.arguments(GroupDeleteMembersViewArguments arguments,
       {super.key})
-      : listViewItemBuilder = arguments.listViewItemBuilder,
+      : itemBuilder = arguments.itemBuilder,
         onSearchTap = arguments.onSearchTap,
         searchBarHideText = arguments.searchBarHideText,
         listViewBackground = arguments.listViewBackground,
@@ -21,7 +21,7 @@ class GroupDeleteMembersView extends StatefulWidget {
 
   const GroupDeleteMembersView({
     required this.groupId,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onSearchTap,
     this.searchBarHideText,
     this.listViewBackground,
@@ -40,7 +40,7 @@ class GroupDeleteMembersView extends StatefulWidget {
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<ContactItemModel> data)? onSearchTap;
 
-  final ChatUIKitContactItemBuilder? listViewItemBuilder;
+  final ChatUIKitContactItemBuilder? itemBuilder;
   final void Function(BuildContext context, ContactItemModel model)? onTap;
   final void Function(BuildContext context, ContactItemModel model)?
       onLongPress;
@@ -80,7 +80,7 @@ class _GroupDeleteMembersViewState extends State<GroupDeleteMembersView>
     super.dispose();
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           ChatUIKitLocal.groupDeleteMembersViewTitle.localString(context),
@@ -132,12 +132,14 @@ class _GroupDeleteMembersViewState extends State<GroupDeleteMembersView>
       centerTitle: widget.appBarModel?.centerTitle ?? false,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -147,7 +149,7 @@ class _GroupDeleteMembersViewState extends State<GroupDeleteMembersView>
       body: GroupMemberListView(
         groupId: widget.groupId,
         controller: controller,
-        itemBuilder: widget.listViewItemBuilder ??
+        itemBuilder: widget.itemBuilder ??
             (context, model) {
               return InkWell(
                 highlightColor: Colors.transparent,
@@ -180,8 +182,8 @@ class _GroupDeleteMembersViewState extends State<GroupDeleteMembersView>
                 ),
               );
             },
-        searchHideText: widget.searchBarHideText,
-        background: widget.listViewBackground,
+        searchBarHideText: widget.searchBarHideText,
+        emptyBackground: widget.listViewBackground,
         onSearchTap: widget.onSearchTap ?? onSearchTap,
       ),
     );

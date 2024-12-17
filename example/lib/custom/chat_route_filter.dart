@@ -1,10 +1,8 @@
 import 'package:agora_chat_uikit/chat_uikit.dart';
-import 'package:em_chat_uikit_example/custom/demo_helper.dart';
 import 'package:em_chat_uikit_example/demo_localizations.dart';
 
 import 'package:em_chat_uikit_example/pages/help/download_page.dart';
 import 'package:em_chat_uikit_example/tool/user_data_store.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -16,7 +14,7 @@ class ChatRouteFilter {
     } else if (settings.name == ChatUIKitRouteNames.createGroupView) {
       return createGroupView(settings);
     } else if (settings.name == ChatUIKitRouteNames.contactDetailsView) {
-      return contactDetail(settings);
+      return contactDetails(settings);
     } else if (settings.name == ChatUIKitRouteNames.groupDetailsView) {
       return groupDetail(settings);
     }
@@ -35,7 +33,7 @@ class ChatRouteFilter {
       Group group = await ChatUIKit.instance
           .fetchGroupInfo(groupId: arguments.profile.id);
       ChatUIKitProfile profile = arguments.profile
-          .copyWith(name: group.name, avatarUrl: group.extension);
+          .copyWith(showName: group.name, avatarUrl: group.extension);
       ChatUIKitProvider.instance.addProfiles([profile]);
       UserDataStore().saveUserData(profile);
     }).then((value) {
@@ -47,8 +45,7 @@ class ChatRouteFilter {
     return RouteSettings(name: settings.name, arguments: arguments);
   }
 
-  // 自定义 contact detail view
-  static RouteSettings contactDetail(RouteSettings settings) {
+  static RouteSettings contactDetails(RouteSettings settings) {
     ChatUIKitViewObserver? viewObserver = ChatUIKitViewObserver();
     ContactDetailsViewArguments arguments =
         settings.arguments as ContactDetailsViewArguments;
@@ -57,14 +54,15 @@ class ChatRouteFilter {
       viewObserver: viewObserver,
 
       // 添加 remark 实现
-      detailsListViewItemsBuilder: (context, profile, models) {
+      itemsBuilder: (context, profile, models) {
         return [
           ChatUIKitDetailsListViewItemModel(
             title: DemoLocalizations.contactRemark.localString(context),
-            trailing: Text(ChatUIKitProvider.instance
-                    .getProfile(arguments.profile)
-                    .remark ??
-                ''),
+            trailing: Text(
+              ChatUIKitProvider.instance.getProfile(arguments.profile).remark ??
+                  '',
+              textScaler: TextScaler.noScaling,
+            ),
             onTap: () async {
               String errStr =
                   DemoLocalizations.contactRemarkFailed.localString(context);
@@ -75,6 +73,7 @@ class ChatRouteFilter {
                   ChatUIKitDialogInputContentItem(
                     hintText: DemoLocalizations.contactRemarkDesc
                         .localString(context),
+                    maxLength: 32,
                   )
                 ],
                 actionItems: [
@@ -106,25 +105,7 @@ class ChatRouteFilter {
               }
             },
           ),
-          ...() {
-            bool isBlocked = DemoHelper.blockList.contains(profile!.id);
-            List<ChatUIKitDetailsListViewItemModel> list = [];
-            list.add(models.first);
-            list.add(
-              ChatUIKitDetailsListViewItemModel(
-                title: '拉黑',
-                trailing: CupertinoSwitch(
-                  value: isBlocked,
-                  onChanged: (value) async {
-                    await DemoHelper.blockUsers(profile.id, !isBlocked);
-                    viewObserver.refresh();
-                  },
-                ),
-              ),
-            );
-            list.addAll(models.sublist(1));
-            return list;
-          }(),
+          ...models,
         ];
       },
     );
@@ -182,7 +163,7 @@ class ChatRouteFilter {
         }
         return null;
       },
-      onItemTap: (ctx, messageModel) {
+      onItemTap: (ctx, messageModel, rect) {
         if (messageModel.message.bodyType == MessageType.FILE) {
           Navigator.of(ctx).push(
             MaterialPageRoute(

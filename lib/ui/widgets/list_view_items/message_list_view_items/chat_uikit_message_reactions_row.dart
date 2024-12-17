@@ -49,10 +49,7 @@ class _ChatUIKitMessageReactionsRowState
               },
               child: Container(
                 margin: const EdgeInsets.only(right: 4),
-                child: ChatUIkitReactionWidget(
-                  reaction,
-                  theme: theme,
-                ),
+                child: ChatUIkitReactionWidget(reaction),
               ),
             ),
           );

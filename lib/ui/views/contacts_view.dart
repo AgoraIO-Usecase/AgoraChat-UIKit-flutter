@@ -6,7 +6,7 @@ class ContactsView extends StatefulWidget {
   ContactsView.arguments(
     ContactsViewArguments arguments, {
     super.key,
-  })  : listViewItemBuilder = arguments.listViewItemBuilder,
+  })  : itemBuilder = arguments.itemBuilder,
         onSearchTap = arguments.onSearchTap,
         searchHideText = arguments.searchHideText,
         listViewBackground = arguments.listViewBackground,
@@ -20,9 +20,11 @@ class ContactsView extends StatefulWidget {
         loadErrorMessage = arguments.loadErrorMessage,
         enableSearchBar = arguments.enableSearchBar,
         viewObserver = arguments.viewObserver,
-        universalAlphabeticalLetter = arguments.universalAlphabetical,
+        specialAlphabeticalLetter = arguments.universalAlphabetical,
         sortAlphabetical = arguments.sortAlphabetical,
         onSelectLetterChanged = arguments.onSelectLetterChanged,
+        enableSorting = arguments.enableSorting,
+        showAlphabeticalIndicator = arguments.showAlphabeticalIndicator,
         attributes = arguments.attributes;
 
   const ContactsView({
@@ -34,16 +36,18 @@ class ContactsView extends StatefulWidget {
     this.listViewBackground,
     this.onTap,
     this.onLongPress,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.controller,
     this.loadErrorMessage,
     this.beforeItems,
     this.afterItems,
     this.attributes,
     this.viewObserver,
-    this.universalAlphabeticalLetter = '#',
+    this.specialAlphabeticalLetter = '#',
     this.sortAlphabetical,
     this.onSelectLetterChanged,
+    this.enableSorting = true,
+    this.showAlphabeticalIndicator = true,
     super.key,
   });
 
@@ -51,14 +55,21 @@ class ContactsView extends StatefulWidget {
       onSelectLetterChanged;
 
   /// 通讯录列表的字母排序默认字，默认为 '#'
-  final String universalAlphabeticalLetter;
+  final String specialAlphabeticalLetter;
 
   /// 字母排序
   final String? sortAlphabetical;
 
+  /// 是否进行首字母排序
+  final bool enableSorting;
+
+  /// 是否显示字母索引
+  final bool showAlphabeticalIndicator;
+
   /// 联系人列表控制器，用于控制联系人列表数据，如果不设置将会自动创建。详细参考 [ContactListViewController]。
   final ContactListViewController? controller;
 
+  /// 自定义消息页面 `appBar`。如不设置会使用默认的。
   final ChatUIKitAppBarModel? appBarModel;
 
   /// 是否显示AppBar, 默认为 `true`。 当为 `false` 时将不会显示AppBar。同时也会影响到是否显示标题。
@@ -71,13 +82,13 @@ class ContactsView extends StatefulWidget {
   final bool enableSearchBar;
 
   /// 联系人列表之前的数据。
-  final List<ChatUIKitListViewMoreItem>? beforeItems;
+  final List<NeedAlphabeticalWidget>? beforeItems;
 
   /// 联系人列表之后的数据。
-  final List<ChatUIKitListViewMoreItem>? afterItems;
+  final List<NeedAlphabeticalWidget>? afterItems;
 
   /// 联系人列表的 `item` 构建器，如果设置后需要显示联系人时会直接回调，如果不处理可以返回 `null`。
-  final ChatUIKitContactItemBuilder? listViewItemBuilder;
+  final ChatUIKitContactItemBuilder? itemBuilder;
 
   /// 点击联系人列表的回调，点击后会把当前的联系人数据传递过来。具体参考 [ContactItemModel]。 如果不是设置默认会跳转到联系人详情页面。具体参考 [ContactDetailsView]。
   final void Function(BuildContext context, ContactItemModel model)? onTap;
@@ -120,6 +131,11 @@ class _ContactsViewState extends State<ContactsView>
 
     ChatUIKit.instance.addObserver(this);
     controller = widget.controller ?? ContactListViewController();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      contactRequestCount.value = ChatUIKit.instance.contactRequestCount();
+      debugPrint('contactRequestCount: $contactRequestCount');
+    });
   }
 
   @override
@@ -129,7 +145,7 @@ class _ContactsViewState extends State<ContactsView>
     super.dispose();
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ?? 'Contacts',
       titleTextStyle: widget.appBarModel?.titleTextStyle ??
@@ -186,12 +202,14 @@ class _ContactsViewState extends State<ContactsView>
       backgroundColor: widget.appBarModel?.backgroundColor,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       onBackButtonPressed: widget.appBarModel?.onBackButtonPressed,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -201,14 +219,16 @@ class _ContactsViewState extends State<ContactsView>
       body: SafeArea(
         child: ContactListView(
           controller: controller,
-          itemBuilder: widget.listViewItemBuilder,
+          itemBuilder: widget.itemBuilder,
+          enableSorting: widget.enableSorting,
+          showAlphabeticalIndicator: widget.showAlphabeticalIndicator,
           onSelectLetterChanged: widget.onSelectLetterChanged,
           sortAlphabetical: widget.sortAlphabetical,
-          universalAlphabetical: widget.universalAlphabeticalLetter,
+          specialAlphabeticalLetter: widget.specialAlphabeticalLetter,
           beforeWidgets: widget.beforeItems ?? beforeWidgets(),
           afterWidgets: widget.afterItems,
-          searchHideText: widget.searchHideText,
-          background: widget.listViewBackground,
+          searchBarHideText: widget.searchHideText,
+          emptyBackground: widget.listViewBackground,
           onTap: widget.onTap ??
               (ctx, model) {
                 tapContactInfo(model.profile);
@@ -224,7 +244,7 @@ class _ContactsViewState extends State<ContactsView>
     return content;
   }
 
-  List<ChatUIKitListViewMoreItem> beforeWidgets() {
+  List<NeedAlphabeticalWidget> beforeWidgets() {
     return [
       ChatUIKitListViewMoreItem(
         title: ChatUIKitLocal.contactsViewNewRequests.localString(context),

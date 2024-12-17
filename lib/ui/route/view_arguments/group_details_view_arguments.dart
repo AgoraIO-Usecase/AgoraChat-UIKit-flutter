@@ -9,7 +9,7 @@ class GroupDetailsViewArguments implements ChatUIKitViewArguments {
     this.enableAppBar = true,
     this.onMessageDidClear,
     this.viewObserver,
-    this.detailsListViewItemsBuilder,
+    this.itemsBuilder,
     this.moreActionsBuilder,
     this.attributes,
     this.group,
@@ -19,7 +19,7 @@ class GroupDetailsViewArguments implements ChatUIKitViewArguments {
   final ChatUIKitAppBarModel? appBarModel;
   final bool enableAppBar;
   final VoidCallback? onMessageDidClear;
-  final ChatUIKitDetailItemBuilder? detailsListViewItemsBuilder;
+  final ChatUIKitDetailItemBuilder? itemsBuilder;
 
   /// 更多操作构建器，用于构建更多操作的菜单，如果不设置将会使用默认的菜单。
   final ChatUIKitMoreActionsBuilder? moreActionsBuilder;
@@ -36,7 +36,7 @@ class GroupDetailsViewArguments implements ChatUIKitViewArguments {
       ChatUIKitDetailContentActionsBuilder? actionsBuilder,
       bool? enableAppBar,
       ChatUIKitAppBarModel? appBarModel,
-      ChatUIKitDetailItemBuilder? detailsListViewItemsBuilder,
+      ChatUIKitDetailItemBuilder? itemsBuilder,
       ChatUIKitViewObserver? viewObserver,
       VoidCallback? onMessageDidClear,
       String? attributes,
@@ -50,8 +50,7 @@ class GroupDetailsViewArguments implements ChatUIKitViewArguments {
       appBarModel: appBarModel ?? this.appBarModel,
       onMessageDidClear: onMessageDidClear ?? this.onMessageDidClear,
       viewObserver: viewObserver ?? this.viewObserver,
-      detailsListViewItemsBuilder:
-          detailsListViewItemsBuilder ?? this.detailsListViewItemsBuilder,
+      itemsBuilder: itemsBuilder ?? this.itemsBuilder,
       moreActionsBuilder: moreActionsBuilder ?? this.moreActionsBuilder,
       attributes: attributes ?? this.attributes,
     );

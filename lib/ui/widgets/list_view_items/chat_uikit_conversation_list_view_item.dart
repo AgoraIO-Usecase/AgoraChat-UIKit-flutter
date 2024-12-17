@@ -15,6 +15,8 @@ class ChatUIKitConversationListViewItem extends StatelessWidget {
     this.timestamp,
     super.key,
     this.subTitleLabel,
+    this.beforeSubtitle,
+    this.afterSubtitle,
   });
 
   final ConversationItemModel info;
@@ -28,6 +30,8 @@ class ChatUIKitConversationListViewItem extends StatelessWidget {
   final String? unreadCount;
   final int? timestamp;
   final Widget? titleWidget;
+  final Widget? beforeSubtitle;
+  final Widget? afterSubtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +136,7 @@ class ChatUIKitConversationListViewItem extends StatelessWidget {
               style: style,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
+              textScaler: TextScaler.noScaling,
             )
           : Row(
               children: [
@@ -161,6 +166,7 @@ class ChatUIKitConversationListViewItem extends StatelessWidget {
                 ),
                 Expanded(
                   child: ChatUIKitEmojiRichText(
+                    textScaler: TextScaler.noScaling,
                     text: info.lastMessage?.showInfoTranslate(
                           context,
                           needShowName: true,
@@ -175,6 +181,15 @@ class ChatUIKitConversationListViewItem extends StatelessWidget {
               ],
             );
     }
+    subTitle = Row(
+      children: [
+        beforeSubtitle ?? const SizedBox(),
+        Expanded(
+          child: subTitle,
+        ),
+        afterSubtitle ?? const SizedBox()
+      ],
+    );
 
     Widget unreadCount;
     if (info.noDisturb) {

@@ -2,6 +2,8 @@ import '../../chat_uikit.dart';
 
 import 'package:flutter/material.dart';
 
+/// The contact list view.
+/// This widget is used to display the list of contacts.
 class ContactListView extends StatefulWidget {
   const ContactListView({
     this.controller,
@@ -9,38 +11,72 @@ class ContactListView extends StatefulWidget {
     this.beforeWidgets,
     this.afterWidgets,
     this.onSearchTap,
-    this.searchHideText,
-    this.background,
+    this.searchBarHideText,
+    this.emptyBackground,
     this.errorMessage,
     this.reloadMessage,
     this.enableSearchBar = true,
+    this.enableSorting = true,
+    this.showAlphabeticalIndicator = true,
     this.onTap,
     this.onLongPress,
     this.sortAlphabetical,
-    this.universalAlphabetical = '#',
+    this.specialAlphabeticalLetter = '#',
     this.onSelectLetterChanged,
     super.key,
   });
+
+  /// Whether to enable the search bar, the default is true
   final bool enableSearchBar;
+
+  /// Callback when the search bar is clicked, the parameter is the search data source list.
   final void Function(List<ContactItemModel> data)? onSearchTap;
+
+  /// The widget list displayed before the list.
   final List<Widget>? beforeWidgets;
+
+  /// The widget list displayed after the list.
   final List<Widget>? afterWidgets;
+
+  /// The builder of the list item.
   final ChatUIKitContactItemBuilder? itemBuilder;
+
+  /// Callback when the list item is clicked.
   final void Function(BuildContext context, ContactItemModel model)? onTap;
+
+  /// Callback when the list item is long pressed.
   final void Function(BuildContext context, ContactItemModel model)?
       onLongPress;
-  final String? searchHideText;
-  final Widget? background;
+
+  /// The text displayed when the search bar is hidden.
+  final String? searchBarHideText;
+
+  /// The widget displayed when the list is empty.
+  final Widget? emptyBackground;
+
+  /// The error message displayed when the list fails to load.
   final String? errorMessage;
+
+  /// The message displayed when the list fails to load.
   final String? reloadMessage;
+
+  /// The controller of the list.
   final ContactListViewController? controller;
+
+  /// Callback when the letter is selected.
   final void Function(BuildContext context, String? letter)?
       onSelectLetterChanged;
 
-  /// 通讯录列表的字母排序默认字，默认为 '#'
-  final String universalAlphabetical;
+  /// Whether to enable sorting, the default is true
+  final bool enableSorting;
 
-  /// 字母排序
+  /// Whether to display the alphabetical indicator, the default is true
+  final bool showAlphabeticalIndicator;
+
+  /// The special alphabetical letter, the default is '#'
+  final String specialAlphabeticalLetter;
+
+  /// The alphabetical order of the list, the default is 'A-Z'.
   final String? sortAlphabetical;
 
   @override
@@ -57,9 +93,12 @@ class _ContactListViewState extends State<ContactListView>
     super.initState();
     ChatUIKitProvider.instance.addObserver(this);
     controller = widget.controller ?? ContactListViewController();
-    controller.fetchItemList();
     controller.loadingType.addListener(() {
       setState(() {});
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      controller.fetchItemList();
     });
   }
 
@@ -90,10 +129,12 @@ class _ContactListViewState extends State<ContactListView>
   @override
   Widget build(BuildContext context) {
     return ChatUIKitAlphabeticalWidget(
+      enableSorting: widget.enableSorting,
+      showAlphabeticalIndicator: widget.showAlphabeticalIndicator,
       onSelectLetterChanged: widget.onSelectLetterChanged,
       beforeWidgets: widget.beforeWidgets,
       listViewHasSearchBar: widget.enableSearchBar,
-      universalAlphabeticalLetter: widget.universalAlphabetical,
+      specialAlphabeticalLetter: widget.specialAlphabeticalLetter,
       sortAlphabetical: widget.sortAlphabetical,
       list: controller.list,
       scrollController: scrollController,
@@ -115,7 +156,7 @@ class _ContactListViewState extends State<ContactListView>
           reloadMessage: widget.reloadMessage,
           beforeWidgets: widget.beforeWidgets,
           afterWidgets: widget.afterWidgets,
-          background: widget.background,
+          background: widget.emptyBackground,
           onSearchTap: (data) {
             List<ContactItemModel> list = [];
             for (var item in data) {
@@ -139,7 +180,7 @@ class _ContactListViewState extends State<ContactListView>
             }
             return index > -1 ? index : null;
           },
-          searchBarHideText: widget.searchHideText,
+          searchBarHideText: widget.searchBarHideText,
           itemBuilder: (context, model) {
             if (model is ContactItemModel) {
               Widget? item;

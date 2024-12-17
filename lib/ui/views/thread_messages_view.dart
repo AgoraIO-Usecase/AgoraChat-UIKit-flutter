@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'dart:math';
 
@@ -16,7 +18,7 @@ class ThreadMessagesView extends StatefulWidget {
         controller = arguments.controller,
         appBarModel = arguments.appBarModel,
         enableAppBar = arguments.enableAppBar,
-        inputBarController = arguments.inputBarController,
+        inputController = arguments.inputController,
         morePressActions = arguments.morePressActions,
         onMoreActionsItemsHandler = arguments.onMoreActionsItemsHandler,
         longPressActions = arguments.longPressActions,
@@ -29,7 +31,6 @@ class ThreadMessagesView extends StatefulWidget {
         onErrorBtnTapHandler = arguments.onErrorBtnTapHandler,
         bubbleBuilder = arguments.bubbleBuilder,
         bubbleContentBuilder = arguments.bubbleContentBuilder,
-        inputBarTextEditingController = arguments.inputBarTextEditingController,
         multiSelectBottomBar = arguments.multiSelectBottomBar,
         onReactionItemTap = arguments.onReactionItemTap,
         onReactionInfoTap = arguments.onReactionInfoTap,
@@ -52,7 +53,7 @@ class ThreadMessagesView extends StatefulWidget {
     required this.controller,
     this.appBarModel,
     this.enableAppBar = true,
-    this.inputBarController,
+    this.inputController,
     this.morePressActions,
     this.onMoreActionsItemsHandler,
     this.longPressActions,
@@ -76,7 +77,6 @@ class ThreadMessagesView extends StatefulWidget {
     this.onErrorBtnTapHandler,
     this.bubbleBuilder,
     this.bubbleContentBuilder,
-    this.inputBarTextEditingController,
     this.multiSelectBottomBar,
     this.onReactionItemTap,
     this.onReactionInfoTap,
@@ -84,7 +84,7 @@ class ThreadMessagesView extends StatefulWidget {
     this.rightTopMoreActionsBuilder,
   });
 
-  final ChatUIKitInputBarController? inputBarController;
+  final ChatUIKitKeyboardPanelController? inputController;
 
   final ThreadMessagesViewController controller;
 
@@ -103,13 +103,13 @@ class ThreadMessagesView extends StatefulWidget {
   final MessageItemShowHandler? showMessageItemNickname;
 
   /// 消息点击事件, 如果设置后消息点击事件将直接回调，如果不处理可以返回 `false`。
-  final MessageItemTapHandler? onItemTap;
+  final MessageItemGlobalPositionTapHandler? onItemTap;
 
   /// 消息长按事件, 如果设置后消息长按事件将直接回调，返回 `true` 表示处理你需要处理，返回 `false` 则会执行默认的长按事件。
-  final MessageItemTapHandler? onItemLongPress;
+  final MessageItemGlobalPositionTapHandler? onItemLongPress;
 
   /// 消息双击事件,如果设置后消息双击事件将直接回调，如果不处理可以返回 `false`。
-  final MessageItemTapHandler? onDoubleTap;
+  final MessageItemGlobalPositionTapHandler? onDoubleTap;
 
   /// 头像点击事件，如果设置后头像点击事件将直接回调，如果不处理可以返回 `false`。
   final MessageItemTapHandler? onAvatarTap;
@@ -126,17 +126,17 @@ class ThreadMessagesView extends StatefulWidget {
   /// 提示消息构建器， 如果设置后需要显示提示消息时会直接回调，如果不处理可以返回 `null`。
   final MessageItemBuilder? alertItemBuilder;
 
-  /// 更多按钮点击事件列表，如果设置后将会替换默认的更多按钮点击事件列表。详细参考 [ChatUIKitBottomSheetAction]。
-  final List<ChatUIKitBottomSheetAction>? morePressActions;
+  /// 更多按钮点击事件列表，如果设置后将会替换默认的更多按钮点击事件列表。详细参考 [ChatUIKitEventAction]。
+  final List<ChatUIKitEventAction>? morePressActions;
 
-  /// 更多按钮点击事件， 如果设置后将会替换默认的更多按钮点击事件。详细参考 [ChatUIKitBottomSheetAction]。
+  /// 更多按钮点击事件， 如果设置后将会替换默认的更多按钮点击事件。详细参考 [ChatUIKitEventAction]。
   final MessagesViewMorePressHandler? onMoreActionsItemsHandler;
 
-  /// 消息长按事件列表，如果设置后将会替换默认的消息长按事件列表。详细参考 [ChatUIKitBottomSheetAction]。
-  final List<ChatUIKitBottomSheetAction>? longPressActions;
+  /// 消息长按事件列表，如果设置后将会替换默认的消息长按事件列表。详细参考 [ChatUIKitEventAction]。
+  final List<ChatUIKitEventAction>? longPressActions;
 
   /// 消息长按事件回调， 如果设置后将会替换默认的消息长按事件回调。当长按时会回调 [longPressActions] 中设置的事件，需要返回一个列表用于替换，如果不返回则不会显示长按。
-  final MessagesViewItemLongPressHandler? onItemLongPressHandler;
+  final MessagesViewItemLongPressPositionHandler? onItemLongPressHandler;
 
   /// 更多操作构建器，用于构建更多操作的菜单，如果不设置将会使用默认的菜单。
   final ChatUIKitMoreActionsBuilder? rightTopMoreActionsBuilder;
@@ -144,7 +144,7 @@ class ThreadMessagesView extends StatefulWidget {
   /// 强制消息靠左，默认为 `false`， 设置后自己发的消息也会在左侧显示。
   final bool? forceLeft;
 
-  /// 表情控件，如果设置后将会替换默认的表情控件。详细参考 [ChatUIKitInputEmojiBar]。
+  /// 表情控件，如果设置后将会替换默认的表情控件。详细参考 [ChatUIKitEmojiPanel]。
   final Widget? emojiWidget;
 
   /// 回复消息输入控件构建器，如果设置后将会替换默认的回复消息输入控件构建器。详细参考 [ChatUIKitReplyBar]。
@@ -161,9 +161,6 @@ class ThreadMessagesView extends StatefulWidget {
 
   /// 气泡内容构建器，如果设置后将会替换默认的气泡内容构建器。详细参考 [MessageItemBuilder]。
   final MessageItemBuilder? bubbleContentBuilder;
-
-  /// 输入框控制器，如果设置后将会替换默认的输入框控制器。详细参考 [CustomTextEditingController]。
-  final ChatUIKitInputBarController? inputBarTextEditingController;
 
   /// View 附加属性，设置后的内容将会带入到下一个页面。
   final String? attributes;
@@ -188,12 +185,11 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     with ThreadObserver, ChatUIKitProviderObserver, ChatUIKitThemeMixin {
   String? title;
   late ThreadMessagesViewController controller;
-  late final ChatUIKitInputBarController inputBarController;
+  late final ChatUIKitKeyboardPanelController inputController;
   bool showEmoji = false;
   bool showMoreBtn = true;
 
   bool messageEditCanSend = false;
-  ChatUIKitInputBarController? editBarTextEditingController;
   Message? editMessage;
   MessageModel? replyMessage;
   Message? _playingMessage;
@@ -201,10 +197,30 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
   late final AudioPlayer _player;
   late final AutoScrollController _scrollController;
   ChatUIKitAppBarModel? appBarModel;
+  ChatUIKitPopupMenuController? popupMenuController;
+  final Duration _keyboardPanelSwitchDuration =
+      const Duration(milliseconds: 150);
+
+  ValueNotifier<ChatUIKitKeyboardPanelType> currentPanelType =
+      ValueNotifier(ChatUIKitKeyboardPanelType.none);
+
+  CustomTextEditingController? get editController {
+    if (inputController.inputTextEditingController
+        is CustomTextEditingController) {
+      return inputController.inputTextEditingController
+          as CustomTextEditingController;
+    } else {
+      return null;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    setup();
+  }
+
+  setup() {
     ChatUIKitProvider.instance.addObserver(this);
     ChatUIKit.instance.addObserver(this);
     controller = widget.controller;
@@ -212,22 +228,10 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
       setState(() {});
     });
 
-    inputBarController =
-        widget.inputBarController ?? ChatUIKitInputBarController();
-    inputBarController.addListener(() {
-      if (showMoreBtn != !inputBarController.text.trim().isNotEmpty) {
-        showMoreBtn = !inputBarController.text.trim().isNotEmpty;
-        setState(() {});
-      }
-    });
+    inputController = widget.inputController ??
+        ChatUIKitKeyboardPanelController(
+            inputTextEditingController: CustomTextEditingController());
 
-    inputBarController.focusNode.addListener(() {
-      if (editMessage != null) return;
-      if (inputBarController.hasFocus) {
-        showEmoji = false;
-        setState(() {});
-      }
-    });
     _scrollController = AutoScrollController();
     widget.viewObserver?.addListener(() {
       setState(() {});
@@ -235,7 +239,15 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
 
     _picker = ImagePicker();
     _player = AudioPlayer();
+
+    if (ChatUIKitSettings.messageLongPressMenuStyle ==
+        ChatUIKitMessageLongPressMenuStyle.popupMenu) {
+      popupMenuController = ChatUIKitPopupMenuController();
+    }
     loadThreadMessages();
+    currentPanelType.addListener(() {
+      popupMenuController?.hideMenu();
+    });
   }
 
   void loadThreadMessages() {
@@ -246,7 +258,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
   void dispose() {
     ChatUIKitProvider.instance.removeObserver(this);
     ChatUIKit.instance.removeObserver(this);
-    editBarTextEditingController?.dispose();
+    inputController.dispose();
     widget.viewObserver?.dispose();
     super.dispose();
   }
@@ -280,6 +292,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
             child: controller.isMultiSelectMode
                 ? Text(
                     ChatUIKitLocal.bottomSheetCancel.localString(context),
+                    textScaler: TextScaler.noScaling,
                     style: TextStyle(
                       color: theme.color.isDark
                           ? theme.color.primaryColor6
@@ -305,6 +318,8 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
       centerTitle: widget.appBarModel?.centerTitle ?? false,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
@@ -312,19 +327,27 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     updateAppBarModel();
     Widget content = Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
           ? theme.color.neutralColor1
           : theme.color.neutralColor98,
       appBar: widget.enableAppBar ? ChatUIKitAppBar.model(appBarModel!) : null,
       body: SafeArea(
+        maintainBottomViewPadding: true,
         child: Column(
           children: [
             Expanded(
               child: GestureDetector(
-                onTap: clearAllType,
+                onTap: () {
+                  clearAllType();
+                  inputController.switchPanel(
+                    ChatUIKitKeyboardPanelType.none,
+                    duration: _keyboardPanelSwitchDuration,
+                  );
+                },
                 child: ThreadMessageListView(
                   scrollController: _scrollController,
-                  header: originMsgWidget(theme),
+                  header: originMsgWidget(),
                   controller: controller,
                   forceLeft: widget.forceLeft,
                   bubbleContentBuilder: widget.bubbleContentBuilder,
@@ -332,24 +355,25 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                   quoteBuilder: widget.quoteBuilder,
                   showAvatar: widget.showMessageItemAvatar,
                   showNickname: widget.showMessageItemNickname,
-                  onItemTap: (ctx, msg) {
+                  onItemTap: (ctx, msg, rect) {
                     stopVoice();
-                    bool? ret = widget.onItemTap?.call(context, msg);
+                    bool? ret = widget.onItemTap?.call(context, msg, rect);
                     if (ret != true) {
-                      bubbleTab(msg);
+                      bubbleTab(msg, rect);
                     }
                     return ret;
                   },
-                  onItemLongPress: (context, model) {
-                    bool? ret = widget.onItemLongPress?.call(context, model);
+                  onItemLongPress: (context, model, rect) {
+                    bool? ret =
+                        widget.onItemLongPress?.call(context, model, rect);
                     stopVoice();
                     if (ret != true) {
-                      onItemLongPress(model);
+                      onItemLongPress(model, rect);
                     }
                     return ret;
                   },
-                  onItemDoubleTap: (context, model) {
-                    bool? ret = widget.onDoubleTap?.call(context, model);
+                  onItemDoubleTap: (context, model, rect) {
+                    bool? ret = widget.onDoubleTap?.call(context, model, rect);
                     stopVoice();
                     return ret;
                   },
@@ -410,30 +434,9 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
             ),
             ...() {
               if (controller.isMultiSelectMode) {
-                return [multiSelectBar(theme)];
+                return [multiSelectBar()];
               } else {
-                return [
-                  replyMessageBar(theme),
-                  widget.inputBar ?? inputBar(theme),
-                  AnimatedContainer(
-                    curve: Curves.linearToEaseOut,
-                    duration: const Duration(milliseconds: 250),
-                    height: showEmoji ? 230 : 0,
-                    child: showEmoji
-                        ? widget.emojiWidget ??
-                            ChatUIKitInputEmojiBar(
-                              deleteOnTap: () {
-                                inputBarController.deleteTextOnCursor();
-                              },
-                              emojiClicked: (emoji) {
-                                inputBarController.addText(
-                                  ChatUIKitEmojiData.emojiMap[emoji] ?? emoji,
-                                );
-                              },
-                            )
-                        : const SizedBox(),
-                  )
-                ];
+                return [widget.inputBar ?? inputBar()];
               }
             }(),
           ],
@@ -468,7 +471,16 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                editMessageBar(theme),
+                SafeArea(
+                  child: ChatUIKitEditBar(
+                    text: editMessage!.textContent,
+                    onInputTextChanged: (text) {
+                      controller.editMessage(editMessage!, text);
+                      editMessage = null;
+                      setState(() {});
+                    },
+                  ),
+                ),
               ],
             ),
           )
@@ -482,6 +494,36 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
 
     content = ScrollConfiguration(
       behavior: const ScrollBehavior(),
+      child: content,
+    );
+
+    if (ChatUIKitSettings.messageLongPressMenuStyle ==
+        ChatUIKitMessageLongPressMenuStyle.popupMenu) {
+      content = ChatUIKitPopupMenu(
+        controller: popupMenuController!,
+        style: ChatUIKitPopupMenuStyle(
+          backgroundColor: theme.color.isDark
+              ? theme.color.neutralColor2
+              : theme.color.neutralColor98,
+          foregroundColor: theme.color.isDark
+              ? theme.color.neutralColor9
+              : theme.color.neutralColor1,
+          dividerColor: theme.color.isDark
+              ? theme.color.neutralColor3
+              : theme.color.neutralColor9,
+          radiusCircular: ChatUIKitSettings.messageBubbleStyle ==
+                  ChatUIKitMessageListViewBubbleStyle.arrow
+              ? 4
+              : 16,
+        ),
+        child: content,
+      );
+    }
+
+    content = PopScope(
+      onPopInvoked: (didPop) {
+        popupMenuController?.hideMenu();
+      },
       child: content,
     );
 
@@ -505,20 +547,6 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
       showAvatar: widget.showMessageItemAvatar,
       quoteBuilder: widget.quoteBuilder,
       showNickname: widget.showMessageItemNickname,
-      enableSelected: controller.isMultiSelectMode
-          ? () {
-              if (controller.selectedMessages
-                  .map((e) => e.msgId)
-                  .toList()
-                  .contains(model.message.msgId)) {
-                controller.selectedMessages
-                    .removeWhere((e) => model.message.msgId == e.msgId);
-              } else {
-                controller.selectedMessages.add(model.message);
-              }
-              setState(() {});
-            }
-          : null,
       onAvatarTap: () {
         if (widget.onAvatarTap == null) {
           avatarTap(model);
@@ -529,19 +557,46 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
       onAvatarLongPressed: () {
         widget.onAvatarLongPress?.call(context, model);
       },
-      onBubbleDoubleTap: () {
-        widget.onDoubleTap?.call(context, model);
+      onBubbleDoubleTap: (rect) {
+        widget.onDoubleTap?.call(context, model, rect);
       },
-      onBubbleLongPressed: () {
-        bool? ret = widget.onItemLongPress?.call(context, model);
+      onBubbleLongPressed: (rect) {
+        bool? ret = widget.onItemLongPress?.call(context, model, rect);
         if (ret != true) {
-          onItemLongPress(model);
+          onItemLongPress(model, rect);
         }
       },
-      onBubbleTap: () {
-        bool? ret = widget.onItemTap?.call(context, model);
-        if (ret != true) {
-          bubbleTab(model);
+      onItemTap: () {
+        if (controller.isMultiSelectMode) {
+          if (controller.selectedMessages
+              .map((e) => e.msgId)
+              .toList()
+              .contains(model.message.msgId)) {
+            controller.selectedMessages
+                .removeWhere((e) => model.message.msgId == e.msgId);
+          } else {
+            controller.selectedMessages.add(model.message);
+          }
+          setState(() {});
+        }
+      },
+      onBubbleTap: (rect) {
+        if (controller.isMultiSelectMode) {
+          if (controller.selectedMessages
+              .map((e) => e.msgId)
+              .toList()
+              .contains(model.message.msgId)) {
+            controller.selectedMessages
+                .removeWhere((e) => model.message.msgId == e.msgId);
+          } else {
+            controller.selectedMessages.add(model.message);
+          }
+          setState(() {});
+        } else {
+          bool? ret = widget.onItemTap?.call(context, model, rect);
+          if (ret != true) {
+            bubbleTab(model, rect);
+          }
         }
       },
       onNicknameTap: () {
@@ -571,10 +626,10 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     return content;
   }
 
-  Widget originMsgWidget(ChatUIKitTheme theme) {
+  Widget originMsgWidget() {
     MessageModel? model = controller.model;
     if (model == null) {
-      return const Text('No data');
+      return const SizedBox.shrink();
     }
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 12, 10),
@@ -605,7 +660,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                           ChatUIKitProfile? profile = ChatUIKitProvider.instance
                               .getProfileById(model.message.from!);
                           profile ??= model.message.fromProfile;
-                          return profile.showName;
+                          return profile.contactShowName;
                         }(),
                         style: TextStyle(
                           fontWeight: theme.font.titleSmall.fontWeight,
@@ -614,6 +669,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                               ? theme.color.neutralSpecialColor6
                               : theme.color.neutralSpecialColor5,
                         ),
+                        textScaler: TextScaler.noScaling,
                       ),
                       Text(
                         ChatUIKitTimeFormatter.instance.formatterHandler?.call(
@@ -631,10 +687,11 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                               ? theme.color.neutralColor6
                               : theme.color.neutralColor5,
                         ),
+                        textScaler: TextScaler.noScaling,
                       )
                     ],
                   ),
-                  Row(children: [Expanded(child: subWidget(theme, model))]),
+                  Row(children: [Expanded(child: subWidget(model))]),
                   const SizedBox(height: 8),
                   Divider(
                     height: 0.5,
@@ -652,7 +709,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     );
   }
 
-  Widget subWidget(ChatUIKitTheme theme, MessageModel model) {
+  Widget subWidget(MessageModel model) {
     Widget? msgWidget;
     if (model.message.bodyType == MessageType.TXT) {
       msgWidget = ChatUIKitTextBubbleWidget(
@@ -694,10 +751,10 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
   }
 
   void showBottoms() {
-    List<ChatUIKitBottomSheetAction> items = [];
+    List<ChatUIKitEventAction> items = [];
     if (controller.hasPermission) {
       items.add(
-        ChatUIKitBottomSheetAction.normal(
+        ChatUIKitEventAction.normal(
           actionType: ChatUIKitActionType.edit,
           label: ChatUIKitLocal.threadsMessageEdit.localString(context),
           onTap: () async {
@@ -737,7 +794,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
       );
     }
     items.add(
-      ChatUIKitBottomSheetAction.normal(
+      ChatUIKitEventAction.normal(
         actionType: ChatUIKitActionType.members,
         label: ChatUIKitLocal.threadsMessageMembers.localString(context),
         onTap: () async {
@@ -766,7 +823,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
       ),
     );
     items.add(
-      ChatUIKitBottomSheetAction.destructive(
+      ChatUIKitEventAction.destructive(
         actionType: ChatUIKitActionType.leave,
         label: ChatUIKitLocal.threadsMessageLeave.localString(context),
         onTap: () async {
@@ -796,7 +853,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     );
     if (controller.hasPermission) {
       items.add(
-        ChatUIKitBottomSheetAction.destructive(
+        ChatUIKitEventAction.destructive(
           actionType: ChatUIKitActionType.destroy,
           label: ChatUIKitLocal.threadsMessageDestroy.localString(context),
           onTap: () async {
@@ -830,83 +887,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     );
   }
 
-  Widget editMessageBar(ChatUIKitTheme theme) {
-    Widget content = ChatUIKitInputBar(
-      key: const ValueKey('editKey'),
-      autofocus: true,
-      onChanged: (input) {
-        final canSend =
-            input.trim() != editMessage?.textContent && input.isNotEmpty;
-        if (messageEditCanSend != canSend) {
-          messageEditCanSend = canSend;
-          setState(() {});
-        }
-      },
-      inputBarController: editBarTextEditingController!,
-      trailing: InkWell(
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        onTap: () {
-          if (!messageEditCanSend) return;
-          String text = editBarTextEditingController?.text.trim() ?? '';
-          if (text.isNotEmpty) {
-            controller.editMessage(editMessage!, text);
-            editBarTextEditingController?.clear();
-            editMessage = null;
-            messageEditCanSend = false;
-            setState(() {});
-          }
-        },
-        child: Icon(
-          Icons.check_circle,
-          size: 30,
-          color: theme.color.isDark
-              ? messageEditCanSend
-                  ? theme.color.primaryColor6
-                  : theme.color.neutralColor5
-              : messageEditCanSend
-                  ? theme.color.primaryColor5
-                  : theme.color.neutralColor7,
-        ),
-      ),
-    );
-
-    Widget header = Row(
-      children: [
-        SizedBox(
-          width: 16,
-          height: 16,
-          child: ChatUIKitImageLoader.messageEdit(),
-        ),
-        const SizedBox(width: 2),
-        Text(
-          ChatUIKitLocal.messagesViewEditMessageTitle.localString(context),
-          textScaler: TextScaler.noScaling,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-              fontWeight: theme.font.labelSmall.fontWeight,
-              fontSize: theme.font.labelSmall.fontSize,
-              color: theme.color.isDark
-                  ? theme.color.neutralSpecialColor6
-                  : theme.color.neutralSpecialColor5),
-        ),
-      ],
-    );
-    header = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-      decoration: BoxDecoration(
-          color: theme.color.isDark
-              ? theme.color.neutralColor2
-              : theme.color.neutralColor9),
-      child: header,
-    );
-
-    content = SafeArea(child: content);
-
-    return content;
-  }
-
-  Widget replyMessageBar(ChatUIKitTheme theme) {
+  Widget replyMessageBar() {
     if (replyMessage == null) return const SizedBox();
     Widget content = widget.replyBarBuilder?.call(context, replyMessage!) ??
         ChatUIKitReplyBar(
@@ -920,182 +901,39 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     return content;
   }
 
-  Widget inputBar(ChatUIKitTheme theme) {
-    Widget content = ChatUIKitInputBar(
-      key: const ValueKey('inputKey'),
-      inputBarController: inputBarController,
-      leading: InkWell(
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        onTap: () async {
-          showEmoji = false;
-          inputBarController.unfocus();
-          setState(() {});
-          ChatUIKitRecordModel? model = await showChatUIKitRecordBar(
-            context: context,
-            statusChangeCallback: (type, duration, path) {
-              if (type == ChatUIKitVoiceBarStatusType.recording) {
-                stopVoice();
-              } else if (type == ChatUIKitVoiceBarStatusType.playing) {
-                // 播放录音
-                previewVoice(true, path: path);
-              } else if (type == ChatUIKitVoiceBarStatusType.ready) {
-                // 停止播放
-                previewVoice(false);
-              }
-            },
-          );
-          if (model != null) {
-            controller.sendVoiceMessage(model);
-          }
-        },
-        child: ChatUIKitImageLoader.voiceKeyboard(),
-      ),
-      trailing: SizedBox(
-        child: Row(
-          children: [
-            if (!showEmoji)
-              InkWell(
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                onTap: () {
-                  inputBarController.unfocus();
-                  showEmoji = !showEmoji;
-                  setState(() {});
-                },
-                child: ChatUIKitImageLoader.faceKeyboard(),
-              ),
-            if (showEmoji)
-              InkWell(
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                onTap: () {
-                  showEmoji = !showEmoji;
-                  inputBarController.requestFocus();
-                  setState(() {});
-                },
-                child: ChatUIKitImageLoader.textKeyboard(),
-              ),
-            const SizedBox(width: 8),
-            if (showMoreBtn)
-              InkWell(
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                onTap: () {
-                  clearAllType();
-                  List<ChatUIKitBottomSheetAction>? items =
-                      widget.morePressActions;
-                  if (items == null) {
-                    items = [];
-                    items.add(ChatUIKitBottomSheetAction.normal(
-                      actionType: ChatUIKitActionType.photos,
-                      label: ChatUIKitLocal.messagesViewMoreActionsTitleAlbum
-                          .localString(context),
-                      icon: ChatUIKitImageLoader.messageViewMoreAlbum(
-                        color: theme.color.isDark
-                            ? theme.color.primaryColor6
-                            : theme.color.primaryColor5,
-                      ),
-                      onTap: () async {
-                        Navigator.of(context).pop();
-                        selectImage();
-                      },
-                    ));
-                    items.add(ChatUIKitBottomSheetAction.normal(
-                      actionType: ChatUIKitActionType.video,
-                      label: ChatUIKitLocal.messagesViewMoreActionsTitleVideo
-                          .localString(context),
-                      icon: ChatUIKitImageLoader.messageViewMoreVideo(
-                        color: theme.color.isDark
-                            ? theme.color.primaryColor6
-                            : theme.color.primaryColor5,
-                      ),
-                      onTap: () async {
-                        Navigator.of(context).pop();
-                        selectVideo();
-                      },
-                    ));
-                    items.add(ChatUIKitBottomSheetAction.normal(
-                      actionType: ChatUIKitActionType.camera,
-                      label: ChatUIKitLocal.messagesViewMoreActionsTitleCamera
-                          .localString(context),
-                      icon: ChatUIKitImageLoader.messageViewMoreCamera(
-                        color: theme.color.isDark
-                            ? theme.color.primaryColor6
-                            : theme.color.primaryColor5,
-                      ),
-                      onTap: () async {
-                        Navigator.of(context).pop();
-                        selectCamera();
-                      },
-                    ));
-                    items.add(ChatUIKitBottomSheetAction.normal(
-                      actionType: ChatUIKitActionType.file,
-                      label: ChatUIKitLocal.messagesViewMoreActionsTitleFile
-                          .localString(context),
-                      icon: ChatUIKitImageLoader.messageViewMoreFile(
-                        color: theme.color.isDark
-                            ? theme.color.primaryColor6
-                            : theme.color.primaryColor5,
-                      ),
-                      onTap: () async {
-                        Navigator.of(context).pop();
-                        selectFile();
-                      },
-                    ));
-                    items.add(ChatUIKitBottomSheetAction.normal(
-                      actionType: ChatUIKitActionType.contactCard,
-                      label: ChatUIKitLocal.messagesViewMoreActionsTitleContact
-                          .localString(context),
-                      icon: ChatUIKitImageLoader.messageViewMoreCard(
-                        color: theme.color.isDark
-                            ? theme.color.primaryColor6
-                            : theme.color.primaryColor5,
-                      ),
-                      onTap: () async {
-                        Navigator.of(context).pop();
-                        selectCard();
-                      },
-                    ));
-                  }
+  Widget inputBar() {
+    if (editMessage != null) {
+      return const SafeArea(child: SizedBox(height: 54));
+    }
 
-                  if (widget.onMoreActionsItemsHandler != null) {
-                    items = widget.onMoreActionsItemsHandler!.call(
-                      context,
-                      items,
-                    );
-                  }
-                  if (items != null) {
-                    showChatUIKitBottomSheet(context: context, items: items);
-                  }
-                },
-                child: ChatUIKitImageLoader.moreKeyboard(),
-              ),
-            if (!showMoreBtn)
-              InkWell(
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                onTap: () {
-                  String text = inputBarController.text.trim();
-                  if (text.isNotEmpty) {
-                    controller.sendTextMessage(
-                      text,
-                      replay: replyMessage?.message,
-                    );
-                    inputBarController.clearMentions();
-                    inputBarController.clear();
-                    if (replyMessage != null) {
-                      replyMessage = null;
-                    }
-                    showMoreBtn = true;
-                    setState(() {});
-                  }
-                },
-                child: ChatUIKitImageLoader.sendKeyboard(),
-              ),
-          ],
-        ),
-      ),
+    Widget? topWidget = replyMessage == null
+        ? const SizedBox.shrink()
+        : widget.replyBarBuilder?.call(context, replyMessage!) ??
+            ChatUIKitReplyBar(
+              messageModel: replyMessage!,
+              onCancelTap: () {
+                setState(() {
+                  replyMessage = null;
+                  popupMenuController?.hideMenu();
+                });
+              },
+            );
+    Widget content = ChatUIKitInputBar(
+      keyboardPanelController: inputController,
+      maintainBottomViewPadding: true,
+      bottomPanels: bottomPanels(),
+      leftItems: [voicePanel()],
+      rightItems: [emojiPanel(), morePanel()],
+      onPanelChanged: (panelType) {
+        currentPanelType.value = panelType;
+      },
+    );
+
+    content = Column(
+      children: [
+        topWidget,
+        content,
+      ],
     );
 
     return content;
@@ -1103,31 +941,14 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
 
   void clearAllType() {
     bool needUpdate = false;
+
+    popupMenuController?.hideMenu();
+
     if (_player.state == PlayerState.playing) {
       stopVoice();
       needUpdate = true;
     }
 
-    if (inputBarController.hasFocus) {
-      inputBarController.unfocus();
-      needUpdate = true;
-    }
-
-    if (showEmoji) {
-      showEmoji = false;
-      needUpdate = true;
-    }
-
-    if (editMessage != null) {
-      editMessage = null;
-      messageEditCanSend = false;
-      needUpdate = true;
-    }
-
-    if (replyMessage != null) {
-      replyMessage = null;
-      needUpdate = true;
-    }
     if (needUpdate) {
       setState(() {});
     }
@@ -1137,52 +958,64 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     clearAllType();
     if (message.bodyType != MessageType.TXT) return;
     editMessage = message;
-    editBarTextEditingController =
-        ChatUIKitInputBarController(text: editMessage?.textContent ?? "");
+    inputController.switchPanel(
+      ChatUIKitKeyboardPanelType.keyboard,
+      duration: _keyboardPanelSwitchDuration,
+    );
     setState(() {});
   }
 
   void replyMessaged(MessageModel model) {
-    // clearAllType();
-    // inputBarController.requestFocus();
     replyMessage = model;
     setState(() {});
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      inputController.switchPanel(
+        ChatUIKitKeyboardPanelType.keyboard,
+        duration: _keyboardPanelSwitchDuration,
+      );
+    });
   }
 
-  void selectImage() async {
+  Future<bool> selectImage() async {
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
         controller.sendImageMessage(image.path, name: image.name);
+        return true;
       }
     } catch (e) {
       ChatUIKit.instance.sendChatUIKitEvent(ChatUIKitEvent.noStoragePermission);
     }
+    return false;
   }
 
-  void selectVideo() async {
+  Future<bool> selectVideo() async {
     try {
       XFile? video = await _picker.pickVideo(source: ImageSource.gallery);
       if (video != null) {
         controller.sendVideoMessage(video.path, name: video.name);
+        return true;
       }
     } catch (e) {
       ChatUIKit.instance.sendChatUIKitEvent(ChatUIKitEvent.noStoragePermission);
     }
+    return false;
   }
 
-  void selectCamera() async {
+  Future<bool> selectCamera() async {
     try {
       final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
       if (photo != null) {
         controller.sendImageMessage(photo.path, name: photo.name);
+        return true;
       }
     } catch (e) {
       ChatUIKit.instance.sendChatUIKitEvent(ChatUIKitEvent.noStoragePermission);
     }
+    return false;
   }
 
-  void selectFile() async {
+  Future<bool> selectFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       PlatformFile file = result.files.single;
@@ -1192,8 +1025,10 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
           name: file.name,
           fileSize: file.size,
         );
+        return true;
       }
     }
+    return false;
   }
 
   void selectCard() async {
@@ -1249,7 +1084,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     );
   }
 
-  Widget multiSelectBar(ChatUIKitTheme theme) {
+  Widget multiSelectBar() {
     Widget content = widget.multiSelectBottomBar ??
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -1399,36 +1234,49 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     );
   }
 
-  void onItemLongPress(MessageModel model) async {
+  void onItemLongPress(MessageModel model, Rect rect) async {
     clearAllType();
-    List<ChatUIKitBottomSheetAction>? items = widget.longPressActions;
-    items ??= defaultItemLongPressed(model, theme);
+    List<ChatUIKitEventAction>? items = widget.longPressActions;
+    items ??= defaultItemLongPressed(model);
 
     if (widget.onItemLongPressHandler != null) {
       items = widget.onItemLongPressHandler!.call(
         context,
         model,
+        rect,
         items,
       );
     }
     if (items != null) {
-      showChatUIKitBottomSheet(
-        titleWidget: bottomSheetTitle(model, theme),
-        context: context,
-        items: items,
-        showCancel: false,
-      );
+      if (ChatUIKitSettings.messageLongPressMenuStyle ==
+          ChatUIKitMessageLongPressMenuStyle.popupMenu) {
+        popupMenuController?.showMenu(
+            bottomSheetReactionsTitle(model), rect, items);
+      } else {
+        showChatUIKitBottomSheet(
+          titleWidget: bottomSheetReactionsTitle(model),
+          context: context,
+          items: items,
+          showCancel: false,
+        );
+      }
     }
   }
 
-  List<ChatUIKitBottomSheetAction> defaultItemLongPressed(
-      MessageModel model, ChatUIKitTheme theme) {
-    List<ChatUIKitBottomSheetAction> items = [];
+  List<ChatUIKitEventAction> defaultItemLongPressed(MessageModel model) {
+    void closeMenu() {
+      if (ChatUIKitSettings.messageLongPressMenuStyle ==
+          ChatUIKitMessageLongPressMenuStyle.bottomSheet) {
+        Navigator.of(context).pop();
+      }
+    }
+
+    List<ChatUIKitEventAction> items = [];
     for (var element in ChatUIKitSettings.msgItemLongPressActions) {
       // 复制
       if (model.message.bodyType == MessageType.TXT &&
           element == ChatUIKitActionType.copy) {
-        items.add(ChatUIKitBottomSheetAction.normal(
+        items.add(ChatUIKitEventAction.normal(
           actionType: ChatUIKitActionType.copy,
           label: ChatUIKitLocal.messagesViewLongPressActionsTitleCopy
               .localString(context),
@@ -1445,9 +1293,9 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                 : theme.color.neutralColor3,
           ),
           onTap: () async {
+            closeMenu();
             Clipboard.setData(ClipboardData(text: model.message.textContent));
             ChatUIKit.instance.sendChatUIKitEvent(ChatUIKitEvent.messageCopied);
-            Navigator.of(context).pop();
           },
         ));
       }
@@ -1456,7 +1304,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
       if (model.message.status == MessageStatus.SUCCESS &&
           element == ChatUIKitActionType.reply &&
           ChatUIKitSettings.enableMessageReply) {
-        items.add(ChatUIKitBottomSheetAction.normal(
+        items.add(ChatUIKitEventAction.normal(
           actionType: ChatUIKitActionType.reply,
           icon: ChatUIKitImageLoader.messageLongPressReply(
             color: theme.color.isDark
@@ -1473,8 +1321,8 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
           label: ChatUIKitLocal.messagesViewLongPressActionsTitleReply
               .localString(context),
           onTap: () async {
-            Navigator.of(context).pop();
             replyMessaged(model);
+            closeMenu();
           },
         ));
       }
@@ -1482,7 +1330,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
       if (model.message.status == MessageStatus.SUCCESS &&
           element == ChatUIKitActionType.forward &&
           ChatUIKitSettings.enableMessageForward) {
-        items.add(ChatUIKitBottomSheetAction.normal(
+        items.add(ChatUIKitEventAction.normal(
           actionType: ChatUIKitActionType.forward,
           icon: ChatUIKitImageLoader.messageLongPressForward(
             color: theme.color.isDark
@@ -1498,11 +1346,11 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
           ),
           label: ChatUIKitLocal.forwardMessage.localString(context),
           onTap: () async {
-            Navigator.of(context).pop();
             forwardMessage(
               [model.message],
               isMultiSelect: false,
             );
+            closeMenu();
           },
         ));
       }
@@ -1511,7 +1359,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
       if (model.message.status == MessageStatus.SUCCESS &&
           element == ChatUIKitActionType.multiSelect &&
           ChatUIKitSettings.enableMessageMultiSelect) {
-        items.add(ChatUIKitBottomSheetAction.normal(
+        items.add(ChatUIKitEventAction.normal(
           actionType: ChatUIKitActionType.multiSelect,
           icon: ChatUIKitImageLoader.messageLongPressMultiSelected(
             color: theme.color.isDark
@@ -1528,8 +1376,8 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
           label:
               ChatUIKitLocal.messageListLongPressMenuMulti.localString(context),
           onTap: () async {
-            Navigator.of(context).pop();
             controller.enableMultiSelectMode();
+            closeMenu();
           },
         ));
       }
@@ -1539,7 +1387,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
           model.message.bodyType == MessageType.TXT &&
           element == ChatUIKitActionType.translate &&
           ChatUIKitSettings.enableMessageTranslation) {
-        items.add(ChatUIKitBottomSheetAction.normal(
+        items.add(ChatUIKitEventAction.normal(
           actionType: ChatUIKitActionType.translate,
           icon: ChatUIKitImageLoader.messageLongPressTranslate(
             color: theme.color.isDark
@@ -1559,11 +1407,11 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
               : ChatUIKitLocal.messageListLongPressMenuTranslate
                   .localString(context),
           onTap: () async {
-            Navigator.of(context).pop();
             controller.translateMessage(
               model.message,
               showTranslate: !model.message.hasTranslate,
             );
+            closeMenu();
           },
         ));
       }
@@ -1574,7 +1422,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
           model.message.direction == MessageDirection.SEND &&
           element == ChatUIKitActionType.edit &&
           ChatUIKitSettings.enableMessageEdit) {
-        items.add(ChatUIKitBottomSheetAction.normal(
+        items.add(ChatUIKitEventAction.normal(
           actionType: ChatUIKitActionType.edit,
           label: ChatUIKitLocal.messagesViewLongPressActionsTitleEdit
               .localString(context),
@@ -1591,8 +1439,8 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                 : theme.color.neutralColor3,
           ),
           onTap: () async {
-            Navigator.of(context).pop();
             textMessageEdit(model.message);
+            closeMenu();
           },
         ));
       }
@@ -1601,7 +1449,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
           element == ChatUIKitActionType.report &&
           ChatUIKitSettings.enableMessageReport) {
         // 举报
-        items.add(ChatUIKitBottomSheetAction.normal(
+        items.add(ChatUIKitEventAction.normal(
           actionType: ChatUIKitActionType.report,
           label: ChatUIKitLocal.messagesViewLongPressActionsTitleReport
               .localString(context),
@@ -1618,8 +1466,8 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                 : theme.color.neutralColor3,
           ),
           onTap: () async {
-            Navigator.of(context).pop();
             reportMessage(model);
+            closeMenu();
           },
         ));
       }
@@ -1645,18 +1493,25 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     });
   }
 
-  Widget? bottomSheetTitle(MessageModel model, ChatUIKitTheme theme) {
+  Widget? bottomSheetReactionsTitle(MessageModel model) {
     if (ChatUIKitSettings.msgItemLongPressActions
                 .contains(ChatUIKitActionType.reaction) ==
             false ||
         ChatUIKitSettings.enableMessageReaction == false) return null;
+
+    void closeMenu() {
+      if (ChatUIKitSettings.messageLongPressMenuStyle ==
+          ChatUIKitMessageLongPressMenuStyle.bottomSheet) {
+        Navigator.of(context).pop();
+      }
+    }
 
     List<MessageReaction>? reactions = model.reactions;
     return Padding(
       padding: EdgeInsets.zero,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          double width = constraints.maxWidth;
+          double width = constraints.maxWidth - kMenuHorizontalPadding * 2;
           int maxCount = width ~/ (36 + 12) - 1;
           List<Widget> items = [];
           for (var i = 0;
@@ -1673,8 +1528,9 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 onTap: () {
+                  closeMenu();
                   onReactionTap(model, emoji, !highlight);
-                  Navigator.of(context).pop();
+                  popupMenuController?.hideMenu();
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -1702,8 +1558,8 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
               onTap: () {
-                Navigator.of(context).pop();
-                showAllReactionEmojis(model, theme);
+                popupMenuController?.hideMenu();
+                showAllReactionEmojis(model);
               },
               child: ChatUIKitImageLoader.moreReactions(width: 36, height: 36),
             ),
@@ -1730,11 +1586,11 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     await controller.updateReaction(model.message.msgId, emoji, isAdd);
   }
 
-  void showAllReactionEmojis(MessageModel model, ChatUIKitTheme theme) {
+  void showAllReactionEmojis(MessageModel model) {
     showChatUIKitBottomSheet(
       context: context,
       showCancel: false,
-      body: ChatUIKitInputEmojiBar(
+      body: ChatUIKitEmojiPanel(
         selectedEmojis: model.reactions
             ?.where((e) => e.isAddedBySelf == true)
             .map((e) => e.reaction)
@@ -1769,7 +1625,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
     );
   }
 
-  void bubbleTab(MessageModel model) async {
+  void bubbleTab(MessageModel model, Rect rect) async {
     if (model.message.bodyType == MessageType.IMAGE) {
       ChatUIKitRoute.pushOrPushNamed(
         context,
@@ -1866,7 +1722,7 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
         ChatUIKitProfile profile = ChatUIKitProvider.instance.getProfile(
           ChatUIKitProfile.contact(id: operator),
         );
-        showName = profile.showName;
+        showName = profile.contactShowName;
       }
       content ??= ChatUIKitMessageListViewAlertItem(
         actions: [
@@ -1924,4 +1780,321 @@ class _ThreadMessagesViewState extends State<ThreadMessagesView>
 
   @override
   void onUserKickOutOfChatThread(ChatThreadEvent event) {}
+
+  Widget voicePanel() {
+    return Padding(
+      padding: const EdgeInsets.all(4),
+      child: InkWell(
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        onTap: () async {
+          inputController.switchPanel(
+            ChatUIKitKeyboardPanelType.voice,
+            duration: _keyboardPanelSwitchDuration,
+          );
+          RecordResultData? data = await showChatUIKitRecordBar(
+            context: context,
+            backgroundColor: theme.color.isDark
+                ? theme.color.neutralColor1
+                : theme.color.neutralColor98,
+            onRecordTypeChanged: (type) {},
+          );
+
+          inputController.switchPanel(
+            ChatUIKitKeyboardPanelType.none,
+            duration: _keyboardPanelSwitchDuration,
+          );
+          if (data?.path != null) {
+            controller.sendVoiceMessage(
+              data!.path!,
+              data.duration ?? 0,
+              data.fileName ?? '',
+            );
+          }
+        },
+        child: ChatUIKitImageLoader.voiceKeyboard(
+          color: theme.color.isDark
+              ? theme.color.neutralColor5
+              : theme.color.neutralColor3,
+        ),
+      ),
+    );
+  }
+
+  List<ChatUIKitEventAction> moreActions() {
+    void closeMenu([close = true]) {
+      if (ChatUIKitSettings.messageAttachmentMenuStyle ==
+          ChatUIKitMessageAttachmentMenuStyle.bottomSheet) {
+        Navigator.of(context).pop();
+      } else {
+        if (close) {
+          inputController.switchPanel(
+            ChatUIKitKeyboardPanelType.none,
+            duration: _keyboardPanelSwitchDuration,
+          );
+        }
+      }
+    }
+
+    final style = ChatUIKitSettings.messageAttachmentMenuStyle ==
+            ChatUIKitMessageAttachmentMenuStyle.bottomSheet
+        ? TextStyle(
+            color: theme.color.isDark
+                ? theme.color.neutralColor7
+                : theme.color.neutralColor3,
+            fontWeight: theme.font.bodyLarge.fontWeight,
+            fontSize: theme.font.bodyLarge.fontSize,
+          )
+        : TextStyle(
+            color: theme.color.isDark
+                ? theme.color.neutralColor7
+                : theme.color.neutralColor3,
+            fontWeight: theme.font.bodySmall.fontWeight,
+            fontSize: theme.font.bodySmall.fontSize,
+          );
+
+    List<ChatUIKitEventAction>? items = widget.morePressActions;
+    if (items == null) {
+      items = [];
+      items.add(ChatUIKitEventAction.normal(
+        actionType: ChatUIKitActionType.photos,
+        label: ChatUIKitLocal.messagesViewMoreActionsTitleAlbum
+            .localString(context),
+        style: style,
+        icon: ChatUIKitImageLoader.messageViewMoreAlbum(
+          color: theme.color.isDark
+              ? theme.color.neutralColor9
+              : theme.color.neutralColor3,
+        ),
+        onTap: () async {
+          closeMenu(await selectImage());
+        },
+      ));
+      items.add(ChatUIKitEventAction.normal(
+        actionType: ChatUIKitActionType.video,
+        label: ChatUIKitLocal.messagesViewMoreActionsTitleVideo
+            .localString(context),
+        style: style,
+        icon: ChatUIKitImageLoader.messageViewMoreVideo(
+          color: theme.color.isDark
+              ? theme.color.neutralColor9
+              : theme.color.neutralColor3,
+        ),
+        onTap: () async {
+          closeMenu(await selectVideo());
+        },
+      ));
+      items.add(ChatUIKitEventAction.normal(
+        actionType: ChatUIKitActionType.camera,
+        label: ChatUIKitLocal.messagesViewMoreActionsTitleCamera
+            .localString(context),
+        style: style,
+        icon: ChatUIKitImageLoader.messageViewMoreCamera(
+          color: theme.color.isDark
+              ? theme.color.neutralColor9
+              : theme.color.neutralColor3,
+        ),
+        onTap: () async {
+          closeMenu(await selectCamera());
+        },
+      ));
+      items.add(ChatUIKitEventAction.normal(
+        actionType: ChatUIKitActionType.file,
+        label: ChatUIKitLocal.messagesViewMoreActionsTitleFile
+            .localString(context),
+        style: style,
+        icon: ChatUIKitImageLoader.messageViewMoreFile(
+          color: theme.color.isDark
+              ? theme.color.neutralColor9
+              : theme.color.neutralColor3,
+        ),
+        onTap: () async {
+          closeMenu(await selectFile());
+        },
+      ));
+      items.add(ChatUIKitEventAction.normal(
+        actionType: ChatUIKitActionType.contactCard,
+        label: ChatUIKitLocal.messagesViewMoreActionsTitleContact
+            .localString(context),
+        style: style,
+        icon: ChatUIKitImageLoader.messageViewMoreCard(
+          color: theme.color.isDark
+              ? theme.color.neutralColor9
+              : theme.color.neutralColor3,
+        ),
+        onTap: () async {
+          closeMenu();
+          selectCard();
+        },
+      ));
+    }
+
+    if (widget.onMoreActionsItemsHandler != null) {
+      items = widget.onMoreActionsItemsHandler!.call(
+        context,
+        items,
+      );
+    }
+    return items!;
+  }
+
+  Widget emojiPanel() {
+    return Padding(
+      padding: const EdgeInsets.all(4),
+      child: InkWell(
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        onTap: () {
+          final type =
+              currentPanelType.value == ChatUIKitKeyboardPanelType.emoji
+                  ? ChatUIKitKeyboardPanelType.keyboard
+                  : ChatUIKitKeyboardPanelType.emoji;
+          if (type == ChatUIKitKeyboardPanelType.emoji) {
+            setState(() {
+              inputController.readOnly = true;
+            });
+          }
+
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            inputController.switchPanel(
+              type,
+              duration: _keyboardPanelSwitchDuration,
+            );
+          });
+        },
+        child: ChatUIKitImageLoader.faceKeyboard(
+          color: theme.color.isDark
+              ? theme.color.neutralColor5
+              : theme.color.neutralColor3,
+        ),
+      ),
+    );
+  }
+
+  Widget morePanel() {
+    return Padding(
+      padding: const EdgeInsets.all(4),
+      child: ValueListenableBuilder(
+        valueListenable: inputController.inputTextEditingController,
+        builder: (context, value, child) {
+          if (inputController.text.isEmpty) {
+            return InkWell(
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              onTap: () {
+                ChatUIKitKeyboardPanelType panel =
+                    ChatUIKitKeyboardPanelType.none;
+                if (ChatUIKitSettings.messageAttachmentMenuStyle ==
+                    ChatUIKitMessageAttachmentMenuStyle.bottomSheet) {
+                  panel = ChatUIKitKeyboardPanelType.none;
+                  inputController.switchPanel(
+                    panel,
+                    duration: _keyboardPanelSwitchDuration,
+                  );
+                  List<ChatUIKitEventAction> items = moreActions();
+                  if (items.isNotEmpty) {
+                    showChatUIKitBottomSheet(
+                      context: context,
+                      items: items,
+                      cancelLabelStyle: TextStyle(
+                        color: theme.color.isDark
+                            ? theme.color.neutralColor7
+                            : theme.color.neutralColor3,
+                        fontWeight: theme.font.bodyLarge.fontWeight,
+                        fontSize: theme.font.bodyLarge.fontSize,
+                      ),
+                    );
+                  }
+                } else {
+                  panel =
+                      currentPanelType.value == ChatUIKitKeyboardPanelType.more
+                          ? ChatUIKitKeyboardPanelType.keyboard
+                          : ChatUIKitKeyboardPanelType.more;
+
+                  inputController.switchPanel(
+                    panel,
+                    duration: _keyboardPanelSwitchDuration,
+                  );
+                }
+              },
+              child: ValueListenableBuilder(
+                valueListenable: currentPanelType,
+                builder: (context, value, child) {
+                  return AnimatedRotation(
+                    turns: value == ChatUIKitKeyboardPanelType.more ? 0.125 : 0,
+                    duration: const Duration(milliseconds: 250),
+                    child: ChatUIKitImageLoader.moreKeyboard(
+                      color: theme.color.isDark
+                          ? theme.color.neutralColor5
+                          : theme.color.neutralColor3,
+                    ),
+                  );
+                },
+              ),
+            );
+          } else {
+            return InkWell(
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              onTap: () {
+                controller.sendTextMessage(
+                  inputController.text,
+                  replay: replyMessage?.message,
+                );
+                replyMessage = null;
+                inputController.clearText();
+              },
+              child: ChatUIKitImageLoader.sendKeyboard(
+                color: theme.color.isDark
+                    ? theme.color.primaryColor6
+                    : theme.color.primaryColor5,
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  List<ChatUIKitBottomPanelData> bottomPanels() {
+    return [
+      //  keyboard
+      const ChatUIKitBottomPanelData(
+        height: 0,
+        panelType: ChatUIKitKeyboardPanelType.keyboard,
+      ),
+      // voice
+      const ChatUIKitBottomPanelData(
+        height: 0,
+        panelType: ChatUIKitKeyboardPanelType.voice,
+      ),
+      // emoji
+      ChatUIKitBottomPanelData(
+        height: 230,
+        showCursor: true,
+        panelType: ChatUIKitKeyboardPanelType.emoji,
+        child: widget.emojiWidget ??
+            ChatUIKitEmojiPanel(
+              deleteOnTap: () {
+                editController?.deleteTextOnCursor();
+              },
+              emojiClicked: (emoji) {
+                editController?.addText(
+                  ChatUIKitEmojiData.emojiMap[emoji] ?? emoji,
+                );
+              },
+            ),
+      ),
+      ChatUIKitBottomPanelData(
+        height: 254,
+        panelType: ChatUIKitKeyboardPanelType.more,
+        child: ChatUIKitSettings.messageAttachmentMenuStyle ==
+                ChatUIKitMessageAttachmentMenuStyle.menu
+            ? ChatUIKitMessageViewBottomMenu(
+                eventActionsHandler: () => moreActions(),
+              )
+            : null,
+      )
+    ];
+  }
 }

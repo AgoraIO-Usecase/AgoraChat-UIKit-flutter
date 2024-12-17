@@ -4,7 +4,7 @@ mixin PresenceActions on PresenceWrapper {
   Future<void> publishPresence(
     String description,
   ) {
-    return checkResult(ChatSDKEvent.getGroupId, () {
+    return checkResult(ChatSDKEvent.getGroupWithId, () {
       return Client.getInstance.presenceManager.publishPresence(description);
     });
   }

@@ -13,7 +13,7 @@ class ChatUIKitMessageReactionInfo extends StatefulWidget {
 
 class _ChatUIKitMessageReactionInfoState
     extends State<ChatUIKitMessageReactionInfo>
-    with ChatUIKitThemeMixin, SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, ChatUIKitThemeMixin {
   late final TabController tabController;
   int selectIndex = 0;
   late List<MessageReaction> reactions;
@@ -62,7 +62,6 @@ class _ChatUIKitMessageReactionInfoState
                   },
                   child: ChatUIkitReactionWidget(
                     reactions[index],
-                    theme: theme,
                     highlightColor: Colors.transparent,
                     highlightTextColor: theme.color.isDark
                         ? theme.color.neutralColor95
@@ -199,7 +198,6 @@ class _ChatReactionInfoWidgetState extends State<ChatReactionInfoWidget>
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
     super.build(context);
-
     if (firstLoadSucceed == false) {
       return Center(
         child: SizedBox(

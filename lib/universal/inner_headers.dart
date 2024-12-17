@@ -7,4 +7,4 @@ export 'package:shared_preferences/shared_preferences.dart';
 export 'package:video_player/video_player.dart';
 export 'package:video_thumbnail/video_thumbnail.dart';
 export 'package:flutter_localization/flutter_localization.dart';
-export 'chat_uikit_log.dart';
+export '../universal/chat_uikit_log.dart';

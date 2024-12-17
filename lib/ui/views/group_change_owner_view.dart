@@ -7,7 +7,7 @@ class GroupChangeOwnerView extends StatefulWidget {
   GroupChangeOwnerView.arguments(GroupChangeOwnerViewArguments arguments,
       {super.key})
       : groupId = arguments.groupId,
-        listViewItemBuilder = arguments.listViewItemBuilder,
+        itemBuilder = arguments.itemBuilder,
         onSearchTap = arguments.onSearchTap,
         searchBarHideText = arguments.searchBarHideText,
         listViewBackground = arguments.listViewBackground,
@@ -22,7 +22,7 @@ class GroupChangeOwnerView extends StatefulWidget {
 
   const GroupChangeOwnerView({
     required this.groupId,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onSearchTap,
     this.searchBarHideText,
     this.listViewBackground,
@@ -43,7 +43,7 @@ class GroupChangeOwnerView extends StatefulWidget {
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<ContactItemModel> data)? onSearchTap;
 
-  final ChatUIKitContactItemBuilder? listViewItemBuilder;
+  final ChatUIKitContactItemBuilder? itemBuilder;
   final void Function(BuildContext context, ContactItemModel model)? onItemTap;
   final void Function(BuildContext context, ContactItemModel model)?
       onItemLongPress;
@@ -84,7 +84,7 @@ class _GroupChangeOwnerViewState extends State<GroupChangeOwnerView>
     super.dispose();
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           ChatUIKitLocal.groupChangeOwnerViewTitle.localString(context),
@@ -101,12 +101,14 @@ class _GroupChangeOwnerViewState extends State<GroupChangeOwnerView>
       centerTitle: widget.appBarModel?.centerTitle ?? false,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -117,7 +119,7 @@ class _GroupChangeOwnerViewState extends State<GroupChangeOwnerView>
         groupId: widget.groupId,
         controller: controller,
         itemBuilder: (context, model) {
-          Widget? content = widget.listViewItemBuilder?.call(context, model);
+          Widget? content = widget.itemBuilder?.call(context, model);
           content ??= () {
             Widget? item;
             item ??= InkWell(
@@ -140,8 +142,8 @@ class _GroupChangeOwnerViewState extends State<GroupChangeOwnerView>
           }();
           return content;
         },
-        searchHideText: widget.searchBarHideText,
-        background: widget.listViewBackground,
+        searchBarHideText: widget.searchBarHideText,
+        emptyBackground: widget.listViewBackground,
         onTap: showConfirmDialog,
       ),
     );
@@ -153,7 +155,7 @@ class _GroupChangeOwnerViewState extends State<GroupChangeOwnerView>
     bool? ret = await showChatUIKitDialog(
       title: Strings.format(
           '${ChatUIKitLocal.groupChangeOwnerViewAlertTitle.localString(context)}"%a"?',
-          [model.profile.nickname]),
+          [model.profile.contactShowName]),
       context: context,
       actionItems: [
         ChatUIKitDialogAction.cancel(

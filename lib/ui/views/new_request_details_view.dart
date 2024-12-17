@@ -59,7 +59,7 @@ class _NewRequestDetailsViewState extends State<NewRequestDetailsView>
     super.dispose();
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title,
       centerWidget: widget.appBarModel?.centerWidget,
@@ -75,12 +75,14 @@ class _NewRequestDetailsViewState extends State<NewRequestDetailsView>
       centerTitle: widget.appBarModel?.centerTitle ?? false,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -100,7 +102,7 @@ class _NewRequestDetailsViewState extends State<NewRequestDetailsView>
     );
 
     Widget name = Text(
-      widget.profile.showName,
+      widget.profile.contactShowName,
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
       textScaler: TextScaler.noScaling,

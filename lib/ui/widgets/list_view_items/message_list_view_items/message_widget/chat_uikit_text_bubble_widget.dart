@@ -20,6 +20,7 @@ class ChatUIKitTextBubbleWidget extends StatelessWidget {
   final TextStyle? style;
   final MessageModel model;
   final bool? forceLeft;
+
   // final RegExp? exp;
   final Color? expHighlightColor;
   final bool enableExpUnderline;
@@ -71,6 +72,7 @@ class ChatUIKitTextBubbleWidget extends StatelessWidget {
           child: Text(
             ChatUIKitLocal.messageTextWidgetURLPreviewParsing
                 .localString(context),
+            textScaler: TextScaler.noScaling,
             style: TextStyle(
               fontWeight: theme.font.bodySmall.fontWeight,
               fontSize: theme.font.bodySmall.fontSize,
@@ -248,6 +250,7 @@ class ChatUIKitTextBubbleWidget extends StatelessWidget {
       );
       widgets.add(
         ChatUIKitRegExpText(
+          textScaler: TextScaler.noScaling,
           text: model.message.translateText,
           // exp: exp,
           onExpTap: onExpTap,

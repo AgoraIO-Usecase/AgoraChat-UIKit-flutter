@@ -1,6 +1,6 @@
 export 'package:chat_uikit_theme/chat_uikit_theme.dart';
 
-export 'chat_uikit_context.dart';
+export 'tools/chat_uikit_context.dart';
 export 'chat_uikit_settings.dart';
 export 'chat_uikit_localizations.dart';
 
@@ -10,22 +10,22 @@ export 'sdk_service/chat_sdk_service.dart';
 export 'sdk_service/chat_sdk_service_defines.dart';
 
 export 'chat_uikit_service/chat_uikit_service.dart';
+export 'provider/chat_uikit_profile.dart';
 export 'chat_uikit_service/chat_uikit_action_events.dart';
 export 'chat_uikit_service/observers/chat_uikit_events_observers.dart';
-export 'provider/chat_uikit_profile.dart';
-export 'universal/chat_string_extension.dart';
 
+export 'tools/chat_string_extension.dart';
 export 'tools/chat_uikit_helper.dart';
 export 'tools/chat_uikit_image_loader.dart';
 export 'tools/chat_uikit_message_extension.dart';
-export 'tools/chat_uikit_conversation_helper.dart';
+export 'tools/chat_uikit_conversation_extension.dart';
 export 'tools/chat_uikit_file_size_tool.dart';
 export 'tools/chat_uikit_time_tool.dart';
 export 'tools/chat_uikit_url_helper.dart';
 
 export 'chat_uikit_time_formatter.dart';
 
-export 'ui/custom/custom_text_editing_controller.dart';
+export 'ui/widgets/input_bar/custom_text_editing_controller.dart';
 export 'ui/custom/share_user_data.dart';
 
 export 'ui/widgets/list_view_items/chat_uikit_details_list_view_item.dart';
@@ -54,22 +54,28 @@ export 'ui/widgets/chat_uikit_app_bar.dart';
 export 'ui/widgets/chat_uikit_avatar.dart';
 export 'ui/widgets/chat_uikit_alphabetical_widget.dart';
 export 'ui/widgets/chat_uikit_badge.dart';
+export 'ui/widgets/chat_uikit_button.dart';
 export 'ui/widgets/chat_uikit_bottom_sheet.dart';
 export 'ui/widgets/chat_uikit_dialog.dart';
 export 'ui/widgets/chat_uikit_downloads_helper_widget.dart';
 export 'ui/widgets/chat_uikit_emoji_rich_text_widget.dart';
+export 'ui/widgets/chat_uikit_emoji_panel.dart';
 export 'ui/widgets/chat_uikit_list_view.dart';
-export 'ui/widgets/chat_uikit_search_widget.dart';
-export 'ui/widgets/chat_uikit_input_bar.dart';
-export 'ui/widgets/chat_uikit_input_emoji_bar.dart';
-export 'ui/widgets/chat_uikit_record_bar.dart';
-export 'ui/widgets/chat_uikit_show_image_widget.dart';
-export 'ui/widgets/chat_uikit_show_video_widget.dart';
 export 'ui/widgets/chat_uikit_message_status_widget.dart';
-export 'ui/widgets/chat_uikit_button.dart';
+export 'ui/widgets/chat_uikit_message_reaction_info.dart';
+export 'ui/widgets/popup_menu/chat_uikit_position_widget.dart';
+export 'ui/widgets/popup_menu/chat_uikit_popup_menu.dart';
 export 'ui/widgets/chat_uikit_quote_widget.dart';
 export 'ui/widgets/chat_uikit_reply_bar.dart';
-export 'ui/widgets/chat_uikit_message_reaction_info.dart';
+export 'ui/widgets/record_bar/chat_uikit_record_bar.dart';
+export 'ui/widgets/chat_uikit_search_widget.dart';
+export 'ui/widgets/chat_uikit_show_image_widget.dart';
+export 'ui/widgets/chat_uikit_show_video_widget.dart';
+
+export 'ui/widgets/message_bottom_menu/chat_uikit_message_view_bottom_menu.dart';
+export 'ui/widgets/edit_bar/chat_uikit_edit_bar.dart';
+export 'ui/widgets/input_bar/chat_uikit_input_bar.dart';
+
 export 'ui/controllers/chat_uikit_list_view_controller_base.dart';
 export 'ui/controllers/conversation_list_view_controller.dart';
 export 'ui/controllers/contact_list_view_controller.dart';
@@ -90,6 +96,7 @@ export 'ui/models/new_request_item_model.dart';
 export 'ui/models/quote_mode.dart';
 export 'ui/models/alphabetical_item_model.dart';
 export 'ui/models/message_model.dart';
+export 'ui/models/pin_list_item_model.dart';
 
 export 'ui/components/block_list_view.dart';
 export 'ui/components/conversation_list_view.dart';
@@ -166,8 +173,8 @@ export 'ui/route/chat_uikit_view_observer.dart';
 export 'universal/chat_uikit_action_model.dart';
 
 export 'chat_uikit_emoji_data.dart';
-export 'chat_uikit_defines.dart';
+export 'universal/chat_uikit_defines.dart';
 export 'universal/defines.dart';
 export 'chat_uikit_alphabet_sort_helper.dart';
 
-
+export 'package:chat_uikit_keyboard_panel/chat_uikit_keyboard_panel.dart';

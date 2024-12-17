@@ -2,7 +2,7 @@ import '../chat_sdk_service.dart';
 
 mixin GroupActions on GroupWrapper {
   Future<Group?> getGroup({required String groupId}) {
-    return checkResult(ChatSDKEvent.getGroupId, () {
+    return checkResult(ChatSDKEvent.getGroupWithId, () {
       return Client.getInstance.groupManager.getGroupWithId(groupId);
     });
   }

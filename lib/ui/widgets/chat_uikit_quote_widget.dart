@@ -107,7 +107,7 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget>
             ChatUIKitProfile? profile =
                 ChatUIKitProvider.instance.getProfileById(message.from!);
             profile ??= message.fromProfile;
-            return profile.showName;
+            return profile.contactShowName;
           }(),
           textScaler: TextScaler.noScaling,
           overflow: TextOverflow.ellipsis,
@@ -173,7 +173,7 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget>
           () {
             return ChatUIKitProvider.instance
                     .getProfileById(message.from!)
-                    ?.showName ??
+                    ?.contactShowName ??
                 message.nickname ??
                 message.from!;
           }(),
@@ -337,7 +337,7 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget>
           () {
             return ChatUIKitProvider.instance
                     .getProfileById(message.from!)
-                    ?.showName ??
+                    ?.contactShowName ??
                 message.nickname ??
                 message.from!;
           }(),
@@ -521,7 +521,7 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget>
           () {
             return ChatUIKitProvider.instance
                     .getProfileById(message.from!)
-                    ?.showName ??
+                    ?.contactShowName ??
                 message.nickname ??
                 message.from!;
           }(),
@@ -598,7 +598,7 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget>
           () {
             return ChatUIKitProvider.instance
                     .getProfileById(message.from!)
-                    ?.showName ??
+                    ?.contactShowName ??
                 message.nickname ??
                 message.from!;
           }(),
@@ -672,7 +672,7 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          message.fromProfile.showName,
+          message.fromProfile.contactShowName,
           textScaler: TextScaler.noScaling,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
@@ -748,7 +748,7 @@ class _ChatUIKitQuoteWidgetState extends State<ChatUIKitQuoteWidget>
             () {
               return ChatUIKitProvider.instance
                       .getProfileById(message.from!)
-                      ?.showName ??
+                      ?.contactShowName ??
                   message.nickname ??
                   message.from!;
             }(),

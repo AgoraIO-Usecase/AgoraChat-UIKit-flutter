@@ -47,7 +47,9 @@ class _ForwardMessagesViewState extends State<ForwardMessagesView>
     ChatUIKit.instance.addObserver(this);
     widget.viewObserver?.addListener(() => setState(() {}));
     message = widget.message;
-    fetchCombineList();
+    WidgetsBinding.instance.addPostFrameCallback((time) {
+      fetchCombineList();
+    });
   }
 
   @override
@@ -73,7 +75,7 @@ class _ForwardMessagesViewState extends State<ForwardMessagesView>
     }
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           ChatUIKitLocal.historyMessages.localString(context),
@@ -90,12 +92,14 @@ class _ForwardMessagesViewState extends State<ForwardMessagesView>
       centerTitle: widget.appBarModel?.centerTitle ?? true,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget? content;
     if (downloading == true) {
       content = Center(
@@ -115,7 +119,9 @@ class _ForwardMessagesViewState extends State<ForwardMessagesView>
     } else {
       content = Center(
         child: Text(
-            ChatUIKitLocal.forwardedMessageDownloadError.localString(context)),
+          ChatUIKitLocal.forwardedMessageDownloadError.localString(context),
+          textScaler: TextScaler.noScaling,
+        ),
       );
     }
 
@@ -196,7 +202,9 @@ class _ForwardMessagesViewState extends State<ForwardMessagesView>
       children: [
         Expanded(
           child: Text(
-            profile?.showName ?? model.message.nickname ?? model.message.from!,
+            profile?.contactShowName ??
+                model.message.nickname ??
+                model.message.from!,
             textScaler: TextScaler.noScaling,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
@@ -258,6 +266,7 @@ class _ForwardMessagesViewState extends State<ForwardMessagesView>
     final body = model.message.body as TextMessageBody;
     return ChatUIKitEmojiRichText(
       emojiSize: const Size(16, 16),
+      textScaler: TextScaler.noScaling,
       text: body.content,
       selectable: true,
       style: TextStyle(
@@ -292,7 +301,7 @@ class _ForwardMessagesViewState extends State<ForwardMessagesView>
   }
 
   Widget voiceWidget(MessageModel model, ChatUIKitTheme theme) {
-    final body = message.body as VoiceMessageBody;
+    final body = model.message.body as VoiceMessageBody;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -338,7 +347,7 @@ class _ForwardMessagesViewState extends State<ForwardMessagesView>
   }
 
   Widget locationWidget(MessageModel model, ChatUIKitTheme theme) {
-    final body = message.body as LocationMessageBody;
+    final body = model.message.body as LocationMessageBody;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [

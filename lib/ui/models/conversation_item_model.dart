@@ -62,18 +62,18 @@ class ConversationItemModel with ChatUIKitListItemModelBase, NeedSearch {
     );
   }
 
-  Future<void> setAttribute(Map<String, String> attribute) async {
+  Future<void> setAttributes(Map<String, String> attributes) async {
     Conversation? conversation = await ChatUIKit.instance.getConversation(
         conversationId: profile.id,
         type: profile.type == ChatUIKitProfileType.group
             ? ConversationType.GroupChat
             : ConversationType.Chat);
-    conversation?.setExt(attribute);
+    await conversation?.setExt(attributes);
   }
 
   @override
   String get showName {
-    return profile.showName;
+    return profile.contactShowName;
   }
 
   String? get avatarUrl {

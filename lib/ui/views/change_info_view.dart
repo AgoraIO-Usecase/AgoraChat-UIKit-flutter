@@ -61,7 +61,7 @@ class _ChangeInfoViewState extends State<ChangeInfoView>
     });
   }
 
-  updateAppBarModel() {
+  updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title,
       centerWidget: widget.appBarModel?.centerWidget,
@@ -121,7 +121,7 @@ class _ChangeInfoViewState extends State<ChangeInfoView>
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Column(
       children: [
         Container(
@@ -134,9 +134,8 @@ class _ChangeInfoViewState extends State<ChangeInfoView>
                 : theme.color.neutralColor95,
           ),
           child: TextField(
-            keyboardAppearance: ChatUIKitTheme.instance.color.isDark
-                ? Brightness.dark
-                : Brightness.light,
+            keyboardAppearance:
+                theme.color.isDark ? Brightness.dark : Brightness.light,
             maxLines: 4,
             minLines: 1,
             buildCounter: (

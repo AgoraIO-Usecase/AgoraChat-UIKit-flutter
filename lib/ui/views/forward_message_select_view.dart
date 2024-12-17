@@ -75,7 +75,8 @@ class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
       } else {
         ChatUIKitProfile? profile =
             ChatUIKitProvider.instance.getProfileById(msg.from!);
-        str += '${profile?.nickname ?? msg.fromProfile.nickname}: ';
+        str +=
+            '${profile?.contactShowName ?? msg.fromProfile.contactShowName}: ';
         if (msg.bodyType == MessageType.TXT) {
           str += msg.textContent;
         }
@@ -125,7 +126,7 @@ class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
     super.dispose();
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           ChatUIKitLocal.forwardMessageViewTitle.localString(context),
@@ -145,12 +146,14 @@ class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
       centerTitle: widget.appBarModel?.centerTitle ?? false,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -193,7 +196,7 @@ class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
               onSearchTap: (data) {
                 onSearchTap(data, context, theme);
               },
-              listViewItemBuilder: (context, model) {
+              itemBuilder: (context, model) {
                 Widget item = Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -215,7 +218,7 @@ class _ForwardMessageSelectViewState extends State<ForwardMessageSelectView>
             ),
             GroupsView(
                 enableAppBar: false,
-                listViewItemBuilder: (context, model) {
+                itemBuilder: (context, model) {
                   Widget item = Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

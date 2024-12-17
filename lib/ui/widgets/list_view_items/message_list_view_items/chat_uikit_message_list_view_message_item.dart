@@ -1,4 +1,5 @@
 import '../../../../chat_uikit.dart';
+
 import 'package:flutter/material.dart';
 
 class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
@@ -27,11 +28,11 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
     this.onReactionInfoTap,
     this.onThreadItemTap,
     this.threadItemBuilder,
-    this.enableSelected,
     this.reactions,
     this.enableThread = true,
     this.enableReaction = true,
     this.enableVoiceUnreadIcon = true,
+    this.onItemTap,
     super.key,
   });
 
@@ -52,10 +53,9 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
   final VoidCallback? onAvatarTap;
   final VoidCallback? onAvatarLongPressed;
   final VoidCallback? onNicknameTap;
-  final VoidCallback? onBubbleTap;
-  final VoidCallback? onBubbleLongPressed;
-  final VoidCallback? onBubbleDoubleTap;
-  final VoidCallback? enableSelected;
+  final ChatUIKitPositionWidgetHandler? onBubbleTap;
+  final ChatUIKitPositionWidgetHandler? onBubbleLongPressed;
+  final ChatUIKitPositionWidgetHandler? onBubbleDoubleTap;
   final Widget Function(BuildContext context, QuoteModel model)? quoteBuilder;
   final VoidCallback? onErrorBtnTap;
   final MessageItemBubbleBuilder? bubbleBuilder;
@@ -65,6 +65,7 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
   final VoidCallback? onReactionInfoTap;
   final VoidCallback? onThreadItemTap;
   final MessageItemBuilder? threadItemBuilder;
+  final VoidCallback? onItemTap;
 
   @override
   Widget build(BuildContext context) {
@@ -97,19 +98,15 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
 
     Widget bubbleWidget;
 
-    if (model.message.bodyType == MessageType.VIDEO ||
-        model.message.bodyType == MessageType.IMAGE) {
-      bubbleWidget =
-          bubbleBuilder?.call(context, msgWidget, model) ?? msgWidget;
-    } else {
-      bubbleWidget = bubbleBuilder?.call(context, msgWidget, model) ??
-          ChatUIKitMessageBubbleWidget(
-            key: ValueKey(model.message.localTime),
-            needSmallCorner: model.message.getQuote == null,
-            isLeft: left,
-            child: msgWidget,
-          );
-    }
+    bubbleWidget = bubbleBuilder?.call(context, msgWidget, model) ??
+        ChatUIKitMessageBubbleWidget(
+          key: ValueKey(model.message.localTime),
+          needSmallCorner: model.message.getQuote == null,
+          isLeft: left,
+          isVisible: !(model.message.bodyType == MessageType.VIDEO ||
+              model.message.bodyType == MessageType.IMAGE),
+          child: msgWidget,
+        );
 
     if (model.message.bodyType == MessageType.VOICE) {
       bubbleWidget = Row(
@@ -131,14 +128,14 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
         ],
       );
     }
-    bubbleWidget = InkWell(
-      highlightColor: Colors.transparent,
-      splashColor: Colors.transparent,
-      onTap: enableSelected != null ? null : onBubbleTap,
-      onDoubleTap: enableSelected != null ? null : onBubbleDoubleTap,
-      onLongPress: enableSelected != null ? null : onBubbleLongPressed,
+
+    bubbleWidget = ChatUIKitPositionWidget(
+      onTapPositionHandler: onBubbleTap,
+      onLongPressPositionHandler: onBubbleLongPressed,
+      onDoubleTapPositionHandler: onBubbleDoubleTap,
       child: bubbleWidget,
     );
+
     bool showAvatar = this.showAvatar?.call(model) ?? true;
     Widget avatar = _avatarWidget(theme, context, showAvatar);
 
@@ -221,14 +218,12 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
       child: item,
     );
 
-    if (enableSelected != null) {
-      item = InkWell(
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        onTap: enableSelected,
-        child: item,
-      );
-    }
+    item = InkWell(
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      onTap: onItemTap,
+      child: item,
+    );
 
     return item;
   }
@@ -326,8 +321,8 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
       content = InkWell(
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
-        onTap: enableSelected != null ? null : onAvatarTap,
-        onLongPress: enableSelected != null ? null : onAvatarLongPressed,
+        onTap: onAvatarTap,
+        onLongPress: onAvatarLongPressed,
         child: content,
       );
     } else {
@@ -360,7 +355,7 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
       content = InkWell(
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
-        onTap: enableSelected != null ? null : onNicknameTap,
+        onTap: onNicknameTap,
         child: content,
       );
       double padding =
@@ -415,7 +410,7 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
             child: threadItemBuilder?.call(context, model) ??
                 ChatUIKitMessageThreadWidget(
                   chatThread: model.thread!,
-                  onTap: enableSelected != null ? null : onThreadItemTap,
+                  onTap: onThreadItemTap,
                 ),
           ),
         ],
@@ -448,10 +443,8 @@ class ChatUIKitMessageListViewMessageItem extends StatelessWidget {
                 ChatUIKitMessageReactionsRow(
                   reactions: reactions!,
                   isLeft: left,
-                  onReactionTap:
-                      enableSelected != null ? null : onReactionItemTap,
-                  onReactionInfoTap:
-                      enableSelected != null ? null : onReactionInfoTap,
+                  onReactionTap: onReactionItemTap,
+                  onReactionInfoTap: onReactionInfoTap,
                 ),
           ),
         ],

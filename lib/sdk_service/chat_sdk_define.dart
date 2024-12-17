@@ -1,9 +1,11 @@
+library chat_sdk_define;
 /*
 import 'package:im_flutter_sdk/im_flutter_sdk.dart' as chat;
+export 'package:im_flutter_sdk/im_flutter_sdk.dart';
 
 typedef Client = chat.EMClient;
 typedef ChatManager = chat.EMChatManager;
-typedef ChatEventHandle = chat.EMChatEventHandler;
+typedef ChatEventHandler = chat.EMChatEventHandler;
 typedef GroupEventHandler = chat.EMGroupEventHandler;
 typedef RoomEventHandler = chat.EMChatRoomEventHandler;
 typedef ContactEventHandler = chat.EMContactEventHandler;
@@ -60,11 +62,16 @@ typedef MessageSearchScope = chat.MessageSearchScope;
 typedef UserInfo = chat.EMUserInfo;
 typedef MessagePinOperation = chat.MessagePinOperation;
 typedef MessagePinInfo = chat.MessagePinInfo;
- */
+typedef LoginExtensionInfo = chat.LoginExtensionInfo;
 
-library chat_sdk_define;
+typedef ChatRoomEventHandler = chat.EMChatRoomEventHandler;
+typedef LeaveReason = chat.LeaveReason;
+typedef ChatRoom = chat.EMChatRoom;
+typedef PageResult<T> = chat.EMPageResult<T>;
+*/
 
 import 'package:agora_chat_sdk/agora_chat_sdk.dart' as chat;
+export 'package:agora_chat_sdk/agora_chat_sdk.dart';
 
 typedef Client = chat.ChatClient;
 typedef ChatManager = chat.ChatManager;
@@ -125,3 +132,10 @@ typedef MessageSearchScope = chat.MessageSearchScope;
 typedef UserInfo = chat.ChatUserInfo;
 typedef MessagePinOperation = chat.MessagePinOperation;
 typedef MessagePinInfo = chat.MessagePinInfo;
+// 1.3.1  开放
+// typedef LoginExtensionInfo = chat.LoginExtensionInfo;
+
+typedef ChatRoomEventHandler = chat.ChatRoomEventHandler;
+typedef LeaveReason = chat.LeaveReason;
+typedef ChatRoom = chat.ChatRoom;
+typedef PageResult<T> = chat.ChatPageResult<T>;

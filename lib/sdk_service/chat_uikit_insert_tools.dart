@@ -19,12 +19,12 @@ class ChatUIKitInsertTools {
     alertMsg.localTime = time;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    ChatUIKit.instance.insertMessage(message: alertMsg);
+    ChatSDKService.instance.insertMessage(message: alertMsg);
     return alertMsg;
   }
 
   static Future<void> insertGroupDestroyMessage(String groupId) async {
-    if (ChatUIKit.instance.options?.deleteMessagesAsExitGroup == true) {
+    if (Client.getInstance.options?.deleteMessagesAsExitGroup == true) {
       return;
     }
     Message alertMsg = Message.createCustomSendMessage(
@@ -37,7 +37,7 @@ class ChatUIKitInsertTools {
     alertMsg.localTime = alertMsg.serverTime;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    await ChatUIKit.instance.insertMessage(
+    await ChatSDKService.instance.insertMessage(
       message: alertMsg,
       runMessageReceived: true,
       needUpdateConversationList: true,
@@ -45,11 +45,11 @@ class ChatUIKitInsertTools {
   }
 
   static Future<void> insertGroupLeaveMessage(String groupId) async {
-    if (ChatUIKit.instance.options?.deleteMessagesAsExitGroup == true) {
+    if (Client.getInstance.options?.deleteMessagesAsExitGroup == true) {
       return;
     }
 
-    String userId = ChatUIKit.instance.currentUserId!;
+    String userId = ChatSDKService.instance.currentUserId!;
     Message alertMsg = Message.createCustomSendMessage(
       targetId: groupId,
       event: alertGroupLeaveKey,
@@ -63,7 +63,7 @@ class ChatUIKitInsertTools {
     alertMsg.localTime = alertMsg.serverTime;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    await ChatUIKit.instance.insertMessage(
+    await ChatSDKService.instance.insertMessage(
       message: alertMsg,
       runMessageReceived: true,
       needUpdateConversationList: true,
@@ -84,7 +84,7 @@ class ChatUIKitInsertTools {
     alertMsg.localTime = alertMsg.serverTime;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    await ChatUIKit.instance.insertMessage(
+    await ChatSDKService.instance.insertMessage(
       message: alertMsg,
       runMessageReceived: true,
       needUpdateConversationList: true,
@@ -92,10 +92,10 @@ class ChatUIKitInsertTools {
   }
 
   static Future<void> insertGroupKickedMessage(String groupId) async {
-    if (ChatUIKit.instance.options?.deleteMessagesAsExitGroup == true) {
+    if (Client.getInstance.options?.deleteMessagesAsExitGroup == true) {
       return;
     }
-    String userId = ChatUIKit.instance.currentUserId!;
+    String userId = ChatSDKService.instance.currentUserId!;
     Message alertMsg = Message.createCustomSendMessage(
       targetId: groupId,
       event: alertGroupKickedKey,
@@ -109,7 +109,7 @@ class ChatUIKitInsertTools {
     alertMsg.localTime = alertMsg.serverTime;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    await ChatUIKit.instance.insertMessage(
+    await ChatSDKService.instance.insertMessage(
       message: alertMsg,
       runMessageReceived: true,
       needUpdateConversationList: true,
@@ -118,7 +118,7 @@ class ChatUIKitInsertTools {
 
   static Future<void> insertCreateGroupMessage({
     required Group group,
-    ChatUIKitProfile? creator,
+    String? creator,
     int? timestamp,
   }) async {
     int time = timestamp ?? DateTime.now().millisecondsSinceEpoch - 1;
@@ -131,7 +131,7 @@ class ChatUIKitInsertTools {
     timeMsg.localTime = time;
     timeMsg.status = MessageStatus.SUCCESS;
 
-    await ChatUIKit.instance.insertMessage(
+    await ChatSDKService.instance.insertMessage(
       message: timeMsg,
     );
 
@@ -140,9 +140,8 @@ class ChatUIKitInsertTools {
       event: alertGroupCreateKey,
       chatType: ChatType.GroupChat,
       params: {
-        alertOperatorIdKey: group.owner ?? creator?.id ?? '',
-        alertOperatorNameKey:
-            creator?.showName ?? creator?.id ?? group.owner ?? '',
+        alertOperatorIdKey: group.owner ?? creator ?? '',
+        alertOperatorNameKey: creator ?? group.owner ?? '',
         alertTargetIdKey: group.groupId,
         alertTargetNameKey: group.name ?? '',
       },
@@ -153,7 +152,7 @@ class ChatUIKitInsertTools {
     alertMsg.localTime = time + 1;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    await ChatUIKit.instance.insertMessage(
+    await ChatSDKService.instance.insertMessage(
       message: alertMsg,
       runMessageReceived: false,
       needUpdateConversationList: true,
@@ -162,7 +161,7 @@ class ChatUIKitInsertTools {
 
   static Future<void> insertCreateThreadEventMessage({
     required ChatThreadEvent event,
-    ChatUIKitProfile? creator,
+    String? creator,
     int? timestamp,
   }) async {
     ChatThread thread = event.chatThread!;
@@ -180,7 +179,7 @@ class ChatUIKitInsertTools {
 
     timeMsg.status = MessageStatus.SUCCESS;
 
-    await ChatUIKit.instance.insertMessage(
+    await ChatSDKService.instance.insertMessage(
       message: timeMsg,
       runMessageReceived: true,
     );
@@ -202,7 +201,7 @@ class ChatUIKitInsertTools {
     alertMsg.localTime = time + 1;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    await ChatUIKit.instance.insertMessage(
+    await ChatSDKService.instance.insertMessage(
       message: alertMsg,
       runMessageReceived: true,
       needUpdateConversationList: true,
@@ -219,7 +218,7 @@ class ChatUIKitInsertTools {
     String? localCreator = creator;
 
     if (localConversationId == null || localCreator == null) {
-      Message? pinedMsg = await ChatUIKit.instance.loadMessage(
+      Message? pinedMsg = await ChatSDKService.instance.loadMessage(
         messageId: messageId,
       );
 
@@ -228,7 +227,7 @@ class ChatUIKitInsertTools {
       }
 
       localConversationId = pinedMsg.conversationId!;
-      localCreator = ChatUIKit.instance.currentUserId!;
+      localCreator = ChatSDKService.instance.currentUserId!;
     }
 
     Message alertMsg = Message.createCustomSendMessage(
@@ -245,7 +244,7 @@ class ChatUIKitInsertTools {
     alertMsg.localTime = time + 1;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    await ChatUIKit.instance.insertMessage(
+    await ChatSDKService.instance.insertMessage(
       message: alertMsg,
       runMessageReceived: true,
       needUpdateConversationList: true,
@@ -262,7 +261,7 @@ class ChatUIKitInsertTools {
     String? localCreator = creator;
 
     if (localConversationId == null || localCreator == null) {
-      Message? pinedMsg = await ChatUIKit.instance.loadMessage(
+      Message? pinedMsg = await ChatSDKService.instance.loadMessage(
         messageId: messageId,
       );
 
@@ -271,7 +270,7 @@ class ChatUIKitInsertTools {
       }
 
       localConversationId = pinedMsg.conversationId!;
-      localCreator = ChatUIKit.instance.currentUserId!;
+      localCreator = ChatSDKService.instance.currentUserId!;
     }
 
     Message alertMsg = Message.createCustomSendMessage(
@@ -288,7 +287,7 @@ class ChatUIKitInsertTools {
     alertMsg.localTime = time + 1;
     alertMsg.status = MessageStatus.SUCCESS;
 
-    await ChatUIKit.instance.insertMessage(
+    await ChatSDKService.instance.insertMessage(
       message: alertMsg,
       runMessageReceived: true,
       needUpdateConversationList: true,

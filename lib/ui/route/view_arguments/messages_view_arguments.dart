@@ -26,7 +26,7 @@ class MessagesViewArguments implements ChatUIKitViewArguments {
     this.bubbleContentBuilder,
     this.onMoreActionsItemsHandler,
     this.onItemLongPressHandler,
-    this.inputBarTextEditingController,
+    this.inputController,
     this.forceLeft,
     this.multiSelectBottomBar,
     this.viewObserver,
@@ -36,6 +36,7 @@ class MessagesViewArguments implements ChatUIKitViewArguments {
     this.reactionItemsBuilder,
     this.onThreadItemTap,
     this.threadItemBuilder,
+    this.backgroundWidget,
   }) {
     this.appBarModel = appBarModel ?? ChatUIKitAppBarModel(centerTitle: false);
   }
@@ -61,10 +62,10 @@ class MessagesViewArguments implements ChatUIKitViewArguments {
   final MessageItemShowHandler? showMessageItemNickname;
 
   /// 消息点击事件, 如果设置后消息点击事件将直接回调，如果不处理可以返回 `false`。
-  final MessageItemTapHandler? onItemTap;
+  final MessageItemGlobalPositionTapHandler? onItemTap;
 
   /// 消息双击事件,如果设置后消息双击事件将直接回调，如果不处理可以返回 `false`。
-  final MessageItemTapHandler? onDoubleTap;
+  final MessageItemGlobalPositionTapHandler? onDoubleTap;
 
   /// 头像点击事件，如果设置后头像点击事件将直接回调，如果不处理可以返回 `false`。
   final MessageItemTapHandler? onAvatarTap;
@@ -81,23 +82,24 @@ class MessagesViewArguments implements ChatUIKitViewArguments {
   /// 提示消息构建器， 如果设置后需要显示提示消息时会直接回调，如果不处理可以返回 `null`。
   final MessageItemBuilder? alertItemBuilder;
 
-  /// 更多按钮点击事件列表，如果设置后将会替换默认的更多按钮点击事件列表。详细参考 [ChatUIKitBottomSheetAction]。
-  final List<ChatUIKitBottomSheetAction>? morePressActions;
+  /// 更多按钮点击事件列表，如果设置后将会替换默认的更多按钮点击事件列表。详细参考 [ChatUIKitEventAction]。
+  final List<ChatUIKitEventAction>? morePressActions;
 
-  /// 更多按钮点击事件， 如果设置后将会替换默认的更多按钮点击事件。详细参考 [ChatUIKitBottomSheetAction]。
+  /// 更多按钮点击事件， 如果设置后将会替换默认的更多按钮点击事件。详细参考 [ChatUIKitEventAction]。
   final MessagesViewMorePressHandler? onMoreActionsItemsHandler;
 
   /// 消息长按事件回调， 如果设置后将会替换默认的消息长按事件回调。
-  final MessagesViewItemLongPressHandler? onItemLongPressHandler;
+  final MessagesViewItemLongPressPositionHandler? onItemLongPressHandler;
 
   /// 强制消息靠左，默认为 `false`， 设置后自己发的消息也会在左侧显示。
   final bool? forceLeft;
 
-  /// 表情控件，如果设置后将会替换默认的表情控件。详细参考 [ChatUIKitInputEmojiBar]。
+  /// 表情控件，如果设置后将会替换默认的表情控件。详细参考 [ChatUIKitEmojiPanel]。
   final Widget? emojiWidget;
 
-  /// 回复消息输入控件构建器，如果设置后将会替换默认的回复消息输入控件构建器。详细参考 [ChatUIKitReplyBar]。
-  final MessageItemBuilder? replyBarBuilder;
+  /// 回复消息提示组件构建器，如果设置后将会替换默认的回复消息提示组件。详细参考 [ChatUIKitReplyBar]。
+  final Widget? Function(BuildContext context, MessageModel replyMessage)?
+      replyBarBuilder;
 
   /// 引用消息构建器，如果设置后将会替换默认的引用消息样式。
   final Widget Function(BuildContext context, QuoteModel model)? quoteBuilder;
@@ -111,8 +113,8 @@ class MessagesViewArguments implements ChatUIKitViewArguments {
   /// 气泡内容构建器，如果设置后将会替换默认的气泡内容构建器。详细参考 [MessageItemBuilder]。
   final MessageItemBuilder? bubbleContentBuilder;
 
-  /// 输入框控制器，如果设置后将会替换默认的输入框控制器。详细参考 [CustomTextEditingController]。
-  final ChatUIKitInputBarController? inputBarTextEditingController;
+  /// 输入框控制器，如果设置后将会替换默认的输入框控制器。详细参考 [ChatUIKitKeyboardPanelController]。
+  final ChatUIKitKeyboardPanelController? inputController;
 
   /// 多选消息时显示的bottom bar.
   final Widget? multiSelectBottomBar;
@@ -126,6 +128,9 @@ class MessagesViewArguments implements ChatUIKitViewArguments {
   final MessageItemTapHandler? onThreadItemTap;
 
   final MessageItemBuilder? threadItemBuilder;
+
+  /// 背景组件，如果设置后将会替换默认的背景组件。
+  final Widget? backgroundWidget;
 
   /// View 附加属性，设置后的内容将会带入到下一个页面。
   @override
@@ -152,10 +157,10 @@ class MessagesViewArguments implements ChatUIKitViewArguments {
     MessageItemShowHandler? showMessageItemNickname,
 
     /// 消息点击事件, 如果设置后消息点击事件将直接回调，如果不处理可以返回 `false`。
-    MessageItemTapHandler? onItemTap,
+    MessageItemGlobalPositionTapHandler? onItemTap,
 
     /// 消息双击事件,如果设置后消息双击事件将直接回调，如果不处理可以返回 `false`。
-    MessageItemTapHandler? onDoubleTap,
+    MessageItemGlobalPositionTapHandler? onDoubleTap,
 
     /// 头像点击事件，如果设置后头像点击事件将直接回调，如果不处理可以返回 `false`。
     MessageItemTapHandler? onAvatarTap,
@@ -166,21 +171,22 @@ class MessagesViewArguments implements ChatUIKitViewArguments {
     /// 昵称点击事件， 如果设置后昵称点击事件将直接回调，如果不处理可以返回 `false`。
     MessageItemTapHandler? onNicknameTap,
 
-    /// 更多按钮点击事件列表，如果设置后将会替换默认的更多按钮点击事件列表。详细参考 [ChatUIKitBottomSheetAction]。
-    List<ChatUIKitBottomSheetAction>? morePressActions,
+    /// 更多按钮点击事件列表，如果设置后将会替换默认的更多按钮点击事件列表。详细参考 [ChatUIKitEventAction]。
+    List<ChatUIKitEventAction>? morePressActions,
     MessageItemBuilder? itemBuilder,
     MessageItemBuilder? alertItemBuilder,
     FocusNode? focusNode,
     Widget? emojiWidget,
-    Widget? Function(BuildContext context, MessageModel model)? replyBarBuilder,
+    Widget? Function(BuildContext context, MessageModel replyMessage)?
+        replyBarBuilder,
     Widget Function(BuildContext context, QuoteModel model)? quoteBuilder,
     bool Function(BuildContext context, MessageModel message)?
         onErrorBtnTapHandler,
     MessageItemBubbleBuilder? bubbleBuilder,
     MessageItemBuilder? bubbleContentBuilder,
     MessagesViewMorePressHandler? onMoreActionsItemsHandler,
-    MessagesViewItemLongPressHandler? onItemLongPressHandler,
-    ChatUIKitInputBarController? inputBarTextEditingController,
+    MessagesViewItemLongPressPositionHandler? onItemLongPressHandler,
+    ChatUIKitKeyboardPanelController? inputController,
     bool? enableAppBar,
     bool? forceLeft,
     Widget? multiSelectBottomBar,
@@ -191,6 +197,7 @@ class MessagesViewArguments implements ChatUIKitViewArguments {
     MessageItemBuilder? reactionItemsBuilder,
     MessageItemTapHandler? onThreadItemTap,
     MessageItemBuilder? threadItemBuilder,
+    Widget? backgroundWidget,
   }) {
     return MessagesViewArguments(
       profile: profile ?? this.profile,
@@ -220,8 +227,7 @@ class MessagesViewArguments implements ChatUIKitViewArguments {
       onItemLongPressHandler:
           onItemLongPressHandler ?? this.onItemLongPressHandler,
       enableAppBar: enableAppBar ?? this.enableAppBar,
-      inputBarTextEditingController:
-          inputBarTextEditingController ?? this.inputBarTextEditingController,
+      inputController: inputController ?? this.inputController,
       forceLeft: forceLeft ?? this.forceLeft,
       multiSelectBottomBar: multiSelectBottomBar ?? this.multiSelectBottomBar,
       viewObserver: viewObserver ?? this.viewObserver,
@@ -231,6 +237,7 @@ class MessagesViewArguments implements ChatUIKitViewArguments {
       reactionItemsBuilder: reactionItemsBuilder ?? this.reactionItemsBuilder,
       onThreadItemTap: onThreadItemTap ?? this.onThreadItemTap,
       threadItemBuilder: threadItemBuilder ?? this.threadItemBuilder,
+      backgroundWidget: backgroundWidget ?? this.backgroundWidget,
     );
   }
 }

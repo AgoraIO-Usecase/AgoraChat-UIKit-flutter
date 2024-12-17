@@ -2,6 +2,8 @@ import '../../chat_uikit.dart';
 
 import 'package:flutter/material.dart';
 
+/// The group list view.
+/// This widget is used to display the list of groups.
 class GroupListView extends StatefulWidget {
   const GroupListView({
     this.controller,
@@ -9,8 +11,8 @@ class GroupListView extends StatefulWidget {
     this.beforeWidgets,
     this.afterWidgets,
     this.onSearchTap,
-    this.searchHideText,
-    this.background,
+    this.searchBarHideText,
+    this.emptyBackground,
     this.errorMessage,
     this.reloadMessage,
     this.onTap,
@@ -18,17 +20,41 @@ class GroupListView extends StatefulWidget {
     this.enableSearch = false,
     super.key,
   });
+
+  /// Callback when the search bar is clicked, the parameter is the search data source list.
   final void Function(List<GroupItemModel> data)? onSearchTap;
+
+  /// The widget list displayed before the list.
   final List<Widget>? beforeWidgets;
+
+  /// The widget list displayed after the list.
   final List<Widget>? afterWidgets;
+
+  /// The builder of the list item.
   final ChatUIKitGroupItemBuilder? itemBuilder;
+
+  /// Callback when the list item is clicked.
   final void Function(BuildContext context, GroupItemModel model)? onTap;
+
+  /// Callback when the list item is long pressed.
   final void Function(BuildContext context, GroupItemModel model)? onLongPress;
-  final String? searchHideText;
-  final Widget? background;
+
+  /// The text displayed when the search bar is hidden.
+  final String? searchBarHideText;
+
+  /// The widget displayed when the list is empty.
+  final Widget? emptyBackground;
+
+  /// The error message displayed when the list fails to load.
   final String? errorMessage;
+
+  /// The message displayed when the list fails to load.
   final String? reloadMessage;
+
+  /// The controller of the list.
   final GroupListViewController? controller;
+
+  /// Whether to enable search bar, the default is false.
   final bool enableSearch;
 
   @override
@@ -45,7 +71,9 @@ class _GroupListViewState extends State<GroupListView>
     ChatUIKitProvider.instance.addObserver(this);
     ChatUIKit.instance.addObserver(this);
     controller = widget.controller ?? GroupListViewController();
-    controller.fetchItemList();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      controller.fetchItemList();
+    });
   }
 
   @override
@@ -107,7 +135,7 @@ class _GroupListViewState extends State<GroupListView>
           },
           errorMessage: widget.errorMessage,
           reloadMessage: widget.reloadMessage,
-          background: widget.background,
+          background: widget.emptyBackground,
           itemBuilder: (context, model) {
             if (model is GroupItemModel) {
               Widget? item;

@@ -5,20 +5,18 @@ import 'package:flutter/material.dart';
 const double letterHeight = 16;
 const double letterWidth = 16;
 
-const defaultLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#';
-
 class ChatUIKitAlphabeticalWidget extends StatefulWidget {
   const ChatUIKitAlphabeticalWidget({
     required this.list,
     required this.scrollController,
     required this.builder,
+    required this.enableSorting,
+    required this.showAlphabeticalIndicator,
     this.groupId,
-    this.enableSorting = true,
-    this.showAlphabetical = true,
     this.selectionTextStyle,
     this.selectionHeight = 32,
     this.selectionBackgroundColor,
-    this.universalAlphabeticalLetter = '#',
+    this.specialAlphabeticalLetter = '#',
     this.sortAlphabetical,
     this.rightPadding = 2,
     this.onSelectLetterChanged,
@@ -34,9 +32,9 @@ class ChatUIKitAlphabeticalWidget extends StatefulWidget {
   final TextStyle? selectionTextStyle;
   final double selectionHeight;
   final Color? selectionBackgroundColor;
-  final bool showAlphabetical;
+  final bool showAlphabeticalIndicator;
   final List<Widget>? beforeWidgets;
-  final String universalAlphabeticalLetter;
+  final String specialAlphabeticalLetter;
   final ListViewBuilder builder;
   final bool enableSorting;
   final double rightPadding;
@@ -110,7 +108,7 @@ class _ChatUIKitAlphabeticalWidgetState
       sortList(),
     );
 
-    if (widget.showAlphabetical) {
+    if (widget.showAlphabeticalIndicator) {
       content = Stack(
         children: [
           content,
@@ -287,7 +285,7 @@ class _ChatUIKitAlphabeticalWidgetState
     for (var letter in targetList) {
       map[letter] = [];
     }
-    map[widget.universalAlphabeticalLetter] = [];
+    map[widget.specialAlphabeticalLetter] = [];
 
     for (var item in tmp) {
       String? letter = ChatUIKitAlphabetSortHelper.instance.sortHandler
@@ -300,7 +298,7 @@ class _ChatUIKitAlphabeticalWidgetState
       if (targetList.any((element) => element.startsWith(letter!))) {
         map[letter]?.add(item);
       } else {
-        map[widget.universalAlphabeticalLetter]?.add(item);
+        map[widget.specialAlphabeticalLetter]?.add(item);
       }
     }
     // 对序列内容排序
@@ -312,8 +310,8 @@ class _ChatUIKitAlphabeticalWidgetState
     map.removeWhere((key, value) => value.isEmpty);
 
     // 修改special位置，如果target中没有special，则把special在最后。
-    if (!targetList.contains(widget.universalAlphabeticalLetter)) {
-      targetList.add(widget.universalAlphabeticalLetter);
+    if (!targetList.contains(widget.specialAlphabeticalLetter)) {
+      targetList.add(widget.specialAlphabeticalLetter);
     }
 
     // 清空不存在的target

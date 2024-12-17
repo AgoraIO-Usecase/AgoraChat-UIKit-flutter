@@ -17,7 +17,6 @@ class ThreadMessagesViewArguments implements ChatUIKitViewArguments {
     this.onErrorBtnTapHandler,
     this.bubbleBuilder,
     this.bubbleContentBuilder,
-    this.inputBarTextEditingController,
     this.multiSelectBottomBar,
     this.onReactionItemTap,
     this.onReactionInfoTap,
@@ -27,7 +26,7 @@ class ThreadMessagesViewArguments implements ChatUIKitViewArguments {
     this.viewObserver,
     this.appBarModel,
     this.enableAppBar = true,
-    this.inputBarController,
+    this.inputController,
     this.morePressActions,
     this.onMoreActionsItemsHandler,
     this.longPressActions,
@@ -45,7 +44,7 @@ class ThreadMessagesViewArguments implements ChatUIKitViewArguments {
   @override
   ChatUIKitViewObserver? viewObserver;
 
-  final ChatUIKitInputBarController? inputBarController;
+  final ChatUIKitKeyboardPanelController? inputController;
 
   final ThreadMessagesViewController controller;
 
@@ -64,13 +63,13 @@ class ThreadMessagesViewArguments implements ChatUIKitViewArguments {
   final MessageItemShowHandler? showMessageItemNickname;
 
   /// 消息点击事件, 如果设置后消息点击事件将直接回调，如果不处理可以返回 `false`。
-  final MessageItemTapHandler? onItemTap;
+  final MessageItemGlobalPositionTapHandler? onItemTap;
 
   /// 消息长按事件, 如果设置后消息长按事件将直接回调，返回 `true` 表示处理你需要处理，返回 `false` 则会执行默认的长按事件。
-  final MessageItemTapHandler? onItemLongPress;
+  final MessageItemGlobalPositionTapHandler? onItemLongPress;
 
   /// 消息双击事件,如果设置后消息双击事件将直接回调，如果不处理可以返回 `false`。
-  final MessageItemTapHandler? onDoubleTap;
+  final MessageItemGlobalPositionTapHandler? onDoubleTap;
 
   /// 头像点击事件，如果设置后头像点击事件将直接回调，如果不处理可以返回 `false`。
   final MessageItemTapHandler? onAvatarTap;
@@ -87,22 +86,22 @@ class ThreadMessagesViewArguments implements ChatUIKitViewArguments {
   /// 提示消息构建器， 如果设置后需要显示提示消息时会直接回调，如果不处理可以返回 `null`。
   final MessageItemBuilder? alertItemBuilder;
 
-  /// 更多按钮点击事件列表，如果设置后将会替换默认的更多按钮点击事件列表。详细参考 [ChatUIKitBottomSheetAction]。
-  final List<ChatUIKitBottomSheetAction>? morePressActions;
+  /// 更多按钮点击事件列表，如果设置后将会替换默认的更多按钮点击事件列表。详细参考 [ChatUIKitEventAction]。
+  final List<ChatUIKitEventAction>? morePressActions;
 
-  /// 更多按钮点击事件， 如果设置后将会替换默认的更多按钮点击事件。详细参考 [ChatUIKitBottomSheetAction]。
+  /// 更多按钮点击事件， 如果设置后将会替换默认的更多按钮点击事件。详细参考 [ChatUIKitEventAction]。
   final MessagesViewMorePressHandler? onMoreActionsItemsHandler;
 
-  /// 消息长按事件列表，如果设置后将会替换默认的消息长按事件列表。详细参考 [ChatUIKitBottomSheetAction]。
-  final List<ChatUIKitBottomSheetAction>? longPressActions;
+  /// 消息长按事件列表，如果设置后将会替换默认的消息长按事件列表。详细参考 [ChatUIKitEventAction]。
+  final List<ChatUIKitEventAction>? longPressActions;
 
   /// 消息长按事件回调， 如果设置后将会替换默认的消息长按事件回调。当长按时会回调 [longPressActions] 中设置的事件，需要返回一个列表用于替换，如果不返回则不会显示长按。
-  final MessagesViewItemLongPressHandler? onItemLongPressHandler;
+  final MessagesViewItemLongPressPositionHandler? onItemLongPressHandler;
 
   /// 强制消息靠左，默认为 `false`， 设置后自己发的消息也会在左侧显示。
   final bool? forceLeft;
 
-  /// 表情控件，如果设置后将会替换默认的表情控件。详细参考 [ChatUIKitInputEmojiBar]。
+  /// 表情控件，如果设置后将会替换默认的表情控件。详细参考 [ChatUIKitEmojiPanel]。
   final Widget? emojiWidget;
 
   /// 回复消息输入控件构建器，如果设置后将会替换默认的回复消息输入控件构建器。详细参考 [ChatUIKitReplyBar]。
@@ -120,9 +119,6 @@ class ThreadMessagesViewArguments implements ChatUIKitViewArguments {
   /// 气泡内容构建器，如果设置后将会替换默认的气泡内容构建器。详细参考 [MessageItemBuilder]。
   final MessageItemBuilder? bubbleContentBuilder;
 
-  /// 输入框控制器，如果设置后将会替换默认的输入框控制器。详细参考 [CustomTextEditingController]。
-  final ChatUIKitInputBarController? inputBarTextEditingController;
-
   /// 多选时显示的 bottom bar
   final Widget? multiSelectBottomBar;
 
@@ -136,25 +132,24 @@ class ThreadMessagesViewArguments implements ChatUIKitViewArguments {
   final ChatUIKitMoreActionsBuilder? rightTopMoreActionsBuilder;
 
   ThreadMessagesViewArguments copyWith({
-    ChatUIKitInputBarController? inputBarController,
     ThreadMessagesViewController? controller,
     ChatUIKitAppBarModel? appBarModel,
     bool? enableAppBar,
     Widget? inputBar,
     MessageItemShowHandler? showMessageItemAvatar,
     MessageItemShowHandler? showMessageItemNickname,
-    MessageItemTapHandler? onItemTap,
-    MessageItemTapHandler? onItemLongPress,
-    MessageItemTapHandler? onDoubleTap,
+    MessageItemGlobalPositionTapHandler? onItemTap,
+    MessageItemGlobalPositionTapHandler? onItemLongPress,
+    MessageItemGlobalPositionTapHandler? onDoubleTap,
     MessageItemTapHandler? onAvatarTap,
     MessageItemTapHandler? onAvatarLongPress,
     MessageItemTapHandler? onNicknameTap,
     MessageItemBuilder? itemBuilder,
     MessageItemBuilder? alertItemBuilder,
-    List<ChatUIKitBottomSheetAction>? morePressActions,
+    List<ChatUIKitEventAction>? morePressActions,
     MessagesViewMorePressHandler? onMoreActionsItemsHandler,
-    List<ChatUIKitBottomSheetAction>? longPressActions,
-    MessagesViewItemLongPressHandler? onItemLongPressHandler,
+    List<ChatUIKitEventAction>? longPressActions,
+    MessagesViewItemLongPressPositionHandler? onItemLongPressHandler,
     bool? forceLeft,
     Widget? emojiWidget,
     MessageItemBuilder? replyBarBuilder,
@@ -162,7 +157,7 @@ class ThreadMessagesViewArguments implements ChatUIKitViewArguments {
     MessageItemTapHandler? onErrorBtnTapHandler,
     MessageItemBubbleBuilder? bubbleBuilder,
     MessageItemBuilder? bubbleContentBuilder,
-    ChatUIKitInputBarController? inputBarTextEditingController,
+    ChatUIKitKeyboardPanelController? inputController,
     Widget? multiSelectBottomBar,
     MessageReactionItemTapHandler? onReactionItemTap,
     MessageItemTapHandler? onReactionInfoTap,
@@ -172,7 +167,7 @@ class ThreadMessagesViewArguments implements ChatUIKitViewArguments {
     ChatUIKitMoreActionsBuilder? rightTopMoreActionsBuilder,
   }) {
     return ThreadMessagesViewArguments(
-      inputBarController: inputBarController ?? this.inputBarController,
+      inputController: inputController ?? this.inputController,
       controller: controller ?? this.controller,
       appBarModel: appBarModel ?? this.appBarModel,
       enableAppBar: enableAppBar ?? this.enableAppBar,
@@ -202,8 +197,6 @@ class ThreadMessagesViewArguments implements ChatUIKitViewArguments {
       onErrorBtnTapHandler: onErrorBtnTapHandler ?? this.onErrorBtnTapHandler,
       bubbleBuilder: bubbleBuilder ?? this.bubbleBuilder,
       bubbleContentBuilder: bubbleContentBuilder ?? this.bubbleContentBuilder,
-      inputBarTextEditingController:
-          inputBarTextEditingController ?? this.inputBarTextEditingController,
       multiSelectBottomBar: multiSelectBottomBar ?? this.multiSelectBottomBar,
       onReactionItemTap: onReactionItemTap ?? this.onReactionItemTap,
       onReactionInfoTap: onReactionInfoTap ?? this.onReactionInfoTap,

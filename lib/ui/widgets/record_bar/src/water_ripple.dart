@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ChatUIKitWaterRipper extends StatefulWidget {
-  const ChatUIKitWaterRipper({
+class WaterRipper extends StatefulWidget {
+  const WaterRipper({
     required this.color,
     this.duration = const Duration(milliseconds: 1000),
     this.count = 3,
@@ -17,10 +17,10 @@ class ChatUIKitWaterRipper extends StatefulWidget {
   final bool enable;
 
   @override
-  State<ChatUIKitWaterRipper> createState() => _ChatUIKitWaterRipperState();
+  State<WaterRipper> createState() => _WaterRipperState();
 }
 
-class _ChatUIKitWaterRipperState extends State<ChatUIKitWaterRipper>
+class _WaterRipperState extends State<WaterRipper>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   @override

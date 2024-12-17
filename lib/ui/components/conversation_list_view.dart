@@ -2,6 +2,8 @@ import '../../chat_uikit.dart';
 
 import 'package:flutter/material.dart';
 
+/// The conversation list view.
+/// This widget is used to display the list of conversations.
 class ConversationListView extends StatefulWidget {
   const ConversationListView({
     this.controller,
@@ -10,7 +12,7 @@ class ConversationListView extends StatefulWidget {
     this.afterWidgets,
     this.onSearchTap,
     this.searchBarHideText,
-    this.background,
+    this.emptyBackground,
     this.errorMessage,
     this.reloadMessage,
     this.onTap,
@@ -21,21 +23,47 @@ class ConversationListView extends StatefulWidget {
     super.key,
   });
 
+  /// Callback when the search bar is clicked, the parameter is the search data source list.
   final void Function(List<ConversationItemModel> data)? onSearchTap;
+
+  /// The builder of the list item.
   final ConversationItemBuilder? itemBuilder;
+
+  /// Callback when the list item is clicked.
   final void Function(BuildContext context, ConversationItemModel info)? onTap;
+
+  /// Callback when the list item is long pressed.
   final void Function(BuildContext context, ConversationItemModel info)?
       onLongPress;
+
+  /// The widget list before the list.
   final List<Widget>? beforeWidgets;
+
+  /// The widget list after the list.
   final List<Widget>? afterWidgets;
 
+  /// The text displayed when the search bar is hidden.
   final String? searchBarHideText;
-  final Widget? background;
+
+  /// The widget displayed when the list is empty.
+  final Widget? emptyBackground;
+
+  /// The error message displayed when the list fails to load.
   final String? errorMessage;
+
+  /// The message displayed when the list fails to load.
   final String? reloadMessage;
+
+  /// The controller of the list.
   final ConversationListViewController? controller;
+
+  /// Whether to enable long press, the default is true.
   final bool enableLongPress;
+
+  /// Whether to enable the search bar, the default is true.
   final bool enableSearchBar;
+
+  /// Whether to enable the pin highlight, the default is true.
   final bool enablePinHighlight;
 
   @override
@@ -51,9 +79,11 @@ class _ConversationListViewState extends State<ConversationListView>
     super.initState();
     ChatUIKitProvider.instance.addObserver(this);
     controller = widget.controller ?? ConversationListViewController();
-    controller.fetchItemList();
     controller.loadingType.addListener(() {
       setState(() {});
+    });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      controller.fetchItemList();
     });
   }
 
@@ -94,7 +124,7 @@ class _ConversationListViewState extends State<ConversationListView>
       reloadMessage: widget.reloadMessage,
       beforeWidgets: widget.beforeWidgets,
       afterWidgets: widget.afterWidgets,
-      background: widget.background,
+      background: widget.emptyBackground,
       onSearchTap: (data) {
         List<ConversationItemModel> list = [];
         for (var item in data) {

@@ -82,7 +82,7 @@ class ChatUIKitEmojiRichText extends StatelessWidget {
         overflow: overflow,
         maxLines: maxLines,
         text: TextSpan(children: spans, style: style),
-        textScaler: TextScaler.noScaling,
+        textScaler: textScaler,
       );
     }
   }

@@ -57,7 +57,7 @@ class _ShowImageViewState extends State<ShowImageView>
     super.dispose();
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title,
       centerWidget: widget.appBarModel?.centerWidget,
@@ -74,34 +74,32 @@ class _ShowImageViewState extends State<ShowImageView>
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor:
           widget.appBarModel?.backgroundColor ?? Colors.transparent,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = ChatUIKitShowImageWidget(
       message: widget.message,
       onLongPressed: widget.onLongPressed,
-      onTap: widget.onTap,
+      onTap: widget.onTap ?? (context, message) => Navigator.of(context).pop(),
       isCombine: widget.isCombine,
     );
 
     content = Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
+      extendBodyBehindAppBar: true,
+      appBar: widget.enableAppBar ? ChatUIKitAppBar.model(appBarModel!) : null,
       body: Stack(
         children: [
           content,
         ],
       ),
     );
-
-    content = Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: widget.enableAppBar ? ChatUIKitAppBar.model(appBarModel!) : null,
-      body: content,
-    );
-
     return content;
   }
 }

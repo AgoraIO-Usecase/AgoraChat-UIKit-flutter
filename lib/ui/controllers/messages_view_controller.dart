@@ -23,7 +23,7 @@ class MessagesViewController extends ChangeNotifier
   /// 一次获取的消息数量，默认为 30
   final int pageSize;
 
-  final Message? Function(Message)? willSendHandler;
+  final Future<Message>? Function(Message willSendMessage)? willSendHandler;
 
   /// 消息列表
   final List<MessageModel> msgModelList = [];
@@ -369,7 +369,7 @@ class MessagesViewController extends ChangeNotifier
   }
 
   @override
-  void onSuccess(String msgId, Message msg) {
+  void onMessageSendSuccess(String msgId, Message msg) {
     final index = msgModelList.indexWhere((element) =>
         element.message.msgId == msgId && msg.status != element.message.status);
 
@@ -380,7 +380,7 @@ class MessagesViewController extends ChangeNotifier
   }
 
   @override
-  void onError(String msgId, Message msg, ChatError error) {
+  void onMessageSendError(String msgId, Message msg, ChatError error) {
     final index = msgModelList.indexWhere((element) =>
         element.message.msgId == msgId && msg.status != element.message.status);
     if (index != -1) {
@@ -580,13 +580,14 @@ class MessagesViewController extends ChangeNotifier
     } catch (e) {}
   }
 
-  Future<void> sendVoiceMessage(ChatUIKitRecordModel model) async {
+  Future<void> sendVoiceMessage(
+      String path, int duration, String? displayName) async {
     final message = Message.createVoiceSendMessage(
       targetId: profile.id,
       chatType: chatType,
-      filePath: model.path,
-      duration: model.duration,
-      displayName: model.displayName,
+      filePath: path,
+      duration: duration,
+      displayName: displayName,
     );
     sendMessage(message);
   }
@@ -676,8 +677,8 @@ class MessagesViewController extends ChangeNotifier
 
   Future<void> sendCardMessage(ChatUIKitProfile cardProfile) async {
     Map<String, String> param = {cardUserIdKey: cardProfile.id};
-    if (cardProfile.name != null) {
-      param[cardNicknameKey] = cardProfile.name!;
+    if (cardProfile.contactShowName.isNotEmpty) {
+      param[cardNicknameKey] = cardProfile.contactShowName;
     }
     if (cardProfile.avatarUrl != null) {
       param[cardAvatarKey] = cardProfile.avatarUrl!;
@@ -692,10 +693,10 @@ class MessagesViewController extends ChangeNotifier
     sendMessage(message);
   }
 
-  Future<void> sendMessage(Message message, {bool needPreview = false}) async {
+  Future<void> sendMessage(Message message) async {
     Message? willSendMsg = message;
     if (willSendHandler != null) {
-      willSendMsg = willSendHandler!(willSendMsg);
+      willSendMsg = await willSendHandler!(willSendMsg);
       if (willSendMsg == null) {
         return Future(() => null);
       }

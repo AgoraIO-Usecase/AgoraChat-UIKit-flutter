@@ -57,7 +57,7 @@ class _ShowVideoViewState extends State<ShowVideoView>
     super.dispose();
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title,
       centerWidget: widget.appBarModel?.centerWidget,
@@ -74,12 +74,14 @@ class _ShowVideoViewState extends State<ShowVideoView>
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor:
           widget.appBarModel?.backgroundColor ?? Colors.transparent,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = ChatUIKitShowVideoWidget(
       message: widget.message,
       onLongPressed: widget.onLongPressed,
@@ -88,6 +90,7 @@ class _ShowVideoViewState extends State<ShowVideoView>
     );
 
     content = Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: widget.enableAppBar ? ChatUIKitAppBar.model(appBarModel!) : null,

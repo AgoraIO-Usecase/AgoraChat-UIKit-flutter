@@ -9,39 +9,21 @@ double itemHeight = 64;
 double appBarHeight = 56;
 double bottomBarHeight = 16;
 
-class PinListItemModel {
-  final Message message;
-  final MessagePinInfo pinInfo;
-
-  const PinListItemModel({
-    required this.message,
-    required this.pinInfo,
-  });
-
-  PinListItemModel copyWith({
-    Message? message,
-    MessagePinInfo? pinInfo,
-    VoidCallback? onTap,
-    bool? isConfirming,
-  }) {
-    return PinListItemModel(
-      message: message ?? this.message,
-      pinInfo: pinInfo ?? this.pinInfo,
-    );
-  }
-
-  String get senderShowName {
-    return message.nickname ?? message.from!;
-  }
-
-  String get operatorShowName {
-    return ChatUIKitProvider.instance
-        .getProfile(ChatUIKitProfile.contact(id: pinInfo.operatorId))
-        .showName;
-  }
-}
-
+/// The pin message list view.
 class PinMessageListView extends StatefulWidget {
+  /// The pin message list view.
+  /// This widget is used to display the list of pinned messages.
+  ///
+  /// [pinMessagesController] The controller of the list.
+  ///
+  /// [maxHeight] The maximum height of the list.
+  ///
+  /// [duration] The duration of the animation.
+  ///
+  /// [barrierColor] The color of the barrier.
+  ///
+  /// [onTap] Callback when the list item is clicked.
+  ///
   const PinMessageListView({
     required this.pinMessagesController,
     this.maxHeight = 300,
@@ -215,6 +197,7 @@ class _PinMessageListViewState extends State<PinMessageListView>
                                     ),
                                     Text(
                                       '${items.length} ${ChatUIKitLocal.pinMessages.getString(context)}',
+                                      textScaler: TextScaler.noScaling,
                                       style: TextStyle(
                                         fontWeight:
                                             theme.font.bodyMedium.fontWeight,
@@ -334,6 +317,7 @@ class PinListItem extends StatelessWidget {
                 children: [
                   Expanded(
                     child: RichText(
+                      textScaler: TextScaler.noScaling,
                       text: TextSpan(
                         style: TextStyle(
                           fontWeight: theme.font.bodySmall.fontWeight,
@@ -380,6 +364,7 @@ class PinListItem extends StatelessWidget {
                           model.pinInfo.pinTime,
                           needTime: true,
                         ),
+                    textScaler: TextScaler.noScaling,
                     style: TextStyle(
                       fontWeight: theme.font.bodySmall.fontWeight,
                       fontSize: theme.font.bodySmall.fontSize,
@@ -399,6 +384,7 @@ class PinListItem extends StatelessWidget {
                         context,
                         needShowName: true,
                       ),
+                      textScaler: TextScaler.noScaling,
                       emojiSize: const Size(16, 16),
                       style: TextStyle(
                         fontWeight: theme.font.bodyMedium.fontWeight,
@@ -430,6 +416,7 @@ class PinListItem extends StatelessWidget {
                         if (isConfirming) {
                           return Text(
                             ChatUIKitLocal.unPinConfirmed.getString(context),
+                            textScaler: TextScaler.noScaling,
                             style: TextStyle(
                               fontWeight: theme.font.labelMedium.fontWeight,
                               fontSize: theme.font.labelMedium.fontSize,
@@ -441,6 +428,7 @@ class PinListItem extends StatelessWidget {
                         } else {
                           return Text(
                             ChatUIKitLocal.unPinInquire.getString(context),
+                            textScaler: TextScaler.noScaling,
                             style: TextStyle(
                               fontWeight: theme.font.labelMedium.fontWeight,
                               fontSize: theme.font.labelMedium.fontSize,

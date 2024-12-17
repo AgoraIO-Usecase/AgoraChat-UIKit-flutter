@@ -8,6 +8,7 @@ class ChatUIKitListViewMoreItem extends StatelessWidget
     this.trailing,
     this.enableMoreArrow = true,
     this.onTap,
+    this.height = 58,
     super.key,
   });
   final String title;
@@ -17,6 +18,8 @@ class ChatUIKitListViewMoreItem extends StatelessWidget
   final bool enableMoreArrow;
 
   final VoidCallback? onTap;
+
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -93,5 +96,5 @@ class ChatUIKitListViewMoreItem extends StatelessWidget
   }
 
   @override
-  double get itemHeight => ChatUIKitSettings.contactItemMoreListItemHeight;
+  double get itemHeight => height;
 }

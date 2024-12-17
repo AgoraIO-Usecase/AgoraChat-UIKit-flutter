@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 Future<T?> showChatUIKitBottomSheet<T>({
   required BuildContext context,
-  List<ChatUIKitBottomSheetAction<T>>? items,
+  List<ChatUIKitEventAction<T>>? items,
   Color? backgroundColor,
   Color? barrierColor,
   bool enableRadius = true,
@@ -54,29 +54,29 @@ Future<T?> showChatUIKitBottomSheet<T>({
   );
 }
 
-enum ChatUIKitBottomSheetItemType {
+enum ChatUIKitEventActionType {
   normal,
   destructive,
 }
 
-class ChatUIKitBottomSheetAction<T> {
-  ChatUIKitBottomSheetAction.normal({
+class ChatUIKitEventAction<T> {
+  ChatUIKitEventAction.normal({
     required this.label,
     this.actionType = ChatUIKitActionType.custom,
     this.style,
     this.onTap,
     this.icon,
-  }) : type = ChatUIKitBottomSheetItemType.normal;
+  }) : type = ChatUIKitEventActionType.normal;
 
-  ChatUIKitBottomSheetAction.destructive({
+  ChatUIKitEventAction.destructive({
     required this.label,
     this.actionType = ChatUIKitActionType.custom,
     this.style,
     this.onTap,
     this.icon,
-  }) : type = ChatUIKitBottomSheetItemType.destructive;
+  }) : type = ChatUIKitEventActionType.destructive;
 
-  ChatUIKitBottomSheetAction({
+  ChatUIKitEventAction({
     required this.type,
     required this.label,
     required this.actionType,
@@ -85,21 +85,21 @@ class ChatUIKitBottomSheetAction<T> {
     this.icon,
   });
 
-  final ChatUIKitBottomSheetItemType type;
+  final ChatUIKitEventActionType type;
   final String label;
   final TextStyle? style;
   final Widget? icon;
   final VoidCallback? onTap;
   final ChatUIKitActionType actionType;
 
-  ChatUIKitBottomSheetAction copyWith({
-    ChatUIKitBottomSheetItemType? type,
+  ChatUIKitEventAction copyWith({
+    ChatUIKitEventActionType? type,
     String? label,
     TextStyle? style,
     Widget? icon,
     T? Function()? onTap,
   }) {
-    return ChatUIKitBottomSheetAction(
+    return ChatUIKitEventAction(
       actionType: this.actionType,
       type: type ?? this.type,
       label: label ?? this.label,
@@ -123,7 +123,7 @@ class ChatUIKitBottomSheet<T> extends StatelessWidget {
     this.height,
     super.key,
   });
-  final List<ChatUIKitBottomSheetAction>? items;
+  final List<ChatUIKitEventAction>? items;
   final String? title;
   final Widget? titleWidget;
   final TextStyle? titleStyle;
@@ -145,7 +145,7 @@ class ChatUIKitBottomSheet<T> extends StatelessWidget {
 
   Widget _build(BuildContext context) {
     List<Widget> list = [];
-    final theme = ChatUIKitTheme.instance;
+    ChatUIKitTheme theme = ChatUIKitTheme.instance;
 
     TextStyle? normalStyle = TextStyle(
       fontWeight: theme.font.bodyLarge.fontWeight,
@@ -252,8 +252,7 @@ class ChatUIKitBottomSheet<T> extends StatelessWidget {
                             textScaler: TextScaler.noScaling,
                             overflow: TextOverflow.ellipsis,
                             style: element.style ??
-                                (element.type ==
-                                        ChatUIKitBottomSheetItemType.normal
+                                (element.type == ChatUIKitEventActionType.normal
                                     ? normalStyle
                                     : destructive),
                           ),
@@ -265,7 +264,7 @@ class ChatUIKitBottomSheet<T> extends StatelessWidget {
                       textScaler: TextScaler.noScaling,
                       overflow: TextOverflow.ellipsis,
                       style: element.style ??
-                          (element.type == ChatUIKitBottomSheetItemType.normal
+                          (element.type == ChatUIKitEventActionType.normal
                               ? normalStyle
                               : destructive),
                     ),

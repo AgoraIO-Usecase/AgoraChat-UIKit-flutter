@@ -3,6 +3,8 @@ import '../../chat_uikit.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
+/// The list view of the message.
+/// This widget is used to display the list of messages.
 class MessageListView extends StatefulWidget {
   const MessageListView({
     required this.controller,
@@ -30,29 +32,71 @@ class MessageListView extends StatefulWidget {
     super.key,
   });
 
+  /// The controller of the list.
   final MessagesViewController controller;
-  final MessageItemTapHandler? onItemTap;
-  final MessageItemTapHandler? onItemLongPress;
-  final MessageItemTapHandler? onItemDoubleTap;
+
+  /// Callback when the list item is clicked.
+  final MessageItemGlobalPositionTapHandler? onItemTap;
+
+  /// Callback when the list item is long pressed.
+  final MessageItemGlobalPositionTapHandler? onItemLongPress;
+
+  /// Callback when the list item is double clicked.
+  final MessageItemGlobalPositionTapHandler? onItemDoubleTap;
+
+  /// Callback when the avatar is clicked.
   final MessageItemTapHandler? onAvatarTap;
+
+  /// Callback when the avatar is long pressed.
   final MessageItemTapHandler? onAvatarLongPressed;
+
+  /// Callback when the nickname is clicked.
   final MessageItemTapHandler? onNicknameTap;
 
+  /// The builder of the list item.
   final MessageItemBuilder? itemBuilder;
+
+  /// The builder of the alert item.
   final MessageItemBuilder? alertItemBuilder;
+
+  /// The builder of need show avatar.
   final MessageItemShowHandler? showAvatar;
+
+  /// The builder of need show nickname.
   final MessageItemShowHandler? showNickname;
+
+  /// The builder of the quote item.
   final Widget Function(BuildContext context, QuoteModel model)? quoteBuilder;
+
+  /// Callback when the error button is clicked.
   final void Function(MessageModel model)? onErrorBtnTap;
+
+  /// The builder of the bubble.
   final MessageItemBubbleBuilder? bubbleBuilder;
+
+  /// The builder of the bubble content.
   final MessageItemBuilder? bubbleContentBuilder;
+
+  /// Whether to force the message to the left.
   final bool? forceLeft;
+
+  /// Callback when the reaction item is clicked.
   final void Function(MessageModel model, MessageReaction reaction)?
       onReactionItemTap;
+
+  /// Callback when the reaction info is clicked.
   final MessageItemTapHandler? onReactionInfoTap;
+
+  /// The builder of the reaction items.
   final MessageItemBuilder? reactionItemsBuilder;
+
+  /// Callback when the thread item is clicked.
   final MessageItemTapHandler? onThreadItemTap;
+
+  /// The builder of the thread item.
   final MessageItemBuilder? threadItemBuilder;
+
+  /// The scroll controller of the list.
   final AutoScrollController? scrollController;
 
   @override
@@ -134,13 +178,12 @@ class _MessageListViewState extends State<MessageListView>
       child: content,
     );
 
-    content = Scaffold(
-      key: ValueKey(controller.profile.id),
-      body: content,
-      backgroundColor: theme.color.isDark
-          ? theme.color.neutralColor1
-          : theme.color.neutralColor98,
-    );
+    // content = Scaffold(
+    //   key: ValueKey(controller.profile.id),
+    //   resizeToAvoidBottomInset: false,
+    //   body: content,
+    //   backgroundColor: Colors.red,
+    // );
 
     return content;
   }
@@ -186,20 +229,6 @@ class _MessageListViewState extends State<MessageListView>
 
     Widget? content = widget.itemBuilder?.call(context, model);
     content ??= ChatUIKitMessageListViewMessageItem(
-      enableSelected: controller.isMultiSelectMode
-          ? () {
-              if (controller.selectedMessages
-                  .map((e) => e.msgId)
-                  .toList()
-                  .contains(model.message.msgId)) {
-                controller.selectedMessages
-                    .removeWhere((e) => model.message.msgId == e.msgId);
-              } else {
-                controller.selectedMessages.add(model.message);
-              }
-              setState(() {});
-            }
-          : null,
       forceLeft: widget.forceLeft,
       bubbleContentBuilder: widget.bubbleContentBuilder,
       bubbleBuilder: widget.bubbleBuilder,
@@ -217,38 +246,81 @@ class _MessageListViewState extends State<MessageListView>
       },
       showNickname: widget.showNickname,
       onAvatarTap: () {
-        if (widget.onAvatarTap != null) {
-          widget.onAvatarTap?.call(context, model);
+        if (!controller.isMultiSelectMode) {
+          if (widget.onAvatarTap != null) {
+            widget.onAvatarTap?.call(context, model);
+          }
         }
       },
       onAvatarLongPressed: () {
-        widget.onAvatarLongPressed?.call(context, model);
+        if (!controller.isMultiSelectMode) {
+          widget.onAvatarLongPressed?.call(context, model);
+        }
       },
-      onBubbleDoubleTap: () {
-        widget.onItemDoubleTap?.call(context, model);
+      onBubbleDoubleTap: (rect) {
+        if (!controller.isMultiSelectMode) {
+          widget.onItemDoubleTap?.call(context, model, rect);
+        }
       },
-      onBubbleLongPressed: () {
-        widget.onItemLongPress?.call(context, model);
+      onBubbleLongPressed: (rect) {
+        if (!controller.isMultiSelectMode) {
+          widget.onItemLongPress?.call(context, model, rect);
+        }
       },
-      onBubbleTap: () {
-        widget.onItemTap?.call(context, model);
+      onBubbleTap: (rect) {
+        if (controller.isMultiSelectMode) {
+          if (controller.selectedMessages
+              .map((e) => e.msgId)
+              .toList()
+              .contains(model.message.msgId)) {
+            controller.selectedMessages
+                .removeWhere((e) => model.message.msgId == e.msgId);
+          } else {
+            controller.selectedMessages.add(model.message);
+          }
+          setState(() {});
+        } else {
+          widget.onItemTap?.call(context, model, rect);
+        }
       },
       onNicknameTap: () {
-        widget.onNicknameTap?.call(context, model);
+        if (!controller.isMultiSelectMode) {
+          widget.onNicknameTap?.call(context, model);
+        }
       },
       model: model,
       reactions: model.reactions,
       onReactionItemTap: (reaction) {
-        widget.onReactionItemTap?.call(model, reaction);
+        if (!controller.isMultiSelectMode) {
+          widget.onReactionItemTap?.call(model, reaction);
+        }
       },
       onReactionInfoTap: () {
-        widget.onReactionInfoTap?.call(context, model);
+        if (!controller.isMultiSelectMode) {
+          widget.onReactionInfoTap?.call(context, model);
+        }
       },
       reactionItemsBuilder: widget.reactionItemsBuilder,
       threadItemBuilder: widget.threadItemBuilder,
       onThreadItemTap: () {
-        widget.onThreadItemTap?.call(context, model);
+        if (!controller.isMultiSelectMode) {
+          widget.onThreadItemTap?.call(context, model);
+        }
       },
+      // onItemTap: () {
+      //   if (controller.isMultiSelectMode) {
+      //     if (controller.selectedMessages
+      //         .map((e) => e.msgId)
+      //         .toList()
+      //         .contains(model.message.msgId)) {
+      //       controller.selectedMessages
+      //           .removeWhere((e) => model.message.msgId == e.msgId);
+      //     } else {
+      //       controller.selectedMessages.add(model.message);
+      //     }
+      //     setState(() {});
+      //   }
+      // },
     );
 
     double zoom = 0.8;

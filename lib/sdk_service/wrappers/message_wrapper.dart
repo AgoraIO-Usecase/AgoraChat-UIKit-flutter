@@ -26,7 +26,7 @@ mixin MessageWrapper on ChatUIKitServiceBase {
   void onSuccess(String msgId, Message msg) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is MessageObserver) {
-        observer.onSuccess(msgId, msg);
+        observer.onMessageSendSuccess(msgId, msg);
       }
     }
   }
@@ -35,7 +35,7 @@ mixin MessageWrapper on ChatUIKitServiceBase {
   void onError(String msgId, Message msg, ChatError error) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is MessageObserver) {
-        observer.onError(msgId, msg, error);
+        observer.onMessageSendError(msgId, msg, error);
       }
     }
   }
@@ -44,7 +44,7 @@ mixin MessageWrapper on ChatUIKitServiceBase {
   void onProgress(String msgId, int progress) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is MessageObserver) {
-        observer.onProgress(msgId, progress);
+        observer.onMessageSendProgress(msgId, progress);
       }
     }
   }

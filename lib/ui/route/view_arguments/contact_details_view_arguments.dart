@@ -9,7 +9,7 @@ class ContactDetailsViewArguments implements ChatUIKitViewArguments {
     this.onMessageDidClear,
     this.appBarModel,
     this.viewObserver,
-    this.detailsListViewItemsBuilder,
+    this.itemsBuilder,
     this.attributes,
     this.onContactDeleted,
     this.enableAppBar = true,
@@ -20,7 +20,7 @@ class ContactDetailsViewArguments implements ChatUIKitViewArguments {
   final ChatUIKitDetailContentActionsBuilder? actionsBuilder;
   final VoidCallback? onMessageDidClear;
   final ChatUIKitAppBarModel? appBarModel;
-  final ChatUIKitDetailItemBuilder? detailsListViewItemsBuilder;
+  final ChatUIKitDetailItemBuilder? itemsBuilder;
   final VoidCallback? onContactDeleted;
   @override
   String? attributes;
@@ -37,7 +37,7 @@ class ContactDetailsViewArguments implements ChatUIKitViewArguments {
     ChatUIKitViewObserver? viewObserver,
     VoidCallback? onContactDeleted,
     String? attributes,
-    ChatUIKitDetailItemBuilder? detailsListViewItemsBuilder,
+    ChatUIKitDetailItemBuilder? itemsBuilder,
     ChatUIKitMoreActionsBuilder<bool>? moreActionsBuilder,
     bool? enableAppBar,
   }) {
@@ -48,8 +48,7 @@ class ContactDetailsViewArguments implements ChatUIKitViewArguments {
       appBarModel: appBarModel ?? this.appBarModel,
       viewObserver: viewObserver ?? this.viewObserver,
       attributes: attributes ?? this.attributes,
-      detailsListViewItemsBuilder:
-          detailsListViewItemsBuilder ?? this.detailsListViewItemsBuilder,
+      itemsBuilder: itemsBuilder ?? this.itemsBuilder,
       moreActionsBuilder: moreActionsBuilder ?? this.moreActionsBuilder,
       enableAppBar: enableAppBar ?? this.enableAppBar,
       onContactDeleted: onContactDeleted ?? this.onContactDeleted,

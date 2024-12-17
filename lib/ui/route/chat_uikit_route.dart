@@ -319,11 +319,4 @@ class ChatUIKitRoute {
       );
     }
   }
-
-  // static void addPushName(String pushName) {
-  //   pushedName.add(pushName);
-  //   chatPrint('pushedName: $pushedName');
-  // }
-
-  // static List<String> pushedName = [];
 }

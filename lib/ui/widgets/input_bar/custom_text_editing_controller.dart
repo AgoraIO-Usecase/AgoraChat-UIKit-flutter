@@ -1,4 +1,4 @@
-import '../../chat_uikit.dart';
+import '../../../chat_uikit.dart';
 import 'package:flutter/widgets.dart';
 
 class CustomTextEditingController extends TextEditingController {
@@ -17,7 +17,7 @@ class CustomTextEditingController extends TextEditingController {
   }) : super(text: text);
 
   void at(ChatUIKitProfile profile) {
-    String addText = '${profile.showName} '; // 在nickname后面添加空格
+    String addText = '${profile.contactShowName} '; // 在nickname后面添加空格
     int cursorOffset = value.selection.baseOffset + addText.length;
     final mention = MentionModel(profile);
     mentionList.add(mention);

@@ -357,6 +357,9 @@ mixin ChatUIKitLocal {
   static const unPinInquire = 'un_pin_confirm';
   static const unPinConfirmed = 'un_pin_confirmed';
 
+  static const floatingUnreadMessage = 'floating_unread_message';
+  static const deleteSomeMessages = 'delete_some_messages';
+
   static const Map<String, String> zh = {
     conversationsViewMenuAddContact: '添加联系人',
     conversationsViewMenuCreateGroup: '创建群组',
@@ -379,7 +382,7 @@ mixin ChatUIKitLocal {
     messageListLongPressMenuMulti: '多选',
     messageListLongPressMenuPin: '置顶',
     messageListLongPressMenuTranslate: '翻译',
-    messageListLongPressMenuTranslateOrigin: '显示原文',
+    messageListLongPressMenuTranslateOrigin: '隐藏译文',
     messageListLongPressMenuCreateThread: '创建话题',
     recordBarRecord: '点击录音',
     recordBarRecording: '正在录音',
@@ -584,6 +587,8 @@ mixin ChatUIKitLocal {
     byPined: ' 的消息',
     unPinInquire: '移除',
     unPinConfirmed: '确认移除',
+    floatingUnreadMessage: '条未读消息',
+    deleteSomeMessages: '删除%a条消息?',
   };
 
   static const Map<String, String> en = {
@@ -607,9 +612,9 @@ mixin ChatUIKitLocal {
     messageListLongPressMenuRecall: 'Recall',
     messageListLongPressMenuMulti: 'Select',
     messageListLongPressMenuPin: 'Pin',
-    messageListLongPressMenuTranslate: 'Translate',
-    messageListLongPressMenuTranslateOrigin: 'Hide Translation',
-    messageListLongPressMenuCreateThread: 'Create a Thread',
+    messageListLongPressMenuTranslate: 'Trans',
+    messageListLongPressMenuTranslateOrigin: 'Hide',
+    messageListLongPressMenuCreateThread: 'Thread',
     recordBarRecord: 'Tap to Record',
     recordBarRecording: 'Recording',
     recordBarPlay: 'Tap to Play',
@@ -822,6 +827,8 @@ mixin ChatUIKitLocal {
     byPined: " 's message",
     unPinInquire: 'Remove',
     unPinConfirmed: 'Confirm',
+    floatingUnreadMessage: 'unread messages',
+    deleteSomeMessages: 'Delete %a messages?',
   };
 }
 

@@ -6,7 +6,7 @@ class NewRequestsViewArguments implements ChatUIKitViewArguments {
     this.controller,
     this.appBarModel,
     this.onSearchTap,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onTap,
     this.onLongPress,
     this.searchBarHideText,
@@ -20,7 +20,7 @@ class NewRequestsViewArguments implements ChatUIKitViewArguments {
   final NewRequestListViewController? controller;
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<NewRequestItemModel> data)? onSearchTap;
-  final ChatUIKitNewRequestItemBuilder? listViewItemBuilder;
+  final ChatUIKitNewRequestItemBuilder? itemBuilder;
   final void Function(BuildContext context, NewRequestItemModel model)? onTap;
   final void Function(BuildContext context, NewRequestItemModel model)?
       onLongPress;
@@ -38,7 +38,7 @@ class NewRequestsViewArguments implements ChatUIKitViewArguments {
     NewRequestListViewController? controller,
     ChatUIKitAppBarModel? appBarModel,
     void Function(List<NewRequestItemModel> data)? onSearchTap,
-    ChatUIKitNewRequestItemBuilder? listViewItemBuilder,
+    ChatUIKitNewRequestItemBuilder? itemBuilder,
     void Function(BuildContext context, NewRequestItemModel model)? onTap,
     void Function(BuildContext context, NewRequestItemModel model)? onLongPress,
     String? searchBarHideText,
@@ -52,7 +52,7 @@ class NewRequestsViewArguments implements ChatUIKitViewArguments {
       controller: controller ?? this.controller,
       appBarModel: appBarModel ?? this.appBarModel,
       onSearchTap: onSearchTap ?? this.onSearchTap,
-      listViewItemBuilder: listViewItemBuilder ?? this.listViewItemBuilder,
+      itemBuilder: itemBuilder ?? this.itemBuilder,
       onTap: onTap ?? this.onTap,
       onLongPress: onLongPress ?? this.onLongPress,
       searchBarHideText: searchBarHideText ?? this.searchBarHideText,

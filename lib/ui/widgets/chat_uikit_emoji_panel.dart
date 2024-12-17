@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 typedef EmojiClick = void Function(String emoji);
 
-class ChatUIKitInputEmojiBar extends StatelessWidget {
+class ChatUIKitEmojiPanel extends StatelessWidget {
   final double maxCrossAxisExtent;
 
   final double mainAxisSpacing;
@@ -24,7 +24,7 @@ class ChatUIKitInputEmojiBar extends StatelessWidget {
 
   final Color? selectedColor;
 
-  const ChatUIKitInputEmojiBar({
+  const ChatUIKitEmojiPanel({
     super.key,
     this.maxCrossAxisExtent = 36,
     this.mainAxisSpacing = 19.0,

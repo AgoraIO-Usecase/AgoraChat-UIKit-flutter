@@ -1,4 +1,4 @@
-import 'chat_uikit.dart';
+import '../chat_uikit.dart';
 import 'package:flutter/widgets.dart';
 
 // 消息列表 item 构建器，需要返回一个 widget，如果返回 null 将会使用默认的 item。 返回后会用于列表显示。
@@ -9,6 +9,9 @@ typedef MessageItemBuilder = Widget? Function(
 typedef MessageItemTapHandler = bool? Function(
     BuildContext context, MessageModel model);
 
+typedef MessageItemGlobalPositionTapHandler = bool? Function(
+    BuildContext context, MessageModel model, Rect rect);
+
 typedef MessageReactionItemTapHandler = bool? Function(
     BuildContext context, MessageModel model, MessageReaction reaction);
 
@@ -16,18 +19,18 @@ typedef MessageReactionItemTapHandler = bool? Function(
 typedef MessageItemShowHandler = bool Function(MessageModel model);
 
 /// 消息列表 item 长按事件，会返回默认的列表，需要你调整后返回来，返回来的数据会用于 bottom sheet 显示。
-typedef MessagesViewItemLongPressHandler = List<ChatUIKitBottomSheetAction>?
+typedef MessagesViewItemLongPressPositionHandler = List<ChatUIKitEventAction>?
     Function(
   BuildContext context,
   MessageModel model,
-  List<ChatUIKitBottomSheetAction> defaultActions,
+  Rect rect,
+  List<ChatUIKitEventAction> defaultActions,
 );
 
 /// 消息页 输入框 更多按钮点击事件，会返回默认的列表，需要你调整后返回来，返回来的数据会用于 bottom sheet 显示。
-typedef MessagesViewMorePressHandler = List<ChatUIKitBottomSheetAction>?
-    Function(
+typedef MessagesViewMorePressHandler = List<ChatUIKitEventAction>? Function(
   BuildContext context,
-  List<ChatUIKitBottomSheetAction> defaultActions,
+  List<ChatUIKitEventAction> defaultActions,
 );
 
 /// 消息气泡构建器，需要返回一个 widget，如果返回 null 将会使用默认的气泡。 返回后会用于列表显示。其中 child 是气泡内部的内容。
@@ -67,11 +70,11 @@ typedef ContactListViewShowHandler = List<ContactItemModel> Function(
     List<ContactItemModel> contacts);
 
 /// 用户会话列表长按事件，会返回默认的列表，需要你调整后返回来，返回来的数据会用于 bottom sheet 显示。
-typedef ConversationsViewItemLongPressHandler
-    = List<ChatUIKitBottomSheetAction>? Function(
+typedef ConversationsViewItemLongPressHandler = List<ChatUIKitEventAction>?
+    Function(
   BuildContext context,
   ConversationItemModel model,
-  List<ChatUIKitBottomSheetAction> defaultActions,
+  List<ChatUIKitEventAction> defaultActions,
 );
 
 // 好友申请列表 item 构建器，需要返回一个 widget，如果返回 null 将会使用默认的 item。 返回后会用于列表显示。
@@ -79,8 +82,8 @@ typedef ChatUIKitNewRequestItemBuilder = Widget Function(
     BuildContext context, NewRequestItemModel model);
 
 /// appBar 点击更多按钮时会弹出 bottom sheet, 会返回默认的列表，需要你调整后返回来，返回来的数据会用于 bottom sheet 显示。
-typedef ChatUIKitMoreActionsBuilder<T> = List<ChatUIKitBottomSheetAction<T>>
-    Function(BuildContext context, List<ChatUIKitBottomSheetAction<T>> actions);
+typedef ChatUIKitMoreActionsBuilder<T> = List<ChatUIKitEventAction<T>> Function(
+    BuildContext context, List<ChatUIKitEventAction<T>> actions);
 
 /// 时间格式化
 typedef TimeFormatterHandler = String? Function(
@@ -107,3 +110,22 @@ typedef ChatUIKitDetailItemBuilder = List<ChatUIKitDetailsListViewItemModel>
   ChatUIKitProfile? profile,
   List<ChatUIKitDetailsListViewItemModel> defaultItems,
 );
+
+typedef ChatUIKitPositionWidgetHandler = void Function(Rect rect);
+
+enum ChatUIKitMessageLongPressMenuStyle {
+  popupMenu,
+  bottomSheet,
+}
+
+enum ChatUIKitMessageAttachmentMenuStyle {
+  menu,
+  bottomSheet,
+}
+
+enum ChatRecordEncodeType {
+  /// amrNb only support android
+  amrNb,
+  aac,
+  wav,
+}

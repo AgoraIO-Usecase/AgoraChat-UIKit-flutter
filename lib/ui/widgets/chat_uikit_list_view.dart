@@ -237,13 +237,6 @@ class _ChatUIKitListViewState extends State<ChatUIKitListView>
       child: content,
     );
 
-    content = Container(
-      color: theme.color.isDark
-          ? theme.color.neutralColor1
-          : theme.color.neutralColor98,
-      child: content,
-    );
-
     return content;
   }
 

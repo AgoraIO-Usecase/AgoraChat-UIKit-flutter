@@ -22,14 +22,12 @@ class MessageAlertAction {
 class ChatUIKitMessageListViewAlertItem extends StatelessWidget {
   const ChatUIKitMessageListViewAlertItem({
     required this.actions,
-    this.isCenter = true,
     this.textAlign = TextAlign.center,
     this.style,
     super.key,
   });
 
   final List<MessageAlertAction> actions;
-  final bool isCenter;
   final TextAlign textAlign;
   final TextStyle? style;
 

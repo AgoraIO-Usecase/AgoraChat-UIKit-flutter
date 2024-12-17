@@ -5,61 +5,81 @@ enum ChatUIKitProfileType {
 
   /// 群类型。
   group,
+
+  /// 自定义类型。
+  custom,
 }
 
-/// ChatUIKitProfile 类，用于存储联系人或群组的信息。
+/// ChatUIKitProfile class, used to store information about contacts or groups.
 class ChatUIKitProfile {
-  /// id ,如果是联系人，则为用户 id，如果是群组，则为群组 id。
+  /// id, if it is a contact, it is the user id, if it is a group, it is the group id.
   final String id;
 
   /// 名称,如果是联系人，则为用户名称，如果是群组，则为群组名称。
-  final String? name;
+  final String? showName;
 
   /// 头像地址, 如果是联系人，则为用户头像地址，如果是群组，则为群组头像地址。
   final String? avatarUrl;
 
-  /// profile 类型，用于区分是联系人还是群组，详见 [ChatUIKitProfileType]。
+  /// Profile type, used to distinguish between contacts and groups.
   final ChatUIKitProfileType type;
 
-  /// 扩展字段，用于存储一些额外的信息。
+  /// Extension field, used to store some additional information.
   final Map<String, String>? extension;
 
-  /// 时间戳，uikit 内部不使用。开发者可以使用该字段存储一些时间戳信息。
+  /// Timestamp, not used internally by uikit. Developers can use this field to store some timestamp information.
   final int timestamp;
 
+  /// Remark, if it is a contact, it is the remark information.
   final String? remark;
 
-  /// 用于展示的名称，如果 name 为空，则展示 id
-  String get showName {
+  /// The name used for display, if the name is empty, the id is displayed.
+  String get contactShowName {
     if (remark != null &&
         remark!.isNotEmpty &&
         type == ChatUIKitProfileType.contact) {
       return remark!;
     }
 
-    if (name != null && name!.isNotEmpty) {
-      return name!;
+    if (showName != null && showName!.isNotEmpty) {
+      return showName!;
     }
     return id;
   }
 
+  /// The nickname used for display, if the name is empty, the id is displayed.
   String get nickname {
-    if (name != null && name!.isNotEmpty) {
-      return name!;
+    if (showName != null && showName!.isNotEmpty) {
+      return showName!;
     }
     return id;
   }
 
+  /// Constructor, used to create a profile object.
+  /// [id] is the user id.
+  /// [showName] is the show name. when type is contact, it is the user nickname, when type is group, it is the group name.
+  /// [avatarUrl] is the user avatar address.
+  /// [type] is the profile type.
+  /// [extension] is the extension field.
+  /// [remark] is the user remark information.
+  /// [timestamp] is the timestamp.
   ChatUIKitProfile({
     required this.id,
     required this.type,
-    this.name,
+    this.showName,
     this.avatarUrl,
     this.extension,
     this.remark,
     this.timestamp = 0,
   });
 
+  /// Create a contact profile object.
+  /// [id] is the user id.
+  /// [nickname] is the user name.
+  /// [avatarUrl] is the user avatar address.
+  /// [remark] is the user remark information.
+  /// [extension] is the extension field.
+  /// [timestamp] is the timestamp.
   ChatUIKitProfile.contact({
     required String id,
     String? nickname,
@@ -69,7 +89,7 @@ class ChatUIKitProfile {
     int timestamp = 0,
   }) : this(
           id: id,
-          name: nickname,
+          showName: nickname,
           avatarUrl: avatarUrl,
           type: ChatUIKitProfileType.contact,
           extension: extension,
@@ -77,6 +97,12 @@ class ChatUIKitProfile {
           timestamp: timestamp,
         );
 
+  /// Create a group profile object.
+  /// [id] is the group id.
+  /// [groupName] is the group name.
+  /// [avatarUrl] is the group avatar address.
+  /// [extension] is the extension field.
+  /// [timestamp] is the timestamp.
   ChatUIKitProfile.group({
     required String id,
     String? groupName,
@@ -85,16 +111,46 @@ class ChatUIKitProfile {
     int timestamp = 0,
   }) : this(
           id: id,
-          name: groupName,
+          showName: groupName,
           avatarUrl: avatarUrl,
           type: ChatUIKitProfileType.group,
           extension: extension,
           timestamp: timestamp,
         );
 
-  /// 用于复制一个新的 profile 对象，如果传入的参数不为空，则使用传入的参数，否则使用当前 profile 的参数。
+  /// Create a custom profile object.
+  /// [id] is the id.
+  /// [showName] is the show name.
+  /// [avatarUrl] is the avatar address.
+  /// [remark] is the remark information.
+  /// [extension] is the extension field.
+  /// [timestamp] is the timestamp.
+  ChatUIKitProfile.custom({
+    required String id,
+    String? showName,
+    String? avatarUrl,
+    String? remark,
+    Map<String, String>? extension,
+    int timestamp = 0,
+  }) : this(
+          id: id,
+          showName: showName,
+          avatarUrl: avatarUrl,
+          type: ChatUIKitProfileType.custom,
+          extension: extension,
+          remark: remark,
+          timestamp: timestamp,
+        );
+
+  ///
+  /// Copy the current object and modify the specified attributes.
+  /// [showName] is the show name. when type is contact, it is the user nickname, when type is group, it is the group name.
+  /// [avatarUrl] is the user avatar address.
+  /// [extension] is the extension field.
+  /// [remark] is the user remark information.
+  /// [timestamp] is the timestamp.
   ChatUIKitProfile copyWith({
-    String? name,
+    String? showName,
     String? avatarUrl,
     Map<String, String>? extension,
     String? remark,
@@ -102,7 +158,7 @@ class ChatUIKitProfile {
   }) {
     return ChatUIKitProfile(
       id: id,
-      name: name ?? this.name,
+      showName: showName ?? this.showName,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       type: type,
       extension: extension ?? this.extension,
@@ -113,6 +169,6 @@ class ChatUIKitProfile {
 
   @override
   String toString() {
-    return "id: $id, nickname: $name, type: $type, avatar: $avatarUrl, remark: $remark \n";
+    return "id: $id, nickname: $showName, type: $type, avatar: $avatarUrl, remark: $remark \n";
   }
 }

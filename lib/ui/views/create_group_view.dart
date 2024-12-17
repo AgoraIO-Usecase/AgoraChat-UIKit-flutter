@@ -6,7 +6,7 @@ class CreateGroupView extends StatefulWidget {
   CreateGroupView.arguments(
     CreateGroupViewArguments arguments, {
     super.key,
-  })  : listViewItemBuilder = arguments.listViewItemBuilder,
+  })  : itemBuilder = arguments.itemBuilder,
         onSearchTap = arguments.onSearchTap,
         searchBarHideText = arguments.searchBarHideText,
         listViewBackground = arguments.listViewBackground,
@@ -21,7 +21,7 @@ class CreateGroupView extends StatefulWidget {
         attributes = arguments.attributes;
 
   const CreateGroupView({
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onSearchTap,
     this.createGroupInfo,
     this.searchBarHideText,
@@ -42,7 +42,7 @@ class CreateGroupView extends StatefulWidget {
   final void Function(List<ContactItemModel> data)? onSearchTap;
   final CreateGroupInfo? createGroupInfo;
 
-  final ChatUIKitContactItemBuilder? listViewItemBuilder;
+  final ChatUIKitContactItemBuilder? itemBuilder;
   final void Function(ContactItemModel model)? onItemTap;
   final void Function(ContactItemModel model)? onItemLongPress;
   final String? searchBarHideText;
@@ -79,7 +79,7 @@ class _CreateGroupViewState extends State<CreateGroupView>
     super.dispose();
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           ChatUIKitLocal.createGroupViewTitle.localString(context),
@@ -126,12 +126,14 @@ class _CreateGroupViewState extends State<CreateGroupView>
       centerTitle: widget.appBarModel?.centerTitle ?? false,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -140,7 +142,7 @@ class _CreateGroupViewState extends State<CreateGroupView>
       appBar: widget.enableAppBar ? ChatUIKitAppBar.model(appBarModel!) : null,
       body: ContactListView(
         controller: controller,
-        itemBuilder: widget.listViewItemBuilder ??
+        itemBuilder: widget.itemBuilder ??
             (context, model) {
               return InkWell(
                 highlightColor: Colors.transparent,
@@ -173,8 +175,8 @@ class _CreateGroupViewState extends State<CreateGroupView>
                 ),
               );
             },
-        searchHideText: widget.searchBarHideText,
-        background: widget.listViewBackground,
+        searchBarHideText: widget.searchBarHideText,
+        emptyBackground: widget.listViewBackground,
         onSearchTap: widget.onSearchTap ?? onSearchTap,
       ),
     );
@@ -248,7 +250,7 @@ class _CreateGroupViewState extends State<CreateGroupView>
                       ChatUIKitProfile.contact(
                           id: ChatUIKit.instance.currentUserId!)
                 ]
-          ].map((e) => e.showName).join(','),
+          ].map((e) => e.contactShowName).join(','),
       desc: info?.groupDesc ?? widget.createGroupInfo?.groupDesc,
       options: GroupOptions(
         maxCount: info?.maxCount ?? widget.createGroupInfo?.maxCount ?? 1000,

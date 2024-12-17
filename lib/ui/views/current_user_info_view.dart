@@ -66,7 +66,7 @@ class _CurrentUserInfoViewState extends State<CurrentUserInfoView>
     }
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title,
       centerWidget: widget.appBarModel?.centerWidget,
@@ -82,12 +82,14 @@ class _CurrentUserInfoViewState extends State<CurrentUserInfoView>
       centerTitle: widget.appBarModel?.centerTitle ?? true,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: theme.color.isDark
@@ -107,7 +109,7 @@ class _CurrentUserInfoViewState extends State<CurrentUserInfoView>
     );
 
     Widget name = Text(
-      ChatUIKitProvider.instance.currentUserProfile?.showName ??
+      ChatUIKitProvider.instance.currentUserProfile?.contactShowName ??
           ChatUIKit.instance.currentUserId ??
           '',
       overflow: TextOverflow.ellipsis,

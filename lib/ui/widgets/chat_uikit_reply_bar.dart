@@ -111,9 +111,9 @@ class _ChatUIKitReplyBarState extends State<ChatUIKitReplyBar>
               TextSpan(
                 text: () {
                   ChatUIKitProfile? profile = ChatUIKitProvider.instance
-                      .getProfileById(widget.messageModel.message.from!);
+                      .profilesCache[widget.messageModel.message.from!];
                   profile ??= widget.messageModel.message.fromProfile;
-                  return profile.showName;
+                  return profile.contactShowName;
                 }(),
                 style: TextStyle(
                   fontWeight: theme.font.labelSmall.fontWeight,

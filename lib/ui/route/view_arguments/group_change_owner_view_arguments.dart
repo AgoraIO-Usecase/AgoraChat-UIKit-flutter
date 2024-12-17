@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 class GroupChangeOwnerViewArguments implements ChatUIKitViewArguments {
   GroupChangeOwnerViewArguments({
     required this.groupId,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onSearchTap,
     this.searchBarHideText,
     this.listViewBackground,
@@ -24,7 +24,7 @@ class GroupChangeOwnerViewArguments implements ChatUIKitViewArguments {
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<ContactItemModel> data)? onSearchTap;
 
-  final ChatUIKitContactItemBuilder? listViewItemBuilder;
+  final ChatUIKitContactItemBuilder? itemBuilder;
   final void Function(BuildContext context, ContactItemModel model)? onItemTap;
   final void Function(BuildContext context, ContactItemModel model)?
       onItemLongPress;
@@ -43,7 +43,7 @@ class GroupChangeOwnerViewArguments implements ChatUIKitViewArguments {
     GroupMemberListViewController? controller,
     ChatUIKitAppBarModel? appBarModel,
     void Function(List<ContactItemModel> data)? onSearchTap,
-    ChatUIKitContactItemBuilder? listViewItemBuilder,
+    ChatUIKitContactItemBuilder? itemBuilder,
     void Function(BuildContext context, ContactItemModel model)? onItemTap,
     void Function(BuildContext context, ContactItemModel model)?
         onItemLongPress,
@@ -59,7 +59,7 @@ class GroupChangeOwnerViewArguments implements ChatUIKitViewArguments {
       controller: controller ?? this.controller,
       appBarModel: appBarModel ?? this.appBarModel,
       onSearchTap: onSearchTap ?? this.onSearchTap,
-      listViewItemBuilder: listViewItemBuilder ?? this.listViewItemBuilder,
+      itemBuilder: itemBuilder ?? this.itemBuilder,
       onItemTap: onItemTap ?? this.onItemTap,
       onItemLongPress: onItemLongPress ?? this.onItemLongPress,
       searchBarHideText: searchBarHideText ?? this.searchBarHideText,

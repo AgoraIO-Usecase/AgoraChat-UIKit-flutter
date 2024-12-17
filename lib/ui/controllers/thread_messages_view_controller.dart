@@ -255,13 +255,14 @@ class ThreadMessagesViewController
     } catch (e) {}
   }
 
-  Future<void> sendVoiceMessage(ChatUIKitRecordModel model) async {
+  Future<void> sendVoiceMessage(
+      String path, int duration, String? displayName) async {
     if (await createThreadIfNotExits() == false) return;
     final message = Message.createVoiceSendMessage(
       targetId: thread!.threadId,
-      filePath: model.path,
-      duration: model.duration,
-      displayName: model.displayName,
+      filePath: path,
+      duration: duration,
+      displayName: displayName,
     );
     sendMessage(message);
   }
@@ -350,8 +351,8 @@ class ThreadMessagesViewController
   Future<void> sendCardMessage(ChatUIKitProfile cardProfile) async {
     if (await createThreadIfNotExits() == false) return;
     Map<String, String> param = {cardUserIdKey: cardProfile.id};
-    if (cardProfile.name != null) {
-      param[cardNicknameKey] = cardProfile.name!;
+    if (cardProfile.contactShowName.isNotEmpty) {
+      param[cardNicknameKey] = cardProfile.contactShowName;
     }
     if (cardProfile.avatarUrl != null) {
       param[cardAvatarKey] = cardProfile.avatarUrl!;
@@ -489,7 +490,7 @@ class ThreadMessagesViewController
   }
 
   @override
-  void onSuccess(String msgId, Message msg) {
+  void onMessageSendSuccess(String msgId, Message msg) {
     final index = msgModelList.indexWhere((element) =>
         element.message.msgId == msgId && msg.status != element.message.status);
     if (index != -1) {
@@ -509,7 +510,7 @@ class ThreadMessagesViewController
   }
 
   @override
-  void onError(String msgId, Message msg, ChatError error) {
+  void onMessageSendError(String msgId, Message msg, ChatError error) {
     chatPrint(' thread message error: $error');
     final index = msgModelList.indexWhere((element) =>
         element.message.msgId == msgId && msg.status != element.message.status);

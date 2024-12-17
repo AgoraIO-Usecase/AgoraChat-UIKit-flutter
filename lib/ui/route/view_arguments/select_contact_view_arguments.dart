@@ -6,7 +6,7 @@ class SelectContactViewArguments implements ChatUIKitViewArguments {
     this.controller,
     this.appBarModel,
     this.onSearchTap,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onTap,
     this.onLongPress,
     this.searchBarHideText,
@@ -18,7 +18,7 @@ class SelectContactViewArguments implements ChatUIKitViewArguments {
   final ContactListViewController? controller;
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<ContactItemModel> data)? onSearchTap;
-  final ChatUIKitContactItemBuilder? listViewItemBuilder;
+  final ChatUIKitContactItemBuilder? itemBuilder;
   final void Function(BuildContext context, ContactItemModel model)? onTap;
   final void Function(BuildContext context, ContactItemModel model)?
       onLongPress;
@@ -36,7 +36,7 @@ class SelectContactViewArguments implements ChatUIKitViewArguments {
     ContactListViewController? controller,
     ChatUIKitAppBarModel? appBarModel,
     void Function(List<ContactItemModel> data)? onSearchTap,
-    ChatUIKitContactItemBuilder? listViewItemBuilder,
+    ChatUIKitContactItemBuilder? itemBuilder,
     void Function(BuildContext context, ContactItemModel model)? onTap,
     void Function(BuildContext context, ContactItemModel model)? onLongPress,
     String? searchBarHideText,
@@ -49,7 +49,7 @@ class SelectContactViewArguments implements ChatUIKitViewArguments {
       controller: controller ?? this.controller,
       appBarModel: appBarModel ?? this.appBarModel,
       onSearchTap: onSearchTap ?? this.onSearchTap,
-      listViewItemBuilder: listViewItemBuilder ?? this.listViewItemBuilder,
+      itemBuilder: itemBuilder ?? this.itemBuilder,
       onTap: onTap ?? this.onTap,
       onLongPress: onLongPress ?? this.onLongPress,
       searchBarHideText: searchBarHideText ?? this.searchBarHideText,

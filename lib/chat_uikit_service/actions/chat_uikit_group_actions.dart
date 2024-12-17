@@ -24,9 +24,9 @@ mixin ChatUIKitGroupActions on ChatSDKService {
     Group group = await super.createGroup(
       groupName: groupName,
       desc: desc,
+      options: options,
       inviteMembers: inviteMembers,
       inviteReason: inviteReason,
-      options: options,
     );
     await ChatUIKitInsertTools.insertCreateGroupMessage(group: group);
     return group;

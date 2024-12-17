@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class GroupMembersView extends StatefulWidget {
   GroupMembersView.arguments(GroupMembersViewArguments arguments, {Key? key})
       : profile = arguments.profile,
-        listViewItemBuilder = arguments.listViewItemBuilder,
+        itemBuilder = arguments.itemBuilder,
         onSearchTap = arguments.onSearchTap,
         searchBarHideText = arguments.searchBarHideText,
         listViewBackground = arguments.listViewBackground,
@@ -24,7 +24,7 @@ class GroupMembersView extends StatefulWidget {
 
   const GroupMembersView({
     required this.profile,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onSearchTap,
     this.searchBarHideText,
     this.listViewBackground,
@@ -55,7 +55,7 @@ class GroupMembersView extends StatefulWidget {
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<ContactItemModel> data)? onSearchTap;
 
-  final ChatUIKitContactItemBuilder? listViewItemBuilder;
+  final ChatUIKitContactItemBuilder? itemBuilder;
   final void Function(BuildContext context, ContactItemModel model)? onTap;
   final void Function(BuildContext context, ContactItemModel model)?
       onLongPress;
@@ -121,7 +121,7 @@ class _GroupMembersViewState extends State<GroupMembersView>
     } catch (e) {}
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title,
       centerWidget: widget.appBarModel?.centerWidget ??
@@ -206,12 +206,14 @@ class _GroupMembersViewState extends State<GroupMembersView>
       centerTitle: widget.appBarModel?.centerTitle ?? false,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -222,12 +224,12 @@ class _GroupMembersViewState extends State<GroupMembersView>
         child: GroupMemberListView(
           groupId: widget.profile.id,
           controller: controller,
-          itemBuilder: widget.listViewItemBuilder,
-          searchHideText: widget.searchBarHideText,
-          background: widget.listViewBackground,
+          onSelectLetterChanged: widget.onSelectLetterChanged,
           universalAlphabeticalLetter: widget.universalAlphabeticalLetter,
           sortAlphabetical: widget.sortAlphabetical,
-          onSelectLetterChanged: widget.onSelectLetterChanged,
+          itemBuilder: widget.itemBuilder,
+          searchBarHideText: widget.searchBarHideText,
+          emptyBackground: widget.listViewBackground,
           onTap: widget.onTap ??
               (context, model) {
                 onMemberTap(context, model.profile);

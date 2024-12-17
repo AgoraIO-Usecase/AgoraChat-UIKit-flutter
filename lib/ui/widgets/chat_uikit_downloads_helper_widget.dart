@@ -170,7 +170,7 @@ class _ChatUIKitDownloadsHelperWidgetState
   }
 
   @override
-  void onSuccess(String msgId, Message msg) {
+  void onMessageSendSuccess(String msgId, Message msg) {
     if (msgId == message!.msgId) {
       isDownloading.value = ChatUIKitMessageDownloadState.success;
       widget.onDownloadResult?.call(msg, msg.localPath, null);
@@ -178,7 +178,7 @@ class _ChatUIKitDownloadsHelperWidgetState
   }
 
   @override
-  void onError(String msgId, Message msg, ChatError error) {
+  void onMessageSendError(String msgId, Message msg, ChatError error) {
     if (msgId == message!.msgId) {
       isDownloading.value = ChatUIKitMessageDownloadState.error;
       widget.onDownloadResult?.call(msg, null, error);
@@ -186,7 +186,7 @@ class _ChatUIKitDownloadsHelperWidgetState
   }
 
   @override
-  void onProgress(String msgId, int progress) {
+  void onMessageSendProgress(String msgId, int progress) {
     if (msgId == message!.msgId) {
       this.progress.value = progress;
     }

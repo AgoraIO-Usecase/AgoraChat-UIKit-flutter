@@ -139,8 +139,7 @@ class ChatUIKitDialog<T> extends StatefulWidget {
   State<ChatUIKitDialog> createState() => _ChatUIKitDialogState();
 }
 
-class _ChatUIKitDialogState extends State<ChatUIKitDialog>
-    with ChatUIKitThemeMixin {
+class _ChatUIKitDialogState extends State<ChatUIKitDialog> {
   final List<TextEditingController> _controllers = [];
   int confirmCount = 0;
   @override
@@ -180,7 +179,7 @@ class _ChatUIKitDialogState extends State<ChatUIKitDialog>
   }
 
   @override
-  Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
+  Widget build(BuildContext context) {
     double width = min(MediaQuery.of(context).size.width,
             MediaQuery.of(context).size.height) -
         50;
@@ -209,6 +208,7 @@ class _ChatUIKitDialogState extends State<ChatUIKitDialog>
   }
 
   _buildContent(BuildContext context) {
+    final theme = ChatUIKitTheme.instance;
     final themeColor = theme.color;
     final themeFont = theme.font;
 
@@ -324,6 +324,7 @@ class _ChatUIKitDialogState extends State<ChatUIKitDialog>
 
   // 当有需要输入的内容时，会使用这个组件
   Widget inputContents() {
+    final theme = ChatUIKitTheme.instance;
     final themeColor = theme.color;
     final themeFont = theme.font;
 
@@ -388,6 +389,7 @@ class _ChatUIKitDialogState extends State<ChatUIKitDialog>
                     ? null
                     : Text(
                         '${_controllers[i].text.length}/${item.maxLength}',
+                        textScaler: TextScaler.noScaling,
                       ),
                 suffixIconConstraints: const BoxConstraints(),
                 suffixIcon: item.clearOnTap

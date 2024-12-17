@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 class ChatUIkitReactionWidget extends StatelessWidget {
   const ChatUIkitReactionWidget(
     this.reaction, {
-    required this.theme,
     this.highlightColor,
     this.bgColor,
     this.highlightTextColor,
@@ -12,7 +11,7 @@ class ChatUIkitReactionWidget extends StatelessWidget {
     super.key,
   });
   final MessageReaction reaction;
-  final ChatUIKitTheme theme;
+
   final Color? highlightColor;
   final Color? bgColor;
   final Color? highlightTextColor;
@@ -20,6 +19,7 @@ class ChatUIkitReactionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ChatUIKitTheme.instance;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
@@ -60,6 +60,7 @@ class ChatUIkitReactionWidget extends StatelessWidget {
               return Text(
                 reaction.reaction,
                 textAlign: TextAlign.right,
+                textScaler: TextScaler.noScaling,
               );
             }
           }(),
@@ -72,6 +73,7 @@ class ChatUIkitReactionWidget extends StatelessWidget {
             child: Center(
                 child: Text(
               "${reaction.userCount > 99 ? '99+' : reaction.userCount}",
+              textScaler: TextScaler.noScaling,
               style: TextStyle(
                 fontWeight: theme.font.labelMedium.fontWeight,
                 fontSize: theme.font.labelMedium.fontSize,

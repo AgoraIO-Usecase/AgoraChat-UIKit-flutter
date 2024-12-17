@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/widgets.dart';
-
 import '../chat_uikit_settings.dart';
 import 'package:html/parser.dart';
 
@@ -32,21 +30,19 @@ class ChatUIKitURLHelper {
 
   Future<ChatUIKitPreviewObj?> fetchPreview(String url,
       {String? messageId}) async {
-    ChatUIKitPreviewObj? preview;
     try {
+      final response = await fetchWithRedirects(url);
+      final document = parse(await response.transform(utf8.decoder).join());
       if (messageId != null) {
         _fetchingIds.add(messageId);
       }
-      final response = await fetchWithRedirects(url);
-      final document = parse(await response.transform(utf8.decoder).join());
-
       String? title = document.head?.querySelector('title')?.text;
       String? desc = document.head
           ?.querySelector("meta[name='description']")
           ?.attributes['content'];
       String? image = document.body?.querySelector('img')?.attributes['src'];
 
-      preview = title?.isNotEmpty == true
+      return title?.isNotEmpty == true
           ? ChatUIKitPreviewObj(
               title: title,
               description: desc ?? '',
@@ -55,13 +51,8 @@ class ChatUIKitURLHelper {
             )
           : null;
     } catch (e) {
-      debugPrint('Error fetching preview: $e');
-    } finally {
-      if (messageId != null) {
-        _fetchingIds.remove(messageId);
-      }
+      return null;
     }
-    return preview;
   }
 
   String? getUrlFromText(String text) {

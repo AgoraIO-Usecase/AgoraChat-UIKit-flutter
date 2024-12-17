@@ -12,7 +12,7 @@ enum ChatUIKitMessageListViewBubbleStyle {
   noArrow,
 }
 
-class ChatUIKitMessageBubbleWidget extends StatelessWidget {
+class ChatUIKitMessageBubbleWidget extends StatefulWidget {
   const ChatUIKitMessageBubbleWidget({
     required this.child,
     this.isLeft = true,
@@ -20,67 +20,80 @@ class ChatUIKitMessageBubbleWidget extends StatelessWidget {
     this.color,
     this.needSmallCorner = true,
     this.padding,
+    this.isVisible = true,
     super.key,
   });
-
   final Widget child;
   final bool isLeft;
   final Color? color;
   final bool needSmallCorner;
   final EdgeInsets? padding;
+  final bool isVisible;
 
   final ChatUIKitMessageListViewBubbleStyle? style;
+  @override
+  State<ChatUIKitMessageBubbleWidget> createState() =>
+      _ChatUIKitMessageBubbleWidgetState();
+}
+
+class _ChatUIKitMessageBubbleWidgetState
+    extends State<ChatUIKitMessageBubbleWidget> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    Widget content = widget.child;
+    if (widget.isVisible == false) {
+      return content;
+    }
     final theme = ChatUIKitTheme.instance;
-    Widget content = child;
 
-    if ((style ?? ChatUIKitSettings.messageBubbleStyle) ==
+    if ((widget.style ?? ChatUIKitSettings.messageBubbleStyle) ==
         ChatUIKitMessageListViewBubbleStyle.arrow) {
       content = CustomPaint(
           painter: _BubblePainter(
-            color: color ??
-                (!isLeft
+            color: widget.color ??
+                (!widget.isLeft
                     ? (theme.color.isDark
                         ? theme.color.primaryColor6
                         : theme.color.primaryColor5)
                     : (theme.color.isDark
                         ? theme.color.primaryColor2
                         : theme.color.primaryColor95)),
-            isLeft: isLeft,
+            isLeft: widget.isLeft,
           ),
           child: RepaintBoundary(
             child: Padding(
               padding: () {
-                if (padding != null) {
+                if (widget.padding != null) {
                   return EdgeInsets.only(
-                    left: padding!.left + (isLeft ? arrowWidth : 0),
-                    right: padding!.right + (!isLeft ? arrowWidth : 0),
-                    top: padding!.top,
-                    bottom: padding!.bottom,
+                    left:
+                        widget.padding!.left + (widget.isLeft ? arrowWidth : 0),
+                    right: widget.padding!.right +
+                        (!widget.isLeft ? arrowWidth : 0),
+                    top: widget.padding!.top,
+                    bottom: widget.padding!.bottom,
                   );
                 } else {
                   return EdgeInsets.only(
-                    left: (isLeft ? arrowWidth : 0) + 12,
-                    right: (!isLeft ? arrowWidth : 0) + 12,
+                    left: (widget.isLeft ? arrowWidth : 0) + 12,
+                    right: (!widget.isLeft ? arrowWidth : 0) + 12,
                     top: 7,
                     bottom: 7,
                   );
                 }
               }(),
-              child: child,
+              child: widget.child,
             ),
-          )
-          // child: RepaintBoundary(
-          //   child: child,
-          // ),
-          );
+          ));
     } else {
       content = Container(
         decoration: BoxDecoration(
-          color: color ??
-              (!isLeft
+          color: widget.color ??
+              (!widget.isLeft
                   ? (theme.color.isDark
                       ? theme.color.primaryColor6
                       : theme.color.primaryColor5)
@@ -88,22 +101,23 @@ class ChatUIKitMessageBubbleWidget extends StatelessWidget {
                       ? theme.color.primaryColor2
                       : theme.color.primaryColor95)),
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(isLeft ? (!needSmallCorner ? 4 : 12) : 16),
-            topRight:
-                Radius.circular(!isLeft ? (!needSmallCorner ? 4 : 12) : 16),
-            bottomLeft: Radius.circular(isLeft ? 4 : 16),
-            bottomRight: Radius.circular(!isLeft ? 4 : 16),
+            topLeft: Radius.circular(
+                widget.isLeft ? (!widget.needSmallCorner ? 4 : 12) : 16),
+            topRight: Radius.circular(
+                !widget.isLeft ? (!widget.needSmallCorner ? 4 : 12) : 16),
+            bottomLeft: Radius.circular(widget.isLeft ? 4 : 16),
+            bottomRight: Radius.circular(!widget.isLeft ? 4 : 16),
           ),
         ),
         child: Padding(
-          padding: padding ??
+          padding: widget.padding ??
               const EdgeInsets.only(
                 left: 12,
                 right: 12,
                 top: 7,
                 bottom: 7,
               ),
-          child: child,
+          child: widget.child,
         ),
       );
     }

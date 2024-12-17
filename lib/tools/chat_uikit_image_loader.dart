@@ -142,7 +142,7 @@ class ChatUIKitImageLoader {
   }
 
   static Widget moreKeyboard(
-      {double width = 28, double height = 30, Color? color}) {
+      {double width = 30, double height = 30, Color? color}) {
     return Image(
       color: color,
       width: width,

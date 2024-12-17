@@ -16,22 +16,20 @@ The following figure shows the workflow of how clients send and receive peer-to-
 
 ## Prerequisites
 
+- sdk: '>=3.0.0 <4.0.0'
+- flutter: '>=3.19.0'
+- 
 For the iOS platform, your development environment must meet the following requirements:
 
-- Flutter 2.10 or later
-- Dart 2.16 or later
 - macOS
 - Xcode 12.4 or later with Xcode Command Line Tools
 - CocoaPods
-- An iOS simulator or a real iOS device running iOS 10.0 or later
+- An iOS simulator or a real iOS device running iOS 11.0 or later
 
 For the Android platform, your development environment must meet the following requirements:
 
-- Flutter 2.10 or later
-- Dart 2.16 or later
-- macOS or Windows 
 - Android Studio 4.0 or later with JDK 1.8 or later
-- An Android simulator or a real Android device running Android SDK API level 21 or later
+- An Android simulator or a real Android device running Android SDK API level 23 or later
 
 <div class="alert note">You need to run the <code>flutter doctor</code> command to check whether both the development environment and the deployment environment are correct.</div>
 
@@ -96,7 +94,7 @@ flutter create uikit_quick_start --platforms=android,ios
 ```gradle
 android {
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 23
     }
 }
 ```

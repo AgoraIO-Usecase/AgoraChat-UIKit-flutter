@@ -2,6 +2,8 @@ import '../../chat_uikit.dart';
 
 import 'package:flutter/material.dart';
 
+/// The new requests list view.
+/// This widget is used to display the list of new requests.
 class NewRequestsListView extends StatefulWidget {
   const NewRequestsListView({
     this.controller,
@@ -9,8 +11,8 @@ class NewRequestsListView extends StatefulWidget {
     this.beforeWidgets,
     this.afterWidgets,
     this.onSearchTap,
-    this.searchHideText,
-    this.background,
+    this.searchBarHideText,
+    this.emptyBackground,
     this.errorMessage,
     this.reloadMessage,
     this.onTap,
@@ -18,17 +20,38 @@ class NewRequestsListView extends StatefulWidget {
     super.key,
   });
 
+  /// Callback when the search bar is clicked, the parameter is the search data source list.
   final void Function(List<NewRequestItemModel> data)? onSearchTap;
+
+  /// The widget list displayed before the list.
   final List<Widget>? beforeWidgets;
+
+  /// The widget list displayed after the list.
   final List<Widget>? afterWidgets;
+
+  /// The builder of the list item.
   final ChatUIKitNewRequestItemBuilder? itemBuilder;
+
+  /// Callback when the list item is clicked.
   final void Function(BuildContext context, NewRequestItemModel model)? onTap;
+
+  /// Callback when the list item is long pressed.
   final void Function(BuildContext context, NewRequestItemModel model)?
       onLongPress;
-  final String? searchHideText;
-  final Widget? background;
+
+  /// The text displayed when the search bar is hidden.
+  final String? searchBarHideText;
+
+  /// The widget displayed when the list is empty.
+  final Widget? emptyBackground;
+
+  /// The error message displayed when the list fails to load.
   final String? errorMessage;
+
+  /// The message displayed when the list fails to load.
   final String? reloadMessage;
+
+  /// The controller of the list.
   final NewRequestListViewController? controller;
 
   @override
@@ -87,7 +110,7 @@ class _NewRequestsListViewState extends State<NewRequestsListView>
           enableSearchBar: false,
           errorMessage: widget.errorMessage,
           reloadMessage: widget.reloadMessage,
-          background: widget.background,
+          background: widget.emptyBackground,
           itemBuilder: (context, model) {
             if (model is NewRequestItemModel) {
               Widget? item;

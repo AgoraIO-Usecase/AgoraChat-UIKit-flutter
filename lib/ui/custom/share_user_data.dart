@@ -15,7 +15,7 @@ class ShareUserData extends InheritedWidget {
   }
 
   String? showName(String userId) {
-    return data[userId]?.showName;
+    return data[userId]?.contactShowName;
   }
 
   String? showAvatar(String userId) {

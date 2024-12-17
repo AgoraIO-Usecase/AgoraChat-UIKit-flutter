@@ -62,6 +62,7 @@ class _ChatUIKitMessageThreadWidgetState
               child: ChatUIKitEmojiRichText(
                 text: threadName,
                 overflow: TextOverflow.ellipsis,
+                textScaler: TextScaler.noScaling,
                 maxLines: 1,
                 style: widget.titleStyle ??
                     TextStyle(
@@ -76,6 +77,7 @@ class _ChatUIKitMessageThreadWidgetState
             if (widget.enableMessageCount)
               RichText(
                 maxLines: 1,
+                textScaler: TextScaler.noScaling,
                 text: TextSpan(
                   children: [
                     TextSpan(
@@ -114,6 +116,7 @@ class _ChatUIKitMessageThreadWidgetState
             subtitle,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            textScaler: TextScaler.noScaling,
             style: widget.subtitleStyle ??
                 TextStyle(
                   fontWeight: theme.font.bodyMedium.fontWeight,

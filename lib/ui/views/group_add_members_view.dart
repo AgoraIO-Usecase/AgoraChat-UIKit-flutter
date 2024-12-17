@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class GroupAddMembersView extends StatefulWidget {
   GroupAddMembersView.arguments(GroupAddMembersViewArguments arguments,
       {super.key})
-      : listViewItemBuilder = arguments.listViewItemBuilder,
+      : itemBuilder = arguments.itemBuilder,
         onSearchTap = arguments.onSearchTap,
         searchBarHideText = arguments.searchBarHideText,
         listViewBackground = arguments.listViewBackground,
@@ -21,7 +21,7 @@ class GroupAddMembersView extends StatefulWidget {
 
   const GroupAddMembersView({
     required this.groupId,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onSearchTap,
     this.searchBarHideText,
     this.listViewBackground,
@@ -41,7 +41,7 @@ class GroupAddMembersView extends StatefulWidget {
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<ContactItemModel> data)? onSearchTap;
   final List<ChatUIKitProfile>? inGroupMembers;
-  final ChatUIKitContactItemBuilder? listViewItemBuilder;
+  final ChatUIKitContactItemBuilder? itemBuilder;
   final void Function(BuildContext context, ContactItemModel model)? onTap;
   final void Function(BuildContext context, ContactItemModel model)?
       onLongPress;
@@ -77,7 +77,7 @@ class _GroupAddMembersViewState extends State<GroupAddMembersView>
     super.dispose();
   }
 
-  void updateAppBarModel() {
+  void updateAppBarModel(ChatUIKitTheme theme) {
     appBarModel = ChatUIKitAppBarModel(
       title: widget.appBarModel?.title ??
           ChatUIKitLocal.groupAddMembersViewTitle.localString(context),
@@ -122,12 +122,14 @@ class _GroupAddMembersViewState extends State<GroupAddMembersView>
       centerTitle: widget.appBarModel?.centerTitle ?? false,
       systemOverlayStyle: widget.appBarModel?.systemOverlayStyle,
       backgroundColor: widget.appBarModel?.backgroundColor,
+      bottomLine: widget.appBarModel?.bottomLine,
+      bottomLineColor: widget.appBarModel?.bottomLineColor,
     );
   }
 
   @override
   Widget themeBuilder(BuildContext context, ChatUIKitTheme theme) {
-    updateAppBarModel();
+    updateAppBarModel(theme);
     Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.color.isDark
@@ -136,7 +138,7 @@ class _GroupAddMembersViewState extends State<GroupAddMembersView>
       appBar: widget.enableAppBar ? ChatUIKitAppBar.model(appBarModel!) : null,
       body: ContactListView(
         controller: controller,
-        itemBuilder: widget.listViewItemBuilder ??
+        itemBuilder: widget.itemBuilder ??
             (context, model) {
               return InkWell(
                 highlightColor: Colors.transparent,
@@ -198,8 +200,8 @@ class _GroupAddMembersViewState extends State<GroupAddMembersView>
                 ),
               );
             },
-        searchHideText: widget.searchBarHideText,
-        background: widget.listViewBackground,
+        searchBarHideText: widget.searchBarHideText,
+        emptyBackground: widget.listViewBackground,
         onSearchTap: widget.onSearchTap ?? onSearchTap,
       ),
     );

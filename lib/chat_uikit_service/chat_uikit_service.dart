@@ -7,7 +7,6 @@ import 'actions/chat_uikit_notification_actions.dart';
 
 import 'observers/chat_uikit_chat_observers.dart';
 import 'observers/chat_uikit_contact_observers.dart';
-
 import 'observers/chat_uikit_group_observers.dart';
 import 'observers/chat_uikit_multi_observers.dart';
 import 'observers/chat_uikit_thread_observers.dart';

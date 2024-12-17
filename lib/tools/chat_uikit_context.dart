@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'chat_uikit.dart';
-import 'universal/inner_headers.dart';
+import '../chat_uikit.dart';
+import '../universal/inner_headers.dart';
 
 const String convLoadFinishedKey =
     'EaseChatUIKit_conversation_load_more_finished';
@@ -113,27 +113,23 @@ extension Request on ChatUIKitContext {
     }
   }
 
+  // 删除指定id的请求
   void removeRequests(List<String> userIds, [isGroup = false]) {
     List requestList = cachedMap[requestsKey] ?? [];
     bool needUpdate = false;
     for (var userId in userIds) {
       int index = requestList.indexWhere((element) =>
           element['id'] == userId && element['isGroup'] == isGroup);
-      bool hasUnread = false;
+
       if (index != -1) {
         needUpdate = true;
-        Map ret = requestList.removeAt(index);
-        if (ret.containsKey('isRead') && !ret['isRead']) {
-          hasUnread = true;
-        }
-      }
-      if (hasUnread) {
-        ChatUIKit.instance.onFriendRequestCountChanged(newRequestCount());
+        requestList.removeAt(index);
       }
     }
     if (needUpdate) {
       cachedMap[requestsKey] = requestList;
       _updateStore();
+      ChatUIKit.instance.onFriendRequestCountChanged(newRequestCount());
     }
   }
 }

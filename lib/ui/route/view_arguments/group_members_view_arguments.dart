@@ -7,7 +7,7 @@ class GroupMembersViewArguments implements ChatUIKitViewArguments {
     this.controller,
     this.appBarModel,
     this.onSearchTap,
-    this.listViewItemBuilder,
+    this.itemBuilder,
     this.onTap,
     this.onLongPress,
     this.searchBarHideText,
@@ -26,7 +26,7 @@ class GroupMembersViewArguments implements ChatUIKitViewArguments {
   final ChatUIKitAppBarModel? appBarModel;
   final void Function(List<ContactItemModel> data)? onSearchTap;
 
-  final ChatUIKitContactItemBuilder? listViewItemBuilder;
+  final ChatUIKitContactItemBuilder? itemBuilder;
   final void Function(BuildContext context, ContactItemModel model)? onTap;
   final void Function(BuildContext context, ContactItemModel model)?
       onLongPress;
@@ -53,7 +53,7 @@ class GroupMembersViewArguments implements ChatUIKitViewArguments {
     GroupMemberListViewController? controller,
     ChatUIKitAppBarModel? appBarModel,
     void Function(List<ContactItemModel> data)? onSearchTap,
-    ChatUIKitContactItemBuilder? listViewItemBuilder,
+    ChatUIKitContactItemBuilder? itemBuilder,
     void Function(BuildContext context, ContactItemModel model)? onTap,
     void Function(BuildContext context, ContactItemModel model)? onLongPress,
     String? searchBarHideText,
@@ -72,11 +72,11 @@ class GroupMembersViewArguments implements ChatUIKitViewArguments {
       controller: controller ?? this.controller,
       appBarModel: appBarModel ?? this.appBarModel,
       onSearchTap: onSearchTap ?? this.onSearchTap,
-      listViewItemBuilder: listViewItemBuilder ?? this.listViewItemBuilder,
+      itemBuilder: itemBuilder ?? this.itemBuilder,
       onTap: onTap ?? this.onTap,
       onLongPress: onLongPress ?? this.onLongPress,
       searchBarHideText: searchBarHideText ?? this.searchBarHideText,
-    listViewBackground: listViewBackground ?? this.listViewBackground,
+      listViewBackground: listViewBackground ?? this.listViewBackground,
       loadErrorMessage: loadErrorMessage ?? this.loadErrorMessage,
       enableAppBar: enableAppBar ?? this.enableAppBar,
       viewObserver: viewObserver ?? this.viewObserver,
