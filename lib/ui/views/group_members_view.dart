@@ -173,28 +173,36 @@ class _GroupMembersViewState extends State<GroupMembersView>
               onTap: (context) {
                 pushToAddMember();
               },
-              child: Icon(
-                Icons.person_add_alt_1_outlined,
-                color: theme.color.isDark
-                    ? theme.color.neutralColor9
-                    : theme.color.neutralColor3,
-                size: 24,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Icon(
+                  Icons.person_add_alt_1_outlined,
+                  color: theme.color.isDark
+                      ? theme.color.neutralColor9
+                      : theme.color.neutralColor3,
+                  size: 24,
+                ),
               ),
             ),
           );
-          actions.add(ChatUIKitAppBarAction(
-            actionType: ChatUIKitActionType.remove,
-            onTap: (context) {
-              pushToRemoveMember();
-            },
-            child: Icon(
-              Icons.person_remove_alt_1_outlined,
-              color: theme.color.isDark
-                  ? theme.color.neutralColor9
-                  : theme.color.neutralColor3,
-              size: 24,
+          actions.add(
+            ChatUIKitAppBarAction(
+              actionType: ChatUIKitActionType.remove,
+              onTap: (context) {
+                pushToRemoveMember();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Icon(
+                  Icons.person_remove_alt_1_outlined,
+                  color: theme.color.isDark
+                      ? theme.color.neutralColor9
+                      : theme.color.neutralColor3,
+                  size: 24,
+                ),
+              ),
             ),
-          ));
+          );
           actions = widget.appBarModel?.trailingActionsBuilder
                   ?.call(context, actions) ??
               actions;

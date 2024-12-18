@@ -137,11 +137,6 @@ class _MyPageState extends State<MyPage>
           enableArrow: true,
           onTap: generalSettings,
         ),
-        ListItem(
-          imageWidget: Image.asset('assets/images/notifications.png'),
-          title: DemoLocalizations.notification.localString(context),
-          onTap: nonsupport,
-        ),
         const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),

@@ -222,67 +222,63 @@ class _ChatUIKitAppBarState extends State<ChatUIKitAppBar>
 
     middle = widget.centerWidget ?? middle;
 
-    List<Widget> leadingWidgets = [];
-    if (widget.showBackButton) {
-      leadingWidgets.add(
-        InkWell(
-          highlightColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          onTap: () {
-            if (widget.onBackButtonPressed != null) {
-              widget.onBackButtonPressed?.call();
-            } else {
-              Navigator.maybePop(context);
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 12,
-              top: 12,
-              bottom: 12,
-              right: 2,
-            ),
-            child: SizedBox(
-              width: 24,
-              height: 24,
-              child: Icon(
-                Icons.arrow_back_ios,
-                size: 16,
-                color: theme.color.isDark
-                    ? theme.color.neutralColor95
-                    : theme.color.neutralColor3,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
     List<ChatUIKitAppBarAction>? leadingActions = widget.leadingActions;
+    Widget? leading;
     if (leadingActions?.isNotEmpty == true) {
-      leadingWidgets.addAll(
-        leadingActions!.map((e) {
+      leading = Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: leadingActions!.map((e) {
           return InkWell(
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
             onTap: () => e.onTap?.call(context),
-            child: Container(
-              padding: EdgeInsets.only(
-                  left: widget.showBackButton ? 0 : 16, right: 8),
-              child: e.child,
-            ),
+            child: e.child,
           );
         }).toList(),
       );
-    }
-    Widget? leading;
-    if (leadingWidgets.isNotEmpty) {
-      leading = Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: leadingWidgets,
+      leading = Padding(
+        padding: const EdgeInsets.only(right: 8),
+        child: leading,
       );
     }
+    Widget? backButton;
+    if (widget.showBackButton) {
+      backButton = InkWell(
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        onTap: () {
+          if (widget.onBackButtonPressed != null) {
+            widget.onBackButtonPressed?.call();
+          } else {
+            Navigator.maybePop(context);
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.only(left: 8),
+          margin: const EdgeInsets.only(left: 12, right: 5),
+          // color: Colors.red,
+          width: 20,
+          height: 40,
+          child: Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: theme.color.isDark
+                ? theme.color.neutralColor95
+                : theme.color.neutralColor3,
+          ),
+        ),
+      );
+    }
+    leading = Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        backButton ?? const SizedBox(),
+        SizedBox(width: backButton == null ? 10 : 8),
+        leading ?? const SizedBox()
+      ],
+    );
 
     List<ChatUIKitAppBarAction>? trailingActions = widget.trailingActions;
     Widget? trailing;
@@ -295,10 +291,7 @@ class _ChatUIKitAppBarState extends State<ChatUIKitAppBar>
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
             onTap: () => e.onTap?.call(context),
-            child: Container(
-              padding: const EdgeInsets.only(left: 8),
-              child: e.child,
-            ),
+            child: e.child,
           );
         }).toList(),
       );

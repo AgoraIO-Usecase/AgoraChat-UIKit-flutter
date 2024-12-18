@@ -371,10 +371,13 @@ class _MessagesViewState extends State<MessagesView>
                   controller.conversationType == ConversationType.GroupChat)
                 ChatUIKitAppBarAction(
                   actionType: ChatUIKitActionType.pinMessage,
-                  child: ChatUIKitImageLoader.pinMessage(
-                    color: theme.color.isDark
-                        ? theme.color.neutralColor9
-                        : theme.color.neutralColor3,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: ChatUIKitImageLoader.pinMessage(
+                      color: theme.color.isDark
+                          ? theme.color.neutralColor9
+                          : theme.color.neutralColor3,
+                    ),
                   ),
                   onTap: (context) {
                     showPinMsgsView();
@@ -388,10 +391,13 @@ class _MessagesViewState extends State<MessagesView>
                   onTap: (context) {
                     pushThread();
                   },
-                  child: ChatUIKitImageLoader.messageLongPressThread(
-                    color: theme.color.isDark
-                        ? theme.color.neutralColor9
-                        : theme.color.neutralColor3,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: ChatUIKitImageLoader.messageLongPressThread(
+                      color: theme.color.isDark
+                          ? theme.color.neutralColor9
+                          : theme.color.neutralColor3,
+                    ),
                   ),
                 ),
               if (controller.isMultiSelectMode)

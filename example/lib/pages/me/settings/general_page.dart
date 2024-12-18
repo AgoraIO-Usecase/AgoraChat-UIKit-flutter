@@ -53,12 +53,10 @@ class _GeneralPageState extends State<GeneralPage> with ChatUIKitThemeMixin {
         ListItem(
           title: DemoLocalizations.darkMode.localString(context),
           trailingWidget: CupertinoSwitch(
-              value: !AppSettingsNotification.isLight,
+              value: ChatUIKitTheme.instance.color.isDark,
               onChanged: (value) {
-                AppSettingsNotification.isLight =
-                    !AppSettingsNotification.isLight;
-                AppSettingsNotification().dispatch(context);
-                setState(() {});
+                ChatUIKitTheme.instance.setColor(
+                    value ? ChatUIKitColor.dark() : ChatUIKitColor.light());
               }),
         ),
         ListItem(
