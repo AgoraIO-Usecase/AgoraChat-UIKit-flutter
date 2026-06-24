@@ -57,8 +57,9 @@ class _ChatUIKitShowImageWidgetState extends State<ChatUIKitShowImageWidget>
       } else {
         Future.delayed(const Duration(milliseconds: 100)).then((value) {
           if (widget.isCombine) {
-            ChatUIKit.instance
-                .downloadMessageAttachmentInCombine(message: message!);
+            ChatUIKit.instance.downloadMessageAttachmentInCombine(
+              message: message!,
+            );
           } else {
             ChatUIKit.instance.downloadAttachment(message: message!);
           }
@@ -122,33 +123,30 @@ class _ChatUIKitShowImageWidgetState extends State<ChatUIKitShowImageWidget>
 
   @override
   Widget build(BuildContext context) {
-    Widget? content;
+    ImageProvider? provider;
     if (localPath?.isNotEmpty == true) {
-      content = Image.file(File(localPath!));
+      provider = FileImage(File(localPath!));
+    } else if (localThumbPath?.isNotEmpty == true) {
+      provider = FileImage(File(localThumbPath!));
+    } else if (remoteThumbPath?.isNotEmpty == true) {
+      provider = NetworkImage(remoteThumbPath!);
     }
 
-    if (content == null && localThumbPath?.isNotEmpty == true) {
-      content = Image.file(
-        File(localThumbPath!),
-        gaplessPlayback: true,
-      );
-    }
-
-    if (content == null && remoteThumbPath?.isNotEmpty == true) {
-      content = Image.network(
-        remoteThumbPath!,
+    Widget content;
+    if (provider != null) {
+      content = Image(
+        image: provider,
+        fit: BoxFit.contain,
         gaplessPlayback: true,
         errorBuilder: (context, error, stackTrace) {
           return const Icon(Icons.broken_image, size: 58, color: Colors.white);
         },
       );
+    } else {
+      content = const Icon(Icons.broken_image, size: 58, color: Colors.white);
     }
 
-    content ??= const Icon(Icons.broken_image, size: 58, color: Colors.white);
-
-    content = InteractiveViewer(
-      child: content,
-    );
+    content = InteractiveViewer(child: content);
     content = SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
