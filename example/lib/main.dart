@@ -17,9 +17,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'pages/me/settings/advanced_page.dart';
 
-const appKey = 'easemob#easeim';
-const userId = '';
-const token = '';
+const appKey = 'easemob-demo#zuoyu';
+const userId = 'zuoyu01';
+const token = 'YWMtDI8P9nnnEfG4zWlghJEA3GOE8DausEZYrzT2OfjZvQvIrwqQeQgR8YhsH1Mz3zKMAwMAAAGfO-3MvjeeSAAFu7uD3jEBcdRP9lknqzMbtmvMwXkDLvfMF6ENNXi4cQ';
 
 const bool appDebug = false;
 

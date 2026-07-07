@@ -2,7 +2,7 @@ group = "com.ease.em_chat_uikit"
 version = "1.0-SNAPSHOT"
 
 buildscript {
-    ext.kotlin_version = "1.8.22"
+    ext.kotlin_version = "2.1.0"
     repositories {
         google()
         mavenCentral()
@@ -28,7 +28,7 @@ android {
     namespace = "com.ease.em_chat_uikit"
 
     compileSdk = 35
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "29.0.14206865"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
