@@ -16,27 +16,45 @@ abstract mixin class RoomObserver implements ChatUIKitObserverBase {
   void onChatRoomDestroyed(String roomId, String? roomName) {}
 
   void onMemberExitedFromChatRoom(
-      String roomId, String? roomName, String participant) {}
+    String roomId,
+    String? roomName,
+    String participant,
+  ) {}
 
   void onMemberJoinedFromChatRoom(
-      String roomId, String participant, String? ext) {}
+    String roomId,
+    String participant,
+    String? ext,
+  ) {}
 
-  void onMuteListAddedFromChatRoom(
-      String roomId, List<String> mutes, String? expireTime) {}
+  void onMuteListAddedFromChatRoom(String roomId, Map<String, int> mutes) {}
 
   void onMuteListRemovedFromChatRoom(String roomId, List<String> mutes) {}
 
   void onOwnerChangedFromChatRoom(
-      String roomId, String newOwner, String oldOwner) {}
+    String roomId,
+    String newOwner,
+    String oldOwner,
+  ) {}
 
-  void onRemovedFromChatRoom(String roomId, String? roomName,
-      String? participant, LeaveReason? reason) {}
+  void onRemovedFromChatRoom(
+    String roomId,
+    String? roomName,
+    String? participant,
+    LeaveReason? reason,
+  ) {}
 
   void onSpecificationChanged(ChatRoom room) {}
 
   void onAttributesUpdated(
-      String roomId, Map<String, String> attributes, String from) {}
+    String roomId,
+    Map<String, String> attributes,
+    String from,
+  ) {}
 
   void onAttributesRemoved(
-      String roomId, List<String> removedKeys, String from) {}
+    String roomId,
+    List<String> removedKeys,
+    String from,
+  ) {}
 }

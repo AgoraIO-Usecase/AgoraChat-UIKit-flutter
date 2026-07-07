@@ -31,10 +31,7 @@ mixin RoomWrapper on ChatUIKitServiceBase {
   }
 
   @protected
-  void onAdminAddedFromChatRoom(
-    String roomId,
-    String admin,
-  ) {
+  void onAdminAddedFromChatRoom(String roomId, String admin) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is RoomObserver) {
         observer.onAdminAddedFromChatRoom(roomId, admin);
@@ -98,7 +95,10 @@ mixin RoomWrapper on ChatUIKitServiceBase {
 
   @protected
   void onMemberExitedFromChatRoom(
-      String roomId, String? roomName, String participant) {
+    String roomId,
+    String? roomName,
+    String participant,
+  ) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is RoomObserver) {
         observer.onMemberExitedFromChatRoom(roomId, roomName, participant);
@@ -108,7 +108,10 @@ mixin RoomWrapper on ChatUIKitServiceBase {
 
   @protected
   void onMemberJoinedFromChatRoom(
-      String roomId, String participant, String? ext) {
+    String roomId,
+    String participant,
+    String? ext,
+  ) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is RoomObserver) {
         observer.onMemberJoinedFromChatRoom(roomId, participant, ext);
@@ -117,11 +120,10 @@ mixin RoomWrapper on ChatUIKitServiceBase {
   }
 
   @protected
-  void onMuteListAddedFromChatRoom(
-      String roomId, List<String> mutes, String? expireTime) {
+  void onMuteListAddedFromChatRoom(String roomId, Map<String, int> mutes) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is RoomObserver) {
-        observer.onMuteListAddedFromChatRoom(roomId, mutes, expireTime);
+        observer.onMuteListAddedFromChatRoom(roomId, mutes);
       }
     }
   }
@@ -137,7 +139,10 @@ mixin RoomWrapper on ChatUIKitServiceBase {
 
   @protected
   void onOwnerChangedFromChatRoom(
-      String roomId, String newOwner, String oldOwner) {
+    String roomId,
+    String newOwner,
+    String oldOwner,
+  ) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is RoomObserver) {
         observer.onOwnerChangedFromChatRoom(roomId, newOwner, oldOwner);
@@ -146,8 +151,12 @@ mixin RoomWrapper on ChatUIKitServiceBase {
   }
 
   @protected
-  void onRemovedFromChatRoom(String roomId, String? roomName,
-      String? participant, LeaveReason? reason) {
+  void onRemovedFromChatRoom(
+    String roomId,
+    String? roomName,
+    String? participant,
+    LeaveReason? reason,
+  ) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is RoomObserver) {
         observer.onRemovedFromChatRoom(roomId, roomName, participant, reason);
@@ -166,7 +175,10 @@ mixin RoomWrapper on ChatUIKitServiceBase {
 
   @protected
   void onAttributesUpdated(
-      String roomId, Map<String, String> attributes, String from) {
+    String roomId,
+    Map<String, String> attributes,
+    String from,
+  ) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is RoomObserver) {
         observer.onAttributesUpdated(roomId, attributes, from);
@@ -176,7 +188,10 @@ mixin RoomWrapper on ChatUIKitServiceBase {
 
   @protected
   void onAttributesRemoved(
-      String roomId, List<String> removedKeys, String from) {
+    String roomId,
+    List<String> removedKeys,
+    String from,
+  ) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is RoomObserver) {
         observer.onAttributesRemoved(roomId, removedKeys, from);

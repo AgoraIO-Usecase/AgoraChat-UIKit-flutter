@@ -10,9 +10,7 @@ mixin ChatActions on ChatWrapper {
   }
 
   /// 只支持单聊
-  Future<void> sendTyping({
-    required String userId,
-  }) {
+  Future<void> sendTyping({required String userId}) {
     return checkResult(ChatSDKEvent.sendTypingMessage, () async {
       Message msg = Message.createCmdSendMessage(
         targetId: userId,
@@ -29,7 +27,7 @@ mixin ChatActions on ChatWrapper {
     });
   }
 
-  Future<bool> sendMessageReadAck({required Message message}) {
+  Future<void> sendMessageReadAck({required Message message}) {
     return checkResult(ChatSDKEvent.sendMessageReadAck, () {
       return Client.getInstance.chatManager.sendMessageReadAck(message);
     });
@@ -65,8 +63,10 @@ mixin ChatActions on ChatWrapper {
         await Client.getInstance.chatManager.recallMessage(message.msgId);
         onMessagesRecalled([message]);
       } else {
-        throw ChatError.fromJson(
-            {'code': 500, 'description': 'Message is invalid'});
+        throw ChatError.fromJson({
+          'code': 500,
+          'description': 'Message is invalid',
+        });
       }
     });
   }
@@ -82,8 +82,11 @@ mixin ChatActions on ChatWrapper {
     ConversationType type = ConversationType.Chat,
   }) {
     return checkResult(ChatSDKEvent.createConversation, () async {
-      Conversation? conv = await Client.getInstance.chatManager
-          .getConversation(conversationId, type: type, createIfNeed: true);
+      Conversation? conv = await Client.getInstance.chatManager.getConversation(
+        conversationId,
+        type: type,
+        createIfNeed: true,
+      );
       return conv!;
     });
   }
@@ -93,8 +96,11 @@ mixin ChatActions on ChatWrapper {
     ConversationType type = ConversationType.Chat,
   }) {
     return checkResult(ChatSDKEvent.getConversation, () {
-      return Client.getInstance.chatManager
-          .getConversation(conversationId, type: type, createIfNeed: false);
+      return Client.getInstance.chatManager.getConversation(
+        conversationId,
+        type: type,
+        createIfNeed: false,
+      );
     });
   }
 
@@ -117,9 +123,7 @@ mixin ChatActions on ChatWrapper {
     });
   }
 
-  Future<void> markConversationAsRead({
-    required String conversationId,
-  }) {
+  Future<void> markConversationAsRead({required String conversationId}) {
     return checkResult(ChatSDKEvent.markConversationAsRead, () async {
       Conversation? conv = await Client.getInstance.chatManager.getConversation(
         conversationId,
@@ -176,8 +180,9 @@ mixin ChatActions on ChatWrapper {
     bool needUpdateConversationList = false,
   }) {
     return checkResult(ChatSDKEvent.updateMessage, () async {
-      final oldMsg =
-          await Client.getInstance.chatManager.loadMessage(message.msgId);
+      final oldMsg = await Client.getInstance.chatManager.loadMessage(
+        message.msgId,
+      );
       await Client.getInstance.chatManager.updateMessage(message);
 
       if (runMessageUpdate) {
@@ -202,12 +207,12 @@ mixin ChatActions on ChatWrapper {
     bool needUpdateConversationList = false,
   }) {
     return checkResult(ChatSDKEvent.importMessages, () async {
-      Conversation? conversation =
-          await Client.getInstance.chatManager.getConversation(
-        message.conversationId ?? message.from!,
-        type: ConversationType.values[message.chatType.index],
-        createIfNeed: true,
-      );
+      Conversation? conversation = await Client.getInstance.chatManager
+          .getConversation(
+            message.conversationId ?? message.from!,
+            type: ConversationType.values[message.chatType.index],
+            createIfNeed: true,
+          );
       await conversation!.insertMessage(message);
       if (runMessageReceived) {
         super.onMessagesReceived([message]);
@@ -232,15 +237,17 @@ mixin ChatActions on ChatWrapper {
 
   Future<void> downloadMessageAttachmentInCombine({required Message message}) {
     return checkResult(ChatSDKEvent.downloadMessageAttachmentInCombine, () {
-      return Client.getInstance.chatManager
-          .downloadMessageAttachmentInCombine(message);
+      return Client.getInstance.chatManager.downloadMessageAttachmentInCombine(
+        message,
+      );
     });
   }
 
   Future<void> downloadMessageThumbnailInCombine({required Message message}) {
     return checkResult(ChatSDKEvent.downloadMessageThumbnailInCombine, () {
-      return Client.getInstance.chatManager
-          .downloadMessageThumbnailInCombine(message);
+      return Client.getInstance.chatManager.downloadMessageThumbnailInCombine(
+        message,
+      );
     });
   }
 
@@ -416,9 +423,7 @@ mixin ChatActions on ChatWrapper {
 
   Future<void> deleteLocalMessages({required int beforeTime}) {
     return checkResult(ChatSDKEvent.deleteLocalMessages, () {
-      return Client.getInstance.chatManager.deleteMessagesBefore(
-        beforeTime,
-      );
+      return Client.getInstance.chatManager.deleteMessagesBefore(beforeTime);
     });
   }
 
@@ -546,9 +551,7 @@ mixin ChatActions on ChatWrapper {
     });
   }
 
-  Future<List<Message>> fetchCombineMessageDetail({
-    required Message message,
-  }) {
+  Future<List<Message>> fetchCombineMessageDetail({required Message message}) {
     return checkResult(ChatSDKEvent.fetchCombineMessageDetail, () {
       return Client.getInstance.chatManager.fetchCombineMessageDetail(
         message: message,
@@ -649,12 +652,11 @@ mixin ChatActions on ChatWrapper {
     });
   }
 
-  Future<List<Message>> fetchPinnedMessages({
-    required String conversationId,
-  }) {
+  Future<List<Message>> fetchPinnedMessages({required String conversationId}) {
     return checkResult(ChatSDKEvent.fetchPinnedMessages, () async {
-      return Client.getInstance.chatManager
-          .fetchPinnedMessages(conversationId: conversationId);
+      return Client.getInstance.chatManager.fetchPinnedMessages(
+        conversationId: conversationId,
+      );
     });
   }
 

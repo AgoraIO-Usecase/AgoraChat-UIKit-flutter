@@ -159,9 +159,7 @@ class ChatSDKService extends ChatUIKitServiceBase
     _instance = this;
   }
 
-  Future<void> init({
-    required Options options,
-  }) async {
+  Future<void> init({required Options options}) async {
     await Client.getInstance.init(options);
     Client.getInstance.startCallback();
   }
@@ -186,10 +184,7 @@ class ChatSDKService extends ChatUIKitServiceBase
   /// Param [userId] : userId
   ///
   /// Param [token] : user token
-  Future<void> loginWithToken({
-    required String userId,
-    required String token,
-  }) {
+  Future<void> loginWithToken({required String userId, required String token}) {
     return checkResult(ChatSDKEvent.loginWithToken, () async {
       await Client.getInstance.loginWithToken(userId, token);
       await Client.getInstance.startCallback();
@@ -225,7 +220,7 @@ class ChatSDKService extends ChatUIKitServiceBase
   void connectHandler({
     VoidCallback? onConnected,
     VoidCallback? onDisconnected,
-    Function(String)? onUserDidLoginFromOtherDevice,
+    Function(LoginExtensionInfo)? onUserDidLoginFromOtherDevice,
     VoidCallback? onUserDidRemoveFromServer,
     VoidCallback? onUserDidForbidByServer,
     VoidCallback? onUserDidChangePassword,
@@ -257,11 +252,11 @@ class ChatSDKService extends ChatUIKitServiceBase
         .fetchOwnInfo()
         .then((value) => null)
         .catchError((e) {
-      if (e is ChatError) {
-        if (e.code == 401) {
-          onUserAuthenticationFailed?.call();
-        }
-      }
-    });
+          if (e is ChatError) {
+            if (e.code == 401) {
+              onUserAuthenticationFailed?.call();
+            }
+          }
+        });
   }
 }

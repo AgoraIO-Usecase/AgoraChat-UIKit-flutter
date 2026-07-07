@@ -49,10 +49,10 @@ mixin ConnectWrapper on ChatUIKitServiceBase {
     }
   }
 
-  void onUserDidLoginFromOtherDevice(String deviceName) {
+  void onUserDidLoginFromOtherDevice(LoginExtensionInfo info) {
     for (var observer in List<ChatUIKitObserverBase>.of(observers)) {
       if (observer is ConnectObserver) {
-        observer.onUserDidLoginFromOtherDevice(deviceName);
+        observer.onUserDidLoginFromOtherDevice(info);
       }
     }
   }
