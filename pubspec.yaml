@@ -1,12 +1,12 @@
 name: agora_chat_uikit
 description: A set of ui components adapted to the chat sdk can quickly build a chat page
   and chat through the chat sdk by invoking the ui components.
-version: 2.0.1
+version: 2.0.3
 homepage: https://www.agora.io/
 
 environment:
   sdk: ^3.7.0
-  flutter: ">=3.29.0"
+  flutter: ">=3.29.0 <4.0.0"
 
 dependencies:
   flutter:
