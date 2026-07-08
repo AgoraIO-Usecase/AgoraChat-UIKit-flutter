@@ -1,3 +1,6 @@
+## 2.0.3
+* Upgrade agora_chat_sdk to 1.4.0.
+
 ## 2.0.1
 * Fix uikit cannot use SDK 1.3.3.
 

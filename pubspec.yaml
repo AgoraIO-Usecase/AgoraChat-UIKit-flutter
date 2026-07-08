@@ -6,39 +6,39 @@ homepage: https://www.agora.io/
 
 environment:
   sdk: ^3.7.0
-  flutter: ">=3.29.0 <4.0.0"
+  flutter: ">=3.29.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  agora_chat_sdk: ^1.3.3
+  agora_chat_sdk: ^1.4.0
 
   record: ^6.0.0
 
-  shared_preferences: 2.2.3
+  shared_preferences: ^2.2.3
 
-  chat_uikit_theme: 1.0.4
+  chat_uikit_theme: ^1.0.4
 
-  path_provider: 2.1.4
+  path_provider: ^2.1.4
 
-  file_picker: 9.0.2
+  file_picker: ^9.0.2
 
-  audioplayers: 6.0.0
+  audioplayers: ^6.0.0
 
-  image_picker: 1.1.2
+  image_picker: ^1.1.2
 
-  get_thumbnail_video: 0.7.3
+  get_thumbnail_video: ^0.7.3
 
-  video_player: 2.9.5
+  video_player: ^2.9.5
 
-  flutter_localization: 0.2.0
+  flutter_localization: ^0.2.0
 
   scroll_to_index: ^3.0.1
 
-  cached_network_image: 3.3.1
+  cached_network_image: ^3.3.1
 
-  chat_uikit_keyboard_panel: 0.1.1
+  chat_uikit_keyboard_panel: ^0.1.1
 
   html: ^0.15.4
 
