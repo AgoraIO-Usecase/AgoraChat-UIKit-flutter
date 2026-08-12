@@ -24,6 +24,7 @@ def flutter_root
 end
 
 require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+require_relative 'fix_aosl_conflicting'
 
 flutter_ios_podfile_setup
 
@@ -35,6 +36,10 @@ target 'Runner' do
   target 'RunnerTests' do
     inherit! :search_paths
   end
+end
+
+pre_install do |installer|
+  PodHelpers.handle_aosl_conflict(installer)
 end
 
 post_install do |installer|

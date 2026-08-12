@@ -1,3 +1,8 @@
+## 2.3.2
+
+* Synced with em_chat_uikit 2.3.2 (all features and fixes up to this version).
+* Depends on agora_chat_sdk 1.4.0.
+
 ## 2.0.3
 * Upgrade agora_chat_sdk to 1.4.0.
 

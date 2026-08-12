@@ -33,7 +33,8 @@ class _WelcomePageState extends State<WelcomePage> with ChatUIKitThemeMixin {
   }
 
   void toLoginPage() {
-    Navigator.of(context).pushReplacementNamed('/login');
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
   }
 
   @override
@@ -50,31 +51,12 @@ class _WelcomePageState extends State<WelcomePage> with ChatUIKitThemeMixin {
               SizedBox(
                 width: 100,
                 height: 100,
-                child: Image.asset('assets/images/icon.png'),
+                child: Image.asset('assets/chat/icon.png'),
               ),
               const SizedBox(height: 38),
-              Text(
-                'Agora Chat',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w500,
-                  color: theme.color.primaryColor5,
-                ),
-              ),
               const SizedBox(height: 180),
             ],
           ),
-          Positioned(
-            bottom: 60,
-            left: 0,
-            right: 0,
-            child: Text(
-              'Powered by Agora',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: theme.color.neutralColor5),
-            ),
-          )
         ],
       ),
     );

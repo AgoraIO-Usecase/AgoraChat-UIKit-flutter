@@ -1,0 +1,117 @@
+import 'package:agora_chat_uikit/chat_sdk_service/chat_sdk_service.dart';
+import 'package:agora_chat_uikit/chat_uikit/chat_uikit.dart';
+import 'package:agora_chat_uikit/chat_uikit/src/tools/safe_disposed.dart';
+import 'package:agora_chat_uikit/chat_uikit_provider/chat_uikit_provider.dart';
+import 'package:flutter/foundation.dart';
+
+class PinMessageListViewController extends ChangeNotifier
+    with SafeAreaDisposed, ChatObserver {
+  PinMessageListViewController(this.profile) {
+    ChatUIKit.instance.addObserver(this);
+  }
+
+  final ChatUIKitProfile profile;
+
+  @override
+  void dispose() {
+    ChatUIKit.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  bool isShow = false;
+
+  ValueNotifier<List<PinListItemModel>> list = ValueNotifier([]);
+
+  void show() {
+    if (list.value.isEmpty) return;
+    isShow = true;
+    if (hasListeners) notifyListeners();
+  }
+
+  void hide() {
+    isShow = false;
+    notifyListeners();
+  }
+
+  Future<void> pinMsg(Message message) async {
+    try {
+      await ChatUIKit.instance.pinMessage(messageId: message.msgId);
+      MessagePinInfo? info = await message.pinInfo();
+      list.value = [PinListItemModel(message: message, pinInfo: info!)] +
+          list.value.toList();
+    } catch (e) {
+      debugPrint('Error pinning message: $e');
+    }
+  }
+
+  Future<void> unPinMsg(String msgId) async {
+    try {
+      await ChatUIKit.instance.unpinMessage(messageId: msgId);
+      List<PinListItemModel> models = list.value.toList();
+      models.removeWhere((element) => element.message.msgId == msgId);
+      list.value = models;
+    } catch (e) {
+      debugPrint('Error unpinning message: $e');
+    }
+  }
+
+  bool isFetching = false;
+  Future<void> fetchPinMessages() async {
+    if (isFetching || isShow) return;
+    isFetching = true;
+    try {
+      final messages = await ChatUIKit.instance.fetchPinnedMessages(
+        conversationId: profile.id,
+      );
+      List<PinListItemModel> items = [];
+
+      for (var msg in messages) {
+        MessagePinInfo? pinInfo = await msg.pinInfo();
+        if (pinInfo == null) continue;
+        items.add(PinListItemModel(message: msg, pinInfo: pinInfo));
+      }
+
+      if (items.isNotEmpty) {
+        list.value = items;
+        show();
+      } else {
+        ChatUIKit.instance.sendChatUIKitEvent(ChatUIKitEvent.pinMessagesEmpty);
+      }
+    } catch (e) {
+      debugPrint('Error fetching pinned messages: $e');
+    }
+    isFetching = false;
+  }
+
+  @override
+  void onMessagePinChanged(
+    String messageId,
+    String conversationId,
+    MessagePinOperation pinOperation,
+    MessagePinInfo pinInfo,
+  ) async {
+    List<PinListItemModel> models = list.value.toList();
+    models.removeWhere((element) => element.message.msgId == messageId);
+    if (pinOperation == MessagePinOperation.Pin) {
+      Message? msg = await ChatUIKit.instance.loadMessage(messageId: messageId);
+      if (msg != null) {
+        models.insert(0, PinListItemModel(message: msg, pinInfo: pinInfo));
+        list.value = models;
+      }
+    } else {
+      list.value = models;
+    }
+  }
+
+  @override
+  void onMessagesRecalledInfo(
+      List<RecallMessageInfo> infos, List<Message> replaces) {
+    List<PinListItemModel> models = list.value.toList();
+    int index = models.indexWhere((element) =>
+        infos.any((info) => info.recallMessageId == element.message.msgId));
+    if (index != -1) {
+      models.removeAt(index);
+      list.value = models;
+    }
+  }
+}

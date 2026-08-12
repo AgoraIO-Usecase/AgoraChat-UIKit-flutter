@@ -1,6 +1,6 @@
 # chat_uikit for Flutter
 
-This guide gives a comprehensive overview into chat_uikit. The new chat_uikit is intended to provide developers with an efficient, plug-and-play, and highly customizable UI component library, helping you build complete and elegant IM applications that can easily satisfy most instant messaging scenarios. Please download the demo to try it out.
+This guide gives a comprehensive overview of chat_uikit. The chat_uikit is intended to provide developers with an efficient, plug-and-play, and highly customizable UI component library, helping you build complete and elegant IM applications that can easily satisfy most instant messaging scenarios, including one-to-one chat, group chat and chatroom. Please download the demo to try it out.
 
 # chat_uikit Guide
 
@@ -36,11 +36,12 @@ This guide provides an overview and usage examples of the chat_uikit framework i
 
 ```yaml
 environment:
-  sdk: ^3.7.0
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.3.0"
 ```
 
-- ios 12+
-- android minSDKVersion 23
+- ios 11+
+- android minSDKVersion 24
 
 # Installation
 
@@ -52,38 +53,39 @@ flutter pub add agora_chat_uikit
 
 ```bash
 .
-├── chat_uikit.dart                                             // library
-├── chat_uikit_alphabet_sort_helper.dart                        // Tool to correct the alphabetical order of contacts
-├── chat_uikit_defines.dart                                     // UIKit handler definition class
-├── chat_uikit_emoji_data.dart                                  // Message emoji data class
-├── chat_uikit_localizations.dart                               // Internationalization tool class
-├── chat_uikit_service                                          // Secondary wrapping for the chat SDK wrapper class, used to adapt incompliant functions in the wrapping class to UIKit functions.
-├── chat_uikit_settings.dart                                    // Class to set functions, used to turn on or off or configure certain functions
-├── chat_uikit_time_formatter.dart                              // Tool to set the displayed time format
-├── provider                                                    // User attribute tool
-│   ├── chat_uikit_profile.dart                                 // User attribute object, including the user's avatar, nickname, and remarks.
-│   └── chat_uikit_provider.dart                                // User attribute provider, used to provide user attribute data in the UIKit. 
-├── sdk_service                                                 // Wrapping for the chat SDK, used to wrap APIs in the chat SDK that are available to developers. The UIKit interacts with the wrapping class, instead of calling APIs in the chat SDK.
-├── tools                                                       // Internal tool class
-│   ├── chat_uikit_context.dart                                 // Data context to store certain states.
-│   ├── chat_uikit_conversation_extension.dart                  // Processed class of the conversation list to pre-process certain properties.
-│   ├── chat_uikit_file_size_tool.dart                          // Tool to calculate the displayed file size.
-│   ├── chat_uikit_helper.dart                                  // Internal class to calculate the border radius
-│   ├── chat_uikit_highlight_tool.dart                          // Tool class to calculate the component highlight value
-│   ├── chat_uikit_image_loader.dart                            // Image loading tool class
-│   ├── chat_uikit_message_extension.dart                       // Message processing class that pre-processes certain properties
-│   ├── chat_uikit_time_tool.dart                               // Default time format class
-│   ├── chat_uikit_url_helper.dart                              // Tool class for URL preview
-│   └── safe_disposed.dart                                      // Internal processing class for ChangeNotifier
-├── ui                                                          // UI components
-│   ├── components                                              // Components
-│   ├── controllers                                             // View/widget controllers
-│   ├── custom                                                  // UI customization
-│   ├── models                                                  // models
-│   ├── route                                                   // Route component in the UIKit
-│   ├── views                                                   // Views
-│   └── widgets                                                 // Widgets
-└── universal                                                   // Internal class
+├── chat_uikit.dart                                             // Main entry, exports all modules below
+├── chat_sdk_context                                            // Data context, stores certain states
+├── chat_sdk_service                                            // Wrapping of the chat SDK. The UIKit interacts with this layer instead of calling APIs of the chat SDK directly.
+│   └── src
+│       ├── actions                                             // Wrappers of SDK method calls
+│       ├── observers                                           // Event observers
+│       └── wrappers                                            // Wrappers of SDK event handlers
+├── chat_uikit                                                  // Chat UI components
+│   └── src
+│       ├── chat_uikit_alphabet_sort_helper.dart                // Tool to correct the alphabetical order of contacts
+│       ├── chat_uikit_service                                  // Secondary wrapping of the SDK wrapper, adapting SDK functions to UIKit functions
+│       ├── chat_uikit_settings.dart                            // Class to configure functions, used to turn on/off or configure certain features
+│       ├── chat_uikit_time_formatter.dart                      // Tool to set the displayed time format
+│       ├── tools                                               // Internal tool classes (image loader, extensions, url preview, etc.)
+│       ├── ui                                                  // UI components
+│       │   ├── components                                      // Components
+│       │   ├── controllers                                     // View/widget controllers
+│       │   ├── custom                                          // UI customization
+│       │   ├── models                                          // Models
+│       │   ├── route                                           // Route components in the UIKit
+│       │   ├── views                                           // Views
+│       │   └── widgets                                         // Widgets
+│       └── universal                                           // Internal classes
+├── chat_uikit_localizations                                    // Internationalization
+├── chat_uikit_provider                                         // User attribute provider
+│   └── src
+│       ├── chat_uikit_profile.dart                             // User attribute object, including the user's avatar, nickname, and remarks
+│       └── chat_uikit_provider.dart                            // User attribute provider, used to provide user attribute data in the UIKit
+├── chat_uikit_universal                                        // Common widgets shared across modules
+└── chatroom_uikit                                              // Chatroom UI components
+    └── src
+        ├── utils                                               // Chatroom tool classes
+        └── widgets                                             // Chatroom widgets
 ```
 
 # Quick Start
@@ -286,7 +288,7 @@ class _ChatPageState extends State<ChatPage> {
 
 ## Provider
 
-Provider is a data provider. If user data or group data needs to be displayed, the UIKit will request data via the Provider and you need to return data to the Provider. The UIKit, once getting your data, will refresh the UI to show your data. Following is an example of Provider (`example/lib/tool/user_provider_widget.dart`).
+Provider is a data provider. If user data or group data needs to be displayed, the UIKit will request data via the Provider and you need to return data to the Provider. The UIKit, once getting your data, will refresh the UI to show your data. Following is an example of Provider (`example/lib/demo/tool/user_provider_widget.dart`).
 
 ### Example
 
@@ -354,7 +356,10 @@ class _UserProviderWidgetState extends State<UserProviderWidget>
 
   // This method is called when uikit needs to display user information and the cache does not exist;
   // it requires fetching and storing the information in the db based on user attributes.
-  List<ChatUIKitProfile>? onProfilesRequest(List<ChatUIKitProfile> profiles) {
+  List<ChatUIKitProfile>? onProfilesRequest(
+    List<ChatUIKitProfile> profiles, [
+    String? belongId,
+  ]) {
     List<String> userIds = profiles
         .where((e) => e.type == ChatUIKitProfileType.contact)
         .map((e) => e.id)
@@ -481,7 +486,7 @@ class _UserProviderWidgetState extends State<UserProviderWidget>
 
 ### Usage
 
-A hanlder `profilesHandler` is required before the use of `ChatUIKitProvider`. After that, when related information needs to be displayed, UIKit will return you a default `ChatUIKitProfile` object via the handler and you need to return a `ChatUIKitProfile` object. In this case, you are advised to return a `ChatUIKitProfile` object for the placeholding purpose. When you have obtained the correct `ChatUIKitProfile` object from your server or database, pass it to the UIKit using the `ChatUIKitProvider.instance.addProfiles(list)` method. Receiving the object, the UIKit refreshes the UI and caches it for subsequent displaying. Take the following steps to use ChatUIKitProvider:
+A handler `profilesHandler` is required before the use of `ChatUIKitProvider`. After that, when related information needs to be displayed, UIKit will return you a default `ChatUIKitProfile` object via the handler and you need to return a `ChatUIKitProfile` object. In this case, you are advised to return a `ChatUIKitProfile` object for the placeholder purpose. When you have obtained the correct `ChatUIKitProfile` object from your server or database, pass it to the UIKit using the `ChatUIKitProvider.instance.addProfiles(list)` method. Receiving the object, the UIKit refreshes the UI and caches it for subsequent displaying. Take the following steps to use ChatUIKitProvider:
 
 1. Set `profilesHandler` upon the app start and login.
 
@@ -496,10 +501,13 @@ A hanlder `profilesHandler` is required before the use of `ChatUIKitProvider`. A
     ChatUIKitProvider.instance.addProfiles(list);
 ```
 
-3. When `profilesHandler` is executed, you can first return `ChatUIKitProfile` for the placeholding purpose, get data from the server, and then save the data to the database and pass it to the UIKit. 
+3. When `profilesHandler` is executed, you can first return `ChatUIKitProfile` for the placeholder purpose, get data from the server, and then save the data to the database and pass it to the UIKit. 
 
 ```dart
-  List<ChatUIKitProfile>? onProfilesRequest(List<ChatUIKitProfile> profiles) {
+  List<ChatUIKitProfile>? onProfilesRequest(
+    List<ChatUIKitProfile> profiles, [
+    String? belongId,
+  ]) {
     List<String> userIds = profiles
         .where((e) => e.type == ChatUIKitProfileType.contact)
         .map((e) => e.id)
@@ -541,6 +549,9 @@ class ChatUIKitSettings {
   /// Default avatar placeholder image.
   static ImageProvider? avatarPlaceholder;
 
+  /// Default group avatar placeholder image.
+  static ImageProvider? groupAvatarPlaceholder;
+
   /// The corner radius for the dialog.
   static ChatUIKitDialogRectangleType dialogRectangleType =
       ChatUIKitDialogRectangleType.filletCorner;
@@ -557,6 +568,9 @@ class ChatUIKitSettings {
 
   // Mute icon displayed in the conversation list.
   static ImageProvider? conversationListMuteImage;
+
+  /// Contact item list height.
+  static double contactItemListItemHeight = 60;
 
   /// Message long press menu.
   static List<ChatUIKitActionType> msgItemLongPressActions = [
@@ -599,28 +613,28 @@ class ChatUIKitSettings {
     '\u{1F389}',
   ];
 
-  /// Regular expression for the default message URL  
+  /// Regular expression for the default message URL.
   static RegExp defaultUrlRegExp = RegExp(
     r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+',
     caseSensitive: false,
   );
 
-  /// Whether to enable the message pinning feature
+  /// Whether to enable the message pinning feature.
   static bool enablePinMsg = true;
 
-  /// Whether to enable message quoting feature
+  /// Whether to enable message quoting feature.
   static bool enableMessageReply = true;
 
-  /// Whether to enable message recall feature
+  /// Whether to enable message recall feature.
   static bool enableMessageRecall = true;
 
-  /// Time limit for message recall, in seconds
+  /// Time limit for message recall, in seconds.
   static int recallExpandTime = 120;
 
-  /// Whether to enable message editing feature
+  /// Whether to enable message editing feature.
   static bool enableMessageEdit = true;
 
-  /// Whether to enable message reporting feature
+  /// Whether to enable message reporting feature.
   static bool enableMessageReport = true;
 
   /// Message report tags, can be customized. The reasons for reporting should be written in the localization file, and the key for the reason in the localization file should be consistent with the tag. For example, [ChatUIKitLocal.reportTarget1]
@@ -636,14 +650,37 @@ class ChatUIKitSettings {
     'tag9',
   ];
 
-  /// Whether to enable message multi-selection feature  
+  /// Whether to enable message multi-selection feature.
   static bool enableMessageMultiSelect = true;
 
-  /// Whether to enable message forwarding feature
+  /// Whether to enable message forwarding feature.
   static bool enableMessageForward = true;
 
   /// Alphabetical order of `showName` of contacts. If there are Chinese characters, you can redefine the initials using [ChatUIKitAlphabetSortHelper].
   static String sortAlphabetical = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#';
+
+  /// Message long press menu style.
+  static ChatUIKitMessageLongPressMenuStyle messageLongPressMenuStyle =
+      ChatUIKitMessageLongPressMenuStyle.popupMenu;
+
+  /// Message attachment menu style.
+  static ChatUIKitMessageAttachmentMenuStyle messageAttachmentMenuStyle =
+      ChatUIKitMessageAttachmentMenuStyle.menu;
+
+  /// Audio recording encode type.
+  static ChatRecordEncodeType audioEncoder = ChatRecordEncodeType.aac;
+
+  /// Default display avatar in chatroom.
+  static String? roomUserDefaultAvatar;
+
+  /// Default identity icon in chatroom.
+  static String? roomDefaultIdentify;
+
+  /// Default gift icon in chatroom.
+  static String? roomDefaultGiftIcon;
+
+  /// Default gift price icon in chatroom.
+  static String? roomDefaultGiftPriceIcon;
 }
 
 ```
@@ -738,7 +775,7 @@ return MaterialApp(
 
 The UIKit uses `pushNamed` to implement redirection, with the `ChatUIKitViewArguments` object of the target redirection page passed. You can intercept `onGenerateRoute(RouteSettings settings)` and parse `settings.name` to get the target page for redirection. Then, you can reset the `ChatUIKitViewArguments` parameter for redirection interception and page customization. The name of the target redirection page is specified in `chat_uikit_route_names.dart`. 
 
-For details on route interception, you can refer to `example/lib/custom/chat_route_filter.dart`. 
+For details on route interception, you can refer to `example/lib/demo/custom/chat_route_filter.dart`. 
 
 
 ## Event interception and error handling
@@ -779,7 +816,7 @@ class _SDKEventHandlerPageState extends State<SDKEventHandlerPage>
 }
 ```
 
-For more information, you can refer to `example/lib/tool/toast_page.dart`.
+For more information, you can refer to `example/lib/demo/tool/toast_page.dart`. 
 
 For other events than those of the chat SDK, `ChatUIKitEventsObservers.onChatUIKitEventsReceived` is triggered.
 
@@ -814,7 +851,7 @@ class _UIKitEventHandlePageState extends State<UIKitEventHandlePage>
 
 ```
 
-For more information, see `example/lib/tool/toast_page.dart`.
+For more information, see `example/lib/demo/tool/toast_page.dart`.
 
 ## Connection status change and login token expiration callback 
 
@@ -825,7 +862,7 @@ ChatUIKit.instance.connectHandler(
   onUserAuthenticationFailed: () {},
   onUserDidChangePassword: () {},
   onUserDidForbidByServer: () {},
-  onUserDidLoginFromOtherDevice: (deviceName) {},
+  onUserDidLoginFromOtherDevice: (info) {},
   onUserDidLoginTooManyDevice: () {},
   onUserDidRemoveFromServer: () {},
   onUserKickedByOtherDevice: () {},
@@ -837,7 +874,7 @@ ChatUIKit.instance.connectHandler(
 );
 ```
 
-For more information, you can refer to `example/lib/tool/token_status_handler_widget.dart`.
+For more information, you can refer to `example/lib/demo/tool/token_status_handler_widget.dart`.
 
 ## Message time formatting
 

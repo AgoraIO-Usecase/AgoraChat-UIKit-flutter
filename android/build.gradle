@@ -1,4 +1,4 @@
-group = "com.ease.em_chat_uikit"
+group = "com.chat.uikit"
 version = "1.0-SNAPSHOT"
 
 buildscript {
@@ -25,7 +25,7 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 android {
-    namespace = "com.ease.em_chat_uikit"
+    namespace = "com.chat.uikit"
 
     compileSdk = 35
     ndkVersion = "29.0.14206865"
@@ -45,7 +45,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 24
     }
 
     dependencies {

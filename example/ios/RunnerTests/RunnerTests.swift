@@ -2,7 +2,7 @@ import Flutter
 import UIKit
 import XCTest
 
-@testable import em_chat_uikit
+@testable import agora_chat_uikit
 
 // This demonstrates a simple unit test of the Swift portion of this plugin's implementation.
 //
