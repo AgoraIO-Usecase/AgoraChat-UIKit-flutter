@@ -28,7 +28,6 @@ android {
     namespace = "com.chat.uikit"
 
     compileSdk = 35
-    ndkVersion = "29.0.14206865"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
